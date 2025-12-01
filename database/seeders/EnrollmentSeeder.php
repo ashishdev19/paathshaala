@@ -16,7 +16,7 @@ class EnrollmentSeeder extends Seeder
      */
     public function run(): void
     {
-        $student = User::role('student')->first();
+        $student = User::byRole('student')->first();
         $courses = Course::all();
 
         if ($student && $courses->count() > 0) {
@@ -33,27 +33,35 @@ class EnrollmentSeeder extends Seeder
 
             // Create additional students for testing
             for ($i = 1; $i <= 5; $i++) {
-                $testStudent = User::create([
-                    'name' => "Test Student $i",
-                    'email' => "teststudent$i@paathshaala.com",
-                    'password' => bcrypt('password'),
-                    'phone' => "+91 98765432$i$i",
-                    'address' => "Test Address $i",
-                    'email_verified_at' => now(),
-                ]);
+                $testStudent = User::firstOrCreate(
+                    ['email' => "teststudent$i@paathshaala.com"],
+                    [
+                        'name' => "Test Student $i",
+                        'password' => bcrypt('password'),
+                        'phone' => "+91 98765432$i$i",
+                        'address' => "Test Address $i",
+                        'email_verified_at' => now(),
+                    ]
+                );
                 
-                $testStudent->assignRole('student');
+                if (!$testStudent->hasRole('student')) {
+                    $testStudent->assignRole('student');
+                }
 
-                // Enroll in random courses
+                // Enroll in random courses (skip if already enrolled)
                 $randomCourses = $courses->random(rand(1, 3));
                 foreach ($randomCourses as $course) {
-                    Enrollment::create([
-                        'student_id' => $testStudent->id,
-                        'course_id' => $course->id,
-                        'enrolled_at' => Carbon::now()->subDays(rand(1, 30)),
-                        'status' => collect(['active', 'completed'])->random(),
-                        'progress_percentage' => rand(0, 100),
-                    ]);
+                    Enrollment::firstOrCreate(
+                        [
+                            'student_id' => $testStudent->id,
+                            'course_id' => $course->id,
+                        ],
+                        [
+                            'enrolled_at' => Carbon::now()->subDays(rand(1, 30)),
+                            'status' => collect(['active', 'completed'])->random(),
+                            'progress_percentage' => rand(0, 100),
+                        ]
+                    );
                 }
             }
         }

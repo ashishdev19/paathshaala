@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Payment;
+use App\Models\Offer;
 use App\Services\NotificationService;
 use App\Mail\EnrollmentConfirmation;
 use Illuminate\Http\Request;
@@ -29,15 +30,21 @@ class EnrollmentController extends Controller
             return redirect()->back()->with('error', 'You are already enrolled in this course.');
         }
 
-        // Validate payment method
-        $request->validate([
+        // Validate payment method (relaxed for development)
+        $validated = $request->validate([
             'payment_method' => 'required|in:credit_card,debit_card,upi,net_banking',
-            'card_number' => 'required_if:payment_method,credit_card,debit_card|nullable|string|size:16',
-            'card_expiry' => 'required_if:payment_method,credit_card,debit_card|nullable|string',
-            'card_cvv' => 'required_if:payment_method,credit_card,debit_card|nullable|string|size:3',
-            'card_holder_name' => 'required_if:payment_method,credit_card,debit_card|nullable|string',
-            'upi_id' => 'required_if:payment_method,upi|nullable|email',
-            'bank_name' => 'required_if:payment_method,net_banking|nullable|string',
+            'card_number' => 'nullable|string|max:16',
+            'card_expiry' => 'nullable|string|max:5',
+            'card_cvv' => 'nullable|string|max:3',
+            'card_holder_name' => 'nullable|string|max:255',
+            'upi_id' => 'nullable|string|max:255',
+            'bank_name' => 'nullable|string|max:255',
+        ]);
+        
+        \Log::info('Enrollment attempt', [
+            'user_id' => $user->id,
+            'course_id' => $course->id,
+            'payment_method' => $request->payment_method
         ]);
 
         try {
@@ -45,17 +52,47 @@ class EnrollmentController extends Controller
             $payment = null;
             
             DB::transaction(function () use ($request, $course, $user, &$enrollment, &$payment) {
-                // Create enrollment
-                $enrollment = Enrollment::create([
+                // Check if user is new student and apply discount
+                $finalPrice = $course->price;
+                $appliedOffer = null;
+                
+                $isNewStudent = !Enrollment::where('student_id', $user->id)->exists();
+                if ($isNewStudent) {
+                    $newStudentOffer = Offer::active()
+                        ->valid()
+                        ->available()
+                        ->where('code', 'NEWSTUDENT30')
+                        ->first();
+                        
+                    if ($newStudentOffer && $newStudentOffer->canBeUsed($course->price)) {
+                        $discount = $newStudentOffer->calculateDiscount($course->price);
+                        $finalPrice = $course->price - $discount;
+                        $appliedOffer = $newStudentOffer;
+                        
+                        // Increment usage count
+                        $newStudentOffer->increment('used_count');
+                    }
+                }
+
+                // Create enrollment with expiry date
+                $enrollmentData = [
                     'student_id' => $user->id,
                     'course_id' => $course->id,
                     'enrolled_at' => now(),
                     'progress_percentage' => 0,
                     'status' => 'active',
-                ]);
+                ];
 
-                // Process payment
-                $payment = $this->processPayment($request, $course, $user, $enrollment);
+                // Set expiry date based on course validity
+                if (!$course->is_lifetime) {
+                    $enrollmentData['expires_at'] = $course->calculateExpiryDate(now());
+                    $enrollmentData['is_expired'] = false;
+                }
+
+                $enrollment = Enrollment::create($enrollmentData);
+
+                // Process payment with discounted price
+                $payment = $this->processPayment($request, $course, $user, $enrollment, $finalPrice, $appliedOffer);
 
                 // If payment successful, confirm enrollment
                 if ($payment->status === 'completed') {
@@ -89,23 +126,44 @@ class EnrollmentController extends Controller
                 ->with('success', 'Successfully enrolled in ' . $course->title . '! Welcome to the course.');
 
         } catch (\Exception $e) {
+            \Log::error('Enrollment failed', [
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return redirect()->back()
-                ->with('error', 'Payment processing failed. Please try again.')
+                ->with('error', 'Enrollment failed: ' . $e->getMessage())
                 ->withInput();
         }
     }
 
-    private function processPayment(Request $request, Course $course, $user, Enrollment $enrollment)
+    private function processPayment(Request $request, Course $course, $user, Enrollment $enrollment, $finalPrice = null, $appliedOffer = null)
     {
+        $amount = $finalPrice ?? $course->price;
+        
+        // Development mode: Set default values if not provided
+        $cardNumber = $request->card_number ?? '4111111111111111';
+        $cardHolderName = $request->card_holder_name ?? 'Test User';
+        $upiId = $request->upi_id ?? 'test@upi';
+        $bankName = $request->bank_name ?? 'Test Bank';
+        
         // Simulate payment processing (in real implementation, integrate with payment gateway)
         $paymentData = [
             'student_id' => $user->id,
             'course_id' => $course->id,
             'enrollment_id' => $enrollment->id,
-            'amount' => $course->price,
+            'amount' => $amount,
+            'original_amount' => $course->price,
+            'discount_amount' => $course->price - $amount,
+            'final_amount' => $amount,
+            'offer_id' => $appliedOffer ? $appliedOffer->id : null,
+            'platform_commission' => 0.00,
+            'teacher_earnings' => $amount,
             'payment_method' => $request->payment_method,
+            'paid_via_wallet' => false,
             'transaction_id' => 'TXN_' . strtoupper(Str::random(10)),
-            'payment_date' => now(),
             'status' => 'completed', // In real implementation, this would depend on gateway response
         ];
 
@@ -114,19 +172,22 @@ class EnrollmentController extends Controller
             case 'credit_card':
             case 'debit_card':
                 $paymentData['payment_details'] = json_encode([
-                    'card_last_four' => substr($request->card_number, -4),
-                    'card_holder_name' => $request->card_holder_name,
-                    'card_type' => $this->detectCardType($request->card_number),
+                    'card_last_four' => substr($cardNumber, -4),
+                    'card_holder_name' => $cardHolderName,
+                    'card_type' => $this->detectCardType($cardNumber),
+                    'dev_mode' => true,
                 ]);
                 break;
             case 'upi':
                 $paymentData['payment_details'] = json_encode([
-                    'upi_id' => $request->upi_id,
+                    'upi_id' => $upiId,
+                    'dev_mode' => true,
                 ]);
                 break;
             case 'net_banking':
                 $paymentData['payment_details'] = json_encode([
-                    'bank_name' => $request->bank_name,
+                    'bank_name' => $bankName,
+                    'dev_mode' => true,
                 ]);
                 break;
         }
@@ -164,7 +225,45 @@ class EnrollmentController extends Controller
                 ->with('info', 'You are already enrolled in this course.');
         }
 
-        return view('enrollment.checkout', compact('course'));
+        // Check if user is a new student (no previous enrollments)
+        $isNewStudent = !Enrollment::where('student_id', $user->id)->exists();
+        
+        // Get available offers for new students
+        $availableOffers = collect();
+        $autoAppliedOffer = null;
+        $discountedPrice = $course->price;
+        
+        if ($isNewStudent) {
+            // Find the best new student offer
+            $newStudentOffer = Offer::active()
+                ->valid()
+                ->available()
+                ->where('code', 'NEWSTUDENT30')
+                ->first();
+                
+            if ($newStudentOffer && $newStudentOffer->canBeUsed($course->price)) {
+                $autoAppliedOffer = $newStudentOffer;
+                $discount = $newStudentOffer->calculateDiscount($course->price);
+                $discountedPrice = $course->price - $discount;
+            }
+        }
+        
+        // Get all available offers for display
+        $allOffers = Offer::active()
+            ->valid()
+            ->available()
+            ->get()
+            ->filter(function($offer) use ($course) {
+                return $offer->canBeUsed($course->price) && $offer->isValidForCourse($course->id);
+            });
+
+        return view('enrollment.checkout', compact(
+            'course', 
+            'isNewStudent', 
+            'autoAppliedOffer', 
+            'discountedPrice', 
+            'allOffers'
+        ));
     }
 
     public function success()

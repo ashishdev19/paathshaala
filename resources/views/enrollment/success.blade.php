@@ -1,197 +1,109 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Payment Successful - Paathshaala</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="font-sans antialiased bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
-                        <h1 class="text-2xl font-bold text-indigo-600">Paathshaala</h1>
-                    </a>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="text-sm text-gray-600">
-                        Welcome, {{ auth()->user()->name }}
-                    </div>
-                    <a href="{{ route('dashboard') }}" class="text-indigo-600 hover:text-indigo-800">
-                        Dashboard
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<x-layouts.student>
+    <x-slot name="header">
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            Enrollment Successful
+        </h2>
+    </x-slot>
 
-    <div class="min-h-screen py-16">
-        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Success Message -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
-                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Success Icon -->
+            <div class="bg-gradient-to-r from-green-500 to-green-600 p-8 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-4">
+                    <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
-                
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Payment Successful!</h1>
-                <p class="text-xl text-gray-600 mb-8">
-                    You have successfully enrolled in the course. Welcome to your learning journey!
-                </p>
-                
-                <!-- Course Info -->
-                <div class="bg-white rounded-lg shadow p-6 mb-8">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white text-sm font-medium">🎓</span>
+                <h2 class="text-3xl font-bold text-white mb-2">Enrollment Successful!</h2>
+                <p class="text-green-100">Your payment has been processed successfully</p>
+            </div>
+
+            <!-- Success Message -->
+            <div class="p-8">
+                @if(session('success'))
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p class="text-green-800">{{ session('success') }}</p>
+                </div>
+                @endif
+
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">You're all set!</h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                You have been successfully enrolled in the course. You can now access all course materials and start learning.
+                            </p>
                         </div>
-                        <div class="text-left">
-                            <h3 class="text-lg font-semibold text-gray-900">Course Enrollment Confirmed</h3>
-                            <p class="text-gray-600">You can now access all course materials and join live classes</p>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">Check your email</h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                We've sent a confirmation email with your enrollment details and course access information.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">Start Learning</h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Access your enrolled courses from the dashboard and begin your learning journey right away.
+                            </p>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Next Steps -->
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-                    <h3 class="text-lg font-semibold text-blue-900 mb-4">What's Next?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                        <div class="flex items-start space-x-3">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                <span class="text-white text-xs font-bold">1</span>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-blue-900">Access Your Course</h4>
-                                <p class="text-blue-700 text-sm">Start learning immediately with our course materials</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start space-x-3">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                <span class="text-white text-xs font-bold">2</span>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-blue-900">Join Live Classes</h4>
-                                <p class="text-blue-700 text-sm">Participate in interactive sessions with experts</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start space-x-3">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                <span class="text-white text-xs font-bold">3</span>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-blue-900">Track Progress</h4>
-                                <p class="text-blue-700 text-sm">Monitor your learning journey on your dashboard</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start space-x-3">
-                            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                <span class="text-white text-xs font-bold">4</span>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-blue-900">Get Certified</h4>
-                                <p class="text-blue-700 text-sm">Complete the course to earn your certificate</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+
                 <!-- Action Buttons -->
-                <div class="space-y-4">
-                    <a href="{{ route('student.dashboard') }}" 
-                       class="inline-block w-full bg-indigo-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300">
-                        Go to My Dashboard
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="{{ route('student.enrollments.index') }}" 
+                       class="block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition">
+                        My Courses
                     </a>
-                    
-                    <a href="{{ route('student.courses') }}" 
-                       class="inline-block w-full bg-gray-200 text-gray-800 py-3 px-8 rounded-lg font-semibold hover:bg-gray-300 transition duration-300">
-                        View My Courses
+                    <a href="{{ route('student.courses.index') }}" 
+                       class="block text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition">
+                        Browse More Courses
                     </a>
-                </div>
-                
-                <!-- Support Info -->
-                <div class="mt-12 text-center">
-                    <p class="text-gray-600 mb-4">Need help getting started?</p>
-                    <div class="space-x-6">
-                        <a href="{{ route('contact') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">
-                            Contact Support
-                        </a>
-                        <span class="text-gray-400">|</span>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">
-                            View FAQs
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Next Steps -->
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                What's Next?
+            </h3>
+            <ul class="space-y-2 text-sm text-blue-800">
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-600 font-bold">1.</span>
+                    <span>Visit "My Courses" to access your enrolled course</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-600 font-bold">2.</span>
+                    <span>Complete your profile to get personalized recommendations</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-600 font-bold">3.</span>
+                    <span>Join live classes and interact with instructors</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-600 font-bold">4.</span>
+                    <span>Track your progress and earn certificates upon completion</span>
+                </li>
+            </ul>
+        </div>
     </div>
-
-    <!-- Confetti Animation -->
-    <script>
-        // Simple confetti effect
-        function createConfetti() {
-            const colors = ['#f43f5e', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b'];
-            const confettiContainer = document.createElement('div');
-            confettiContainer.style.position = 'fixed';
-            confettiContainer.style.top = '0';
-            confettiContainer.style.left = '0';
-            confettiContainer.style.width = '100%';
-            confettiContainer.style.height = '100%';
-            confettiContainer.style.pointerEvents = 'none';
-            confettiContainer.style.zIndex = '9999';
-            document.body.appendChild(confettiContainer);
-
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'absolute';
-                confetti.style.width = '10px';
-                confetti.style.height = '10px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
-                confetti.style.animationName = 'fall';
-                confetti.style.animationIterationCount = '1';
-                confetti.style.animationFillMode = 'forwards';
-                confettiContainer.appendChild(confetti);
-            }
-
-            // Remove confetti after animation
-            setTimeout(() => {
-                document.body.removeChild(confettiContainer);
-            }, 5000);
-        }
-
-        // Add CSS animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fall {
-                0% {
-                    transform: translateY(-100vh) rotate(0deg);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(100vh) rotate(720deg);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Trigger confetti on page load
-        window.addEventListener('load', createConfetti);
-    </script>
-</body>
-</html>
+</x-layouts.student>

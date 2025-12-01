@@ -1,242 +1,128 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $course->title }} - Paathshaala</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="font-sans antialiased bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
-                        <h1 class="text-2xl font-bold text-indigo-600">Paathshaala</h1>
-                    </a>
-                    
-                    <div class="hidden md:block ml-10">
-                        <div class="flex items-baseline space-x-4">
-                            <a href="{{ route('home') }}" class="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Home</a>
-                            <a href="{{ route('courses.index') }}" class="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Courses</a>
-                            <a href="{{ route('about') }}" class="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">About</a>
-                            <a href="{{ route('contact') }}" class="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Contact</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700">
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Login</a>
-                        <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700">
-                            Register
-                        </a>
-                    @endauth
-                </div>
-            </div>
-        </div>
-    </nav>
+<x-layouts.student>
+    <x-slot name="header">
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            {{ $course->title }}
+        </h2>
+    </x-slot>
 
-    <!-- Breadcrumb -->
-    <div class="bg-white pt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center">
-                        <a href="{{ route('home') }}" class="text-gray-700 hover:text-indigo-600 inline-flex items-center">
-                            <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                            </svg>
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            <a href="{{ route('courses.index') }}" class="ml-1 text-gray-700 hover:text-indigo-600 md:ml-2">Courses</a>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="ml-1 text-gray-500 md:ml-2">{{ $course->title }}</span>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-
-    <!-- Course Header -->
-    <div class="bg-gradient-to-r from-indigo-600 to-purple-600">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2">
-                    <div class="mb-4">
-                        <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium">{{ $course->category }}</span>
-                    </div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">{{ $course->title }}</h1>
-                    <p class="text-xl text-indigo-100 mb-6">{{ $course->description }}</p>
-                    
-                    <div class="flex flex-wrap items-center gap-6 text-indigo-100">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ $course->enrollments_count }} Students
-                        </div>
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ $course->duration }} Hours
-                        </div>
-                        <div class="flex items-center">
-                            @for($i = 1; $i <= 5; $i++)
-                                <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                                </svg>
-                            @endfor
-                            <span class="ml-2">({{ $course->reviews_count }} reviews)</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Course Card -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow-xl p-6 sticky top-24">
-                        <div class="text-center mb-6">
-                            <div class="text-4xl font-bold text-indigo-600 mb-2">₹{{ number_format($course->price) }}</div>
-                            <div class="text-gray-500">One-time payment</div>
-                        </div>
-                        
-                        @if($isEnrolled)
-                            <div class="text-center mb-6">
-                                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold">
-                                    ✅ Already Enrolled
-                                </div>
-                            </div>
-                            <a href="{{ route('student.courses.show', $course->id) }}" class="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 text-center block">
-                                Go to Course
-                            </a>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Course Header -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+                <div class="md:flex">
+                    <div class="md:flex-shrink-0">
+                        @if($course->thumbnail)
+                            <img class="h-48 w-full object-cover md:w-48" 
+                                 src="/storage/{{ $course->thumbnail }}" 
+                                 alt="{{ $course->title }}">
                         @else
-                            @auth
-                                <div class="mb-4">
-                                    <a href="{{ route('enrollment.checkout', $course->id) }}" class="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 text-center block">
+                            <div class="h-48 w-full md:w-48 bg-blue-100 flex items-center justify-center">
+                                <svg class="w-20 h-20 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="p-8 flex-1">
+                        <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{{ $course->category }}</div>
+                        <h1 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                            {{ $course->title }}
+                        </h1>
+                        <p class="mt-4 text-gray-600">{{ $course->description }}</p>
+                        
+                        <div class="mt-6 flex items-center gap-6">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                {{ $course->teacher->name ?? 'N/A' }}
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                {{ number_format($course->reviews_avg_rating ?? 4.5, 1) }} ({{ $course->reviews_count ?? 0 }} reviews)
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                {{ $course->enrollments_count ?? 0 }} students
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex items-center gap-4">
+                            <div class="text-3xl font-bold text-gray-900">
+                                ₹{{ number_format($course->price, 2) }}
+                            </div>
+                            @if(!$isEnrolled)
+                                @auth
+                                    <a href="{{ route('enrollment.checkout', $course->id) }}" 
+                                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                         Enroll Now
                                     </a>
-                                </div>
-                            @else
-                                <div class="text-center mb-4">
-                                    <p class="text-gray-600 mb-4">Please login to enroll in this course</p>
-                                    <a href="{{ route('login') }}" class="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 text-center block">
+                                @else
+                                    <a href="{{ route('login') }}" 
+                                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                         Login to Enroll
                                     </a>
-                                </div>
-                            @endauth
-                        @endif
-                        
-                        <div class="border-t pt-6">
-                            <h4 class="font-semibold text-gray-900 mb-4">This course includes:</h4>
-                            <ul class="space-y-3 text-gray-600">
-                                <li class="flex items-center">
-                                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                @endauth
+                            @else
+                                <a href="{{ route('student.courses') }}" 
+                                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    {{ $course->duration }} hours of content
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Live online classes
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Certificate of completion
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Lifetime access
-                                </li>
-                            </ul>
+                                    Already Enrolled - Go to Course
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Course Content -->
-    <div class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Course Details Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2">
-                    <!-- Course Description -->
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-6">About This Course</h2>
-                        <div class="prose max-w-none text-gray-600">
-                            <p class="text-lg leading-relaxed">{{ $course->description }}</p>
-                            <p class="mt-6">This comprehensive course is designed for healthcare professionals looking to advance their knowledge and skills in {{ $course->category }}. You'll learn from industry experts and gain practical experience through hands-on exercises and real-world case studies.</p>
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- What you'll learn -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">What you'll learn</h2>
+                        <div class="prose max-w-none">
+                            {!! nl2br(e($course->description)) !!}
                         </div>
                     </div>
 
-                    <!-- Instructor -->
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Meet Your Instructor</h2>
-                        <div class="flex items-start space-x-4">
-                            <div class="w-16 h-16 bg-indigo-500 rounded-full flex items-center justify-center">
-                                <span class="text-white text-xl font-medium">{{ substr($course->teacher->name, 0, 1) }}</span>
+                    <!-- Course Content -->
+                    @if($course->onlineClasses && $course->onlineClasses->count() > 0)
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Course Content</h2>
+                        <div class="space-y-2">
+                            @foreach($course->onlineClasses as $class)
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="font-semibold text-gray-900">{{ $class->title }}</h3>
+                                <p class="text-sm text-gray-600 mt-1">{{ $class->description }}</p>
                             </div>
-                            <div>
-                                <h3 class="text-xl font-semibold text-gray-900">{{ $course->teacher->name }}</h3>
-                                <p class="text-gray-600 mb-2">Expert Healthcare Professional</p>
-                                <p class="text-gray-600">{{ $course->teacher->name }} is a highly experienced healthcare professional with years of expertise in {{ $course->category }}. They have taught thousands of students and helped advance many healthcare careers.</p>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
 
                     <!-- Reviews -->
-                    @if($course->reviews->count() > 0)
-                    <div class="mb-12">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Student Reviews</h2>
-                        <div class="space-y-6">
+                    @if($course->reviews && $course->reviews->count() > 0)
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Student Reviews</h2>
+                        <div class="space-y-4">
                             @foreach($course->reviews->take(5) as $review)
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <div class="flex items-center mb-4">
-                                    <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center mr-4">
-                                        <span class="text-white font-medium">{{ substr($review->user->name, 0, 1) }}</span>
+                            <div class="border-b border-gray-200 pb-4 last:border-0">
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <svg class="w-5 h-5 {{ $i <= $review->rating ? 'fill-current' : 'text-gray-300' }}" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        @endfor
                                     </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">{{ $review->user->name }}</p>
-                                        <div class="flex items-center">
-                                            @for($i = 1; $i <= $review->rating; $i++)
-                                                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                                                </svg>
-                                            @endfor
-                                        </div>
-                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">{{ $review->user->name ?? 'Student' }}</span>
                                 </div>
                                 <p class="text-gray-700">{{ $review->comment }}</p>
                             </div>
@@ -248,92 +134,78 @@
 
                 <!-- Sidebar -->
                 <div class="lg:col-span-1">
-                    <!-- Upcoming Classes -->
-                    @if($course->onlineClasses->count() > 0)
-                    <div class="bg-gray-50 rounded-lg p-6 mb-8">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Upcoming Classes</h3>
-                        <div class="space-y-3">
-                            @foreach($course->onlineClasses->where('scheduled_at', '>', now())->take(3) as $class)
-                            <div class="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ $class->title }}</p>
-                                    <p class="text-sm text-gray-600">{{ $class->scheduled_at->format('M d, Y') }}</p>
-                                </div>
-                                <div class="text-sm text-gray-600">
-                                    {{ $class->scheduled_at->format('h:i A') }}
-                                </div>
+                    <!-- Instructor -->
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Instructor</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <span class="text-indigo-600 font-semibold text-lg">
+                                    {{ substr($course->teacher->name ?? 'T', 0, 1) }}
+                                </span>
                             </div>
-                            @endforeach
+                            <div class="ml-3">
+                                <p class="font-semibold text-gray-900">{{ $course->teacher->name ?? 'Teacher' }}</p>
+                                <p class="text-sm text-gray-600">{{ $course->teacher->email ?? '' }}</p>
+                            </div>
                         </div>
                     </div>
-                    @endif
 
-                    <!-- Related Courses -->
-                    @if($relatedCourses->count() > 0)
-                    <div class="bg-gray-50 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Related Courses</h3>
-                        <div class="space-y-4">
-                            @foreach($relatedCourses as $relatedCourse)
-                            <div class="flex space-x-3">
-                                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-xs">{{ substr($relatedCourse->category, 0, 2) }}</span>
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="font-medium text-gray-900 text-sm line-clamp-2">{{ $relatedCourse->title }}</h4>
-                                    <p class="text-sm text-gray-600">{{ $relatedCourse->teacher->name }}</p>
-                                    <p class="text-sm font-semibold text-indigo-600">₹{{ number_format($relatedCourse->price) }}</p>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
+                    <!-- Course Features -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">This course includes</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-gray-700">{{ $course->is_lifetime ? 'Lifetime' : $course->validity_period . ' ' . $course->validity_unit }} access</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-gray-700">Certificate of completion</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-gray-700">Access on mobile and desktop</span>
+                            </li>
+                        </ul>
                     </div>
-                    @endif
                 </div>
             </div>
+
+            <!-- Related Courses -->
+            @if($relatedCourses && $relatedCourses->count() > 0)
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Related Courses</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach($relatedCourses as $related)
+                    <a href="{{ route('courses.show', $related->id) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        @if($related->thumbnail)
+                            <img class="h-48 w-full object-cover" src="/storage/{{ $related->thumbnail }}" alt="{{ $related->title }}">
+                        @else
+                            <div class="h-48 w-full bg-blue-100 flex items-center justify-center">
+                                <svg class="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                        @endif
+                        <div class="p-4">
+                            <h3 class="font-semibold text-gray-900 mb-2">{{ $related->title }}</h3>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ Str::limit($related->description, 80) }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg font-bold text-gray-900">₹{{ number_format($related->price, 2) }}</span>
+                                <span class="text-sm text-gray-600">{{ $related->enrollments_count }} students</span>
+                            </div>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Paathshaala</h3>
-                    <p class="text-gray-400">Empowering healthcare professionals with quality education and training.</p>
-                </div>
-                
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('courses.index') }}" class="text-gray-400 hover:text-white">Courses</a></li>
-                        <li><a href="{{ route('about') }}" class="text-gray-400 hover:text-white">About Us</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-400 hover:text-white">Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Support</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>📧 info@paathshaala.com</li>
-                        <li>📞 +91 9876543210</li>
-                        <li>📍 New Delhi, India</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 Paathshaala. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
+</x-layouts.student>

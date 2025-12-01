@@ -17,7 +17,7 @@ class TeacherController extends Controller
 
     public function index()
     {
-        $teachers = User::role('teacher')->with('teacherCourses')->paginate(10);
+        $teachers = User::byRole('instructor')->with('teacherCourses')->paginate(10);
         return view('admin.teachers.index', compact('teachers'));
     }
 

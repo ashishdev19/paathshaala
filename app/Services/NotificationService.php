@@ -233,6 +233,45 @@ class NotificationService
     }
 
     /**
+     * Create course access expired notification
+     */
+    public static function courseAccessExpired(User $student, $course): Notification
+    {
+        return self::create([
+            'type' => 'access_expired',
+            'user_id' => $student->id,
+            'title' => 'Course Access Expired',
+            'message' => "Your access to '{$course->title}' has expired. Renew your subscription to continue learning.",
+            'data' => [
+                'course_id' => $course->id,
+                'course_title' => $course->title,
+            ],
+            'action_url' => route('student.courses.preview', $course->id),
+            'priority' => 'high',
+        ]);
+    }
+
+    /**
+     * Create course access expiring soon notification
+     */
+    public static function courseAccessExpiringSoon(User $student, $course, $daysRemaining): Notification
+    {
+        return self::create([
+            'type' => 'access_expiring',
+            'user_id' => $student->id,
+            'title' => 'Course Access Expiring Soon',
+            'message' => "Your access to '{$course->title}' will expire in {$daysRemaining} day(s). Renew now to continue learning.",
+            'data' => [
+                'course_id' => $course->id,
+                'course_title' => $course->title,
+                'days_remaining' => $daysRemaining,
+            ],
+            'action_url' => route('student.courses.preview', $course->id),
+            'priority' => 'high',
+        ]);
+    }
+
+    /**
      * Clean old notifications (older than specified days)
      */
     public static function cleanOldNotifications(int $days = 90): int

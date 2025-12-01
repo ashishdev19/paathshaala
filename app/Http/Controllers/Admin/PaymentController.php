@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -12,7 +13,18 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        $payments = Payment::with(['student', 'course'])
+            ->latest()
+            ->paginate(20);
+
+        $stats = [
+            'total_revenue' => Payment::where('status', 'completed')->sum('final_amount'),
+            'completed' => Payment::where('status', 'completed')->count(),
+            'pending' => Payment::where('status', 'pending')->count(),
+            'failed' => Payment::where('status', 'failed')->count(),
+        ];
+
+        return view('admin.payments.index', compact('payments', 'stats'));
     }
 
     /**
@@ -34,9 +46,10 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Payment $payment)
     {
-        //
+        $payment->load(['student', 'course.teacher']);
+        return view('admin.payments.show', compact('payment'));
     }
 
     /**

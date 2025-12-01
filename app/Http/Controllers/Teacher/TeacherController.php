@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\OnlineClass;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
@@ -58,7 +59,7 @@ class TeacherController extends Controller
             ];
         }
 
-        return view('teacher.dashboard', compact(
+        return view('instructor.dashboard.index', compact(
             'stats', 
             'recentEnrollments', 
             'upcomingClasses', 
@@ -75,7 +76,7 @@ class TeacherController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('teacher.courses.index', compact('courses'));
+        return view('instructor.courses.index', compact('courses'));
     }
 
     public function students()
@@ -83,16 +84,16 @@ class TeacherController extends Controller
         $teacher = Auth::user();
         $courseIds = Course::where('teacher_id', $teacher->id)->pluck('id');
         
-        $students = User::role('student')
-            ->whereHas('enrollments', function($query) use ($courseIds) {
-                $query->whereIn('course_id', $courseIds);
-            })
-            ->with(['enrollments' => function($query) use ($courseIds) {
-                $query->whereIn('course_id', $courseIds)->with('course');
-            }])
+        // Get all enrollments for teacher's courses
+        $enrollments = Enrollment::with(['student', 'course'])
+            ->whereIn('course_id', $courseIds)
+            ->latest()
             ->paginate(15);
+        
+        // Get all courses for the filter dropdown
+        $courses = Course::where('teacher_id', $teacher->id)->get();
 
-        return view('teacher.students.index', compact('students'));
+        return view('instructor.students.index', compact('enrollments', 'courses'));
     }
 
     public function classes()
@@ -105,6 +106,54 @@ class TeacherController extends Controller
             ->latest('scheduled_at')
             ->paginate(10);
 
-        return view('teacher.classes.index', compact('classes'));
+        return view('instructor.classes.index', compact('classes'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'dob' => 'nullable|date',
+            'address' => 'nullable|string|max:500',
+            'qualification' => 'nullable|string|max:255',
+            'institution' => 'nullable|string|max:255',
+            'current_password' => 'nullable|required_with:password',
+            'password' => 'nullable|min:8|confirmed',
+        ]);
+
+        // Update basic information
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'] ?? $user->phone;
+        $user->dob = $validated['dob'] ?? $user->dob;
+        $user->address = $validated['address'] ?? $user->address;
+        $user->qualification = $validated['qualification'] ?? $user->qualification;
+        $user->institution = $validated['institution'] ?? $user->institution;
+
+        // Handle password change if provided
+        if ($request->filled('current_password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Current password is incorrect']);
+            }
+            
+            if ($request->filled('password')) {
+                $user->password = Hash::make($validated['password']);
+            }
+        }
+
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+            $user->profile_picture = $path;
+        }
+
+        $user->save();
+
+        return redirect()->route('instructor.dashboard')
+            ->with('success', 'Profile updated successfully');
     }
 }

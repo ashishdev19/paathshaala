@@ -1,255 +1,196 @@
-<x-admin-layout>
+<x-layouts.admin>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Course Details: ') . $course->title }}
-            </h2>
-            <div class="flex space-x-2">
-                <a href="{{ route('admin.courses.edit', $course) }}" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
-                    <i class="fas fa-edit mr-2"></i>Edit Course
-                </a>
-                <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" 
-                            class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out"
-                            onclick="return confirm('Are you sure you want to delete {{ $course->title }}? This action cannot be undone.')">
-                        <i class="fas fa-trash mr-2"></i>Delete Course
-                    </button>
-                </form>
-                <a href="{{ route('admin.courses.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Courses
-                </a>
-            </div>
-        </div>
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            {{ $course->title }}
+        </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Course Information Card -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Course Header -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="relative h-64 bg-gradient-to-br from-indigo-500 to-purple-600">
-                            @if($course->thumbnail)
-                                <img src="{{ Storage::url($course->thumbnail) }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
-                            @else
-                                <div class="flex items-center justify-center h-full">
-                                    <i class="fas fa-book text-white text-6xl opacity-50"></i>
-                                </div>
-                            @endif
-                            <div class="absolute inset-0 bg-black bg-opacity-30 flex items-end">
-                                <div class="p-6 text-white">
-                                    <h1 class="text-3xl font-bold mb-2">{{ $course->title }}</h1>
-                                    <div class="flex items-center space-x-4">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white bg-opacity-20">
-                                            <i class="fas fa-user mr-2"></i>{{ $course->teacher->name ?? 'No instructor' }}
-                                        </span>
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white bg-opacity-20">
-                                            <i class="fas fa-tag mr-2"></i>{{ $course->category }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="max-w-5xl mx-auto">
+        @if(session('success'))
+            <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+                {{ session('success') }}
+            </div>
+        @endif
 
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-3">Course Description</h3>
-                            <p class="text-gray-700 leading-relaxed">{{ $course->description }}</p>
-                        </div>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <!-- Course Header -->
+            <div class="relative h-64 bg-gradient-to-r from-blue-500 to-purple-600">
+                @if($course->thumbnail)
+                    <img src="/storage/{{ $course->thumbnail }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
+                @else
+                    <div class="w-full h-full flex items-center justify-center text-white">
+                        <svg class="h-32 w-32 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Course Details -->
+            <div class="p-8">
+                <!-- Stats Row -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <!-- Price Card -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
+                        <div class="text-sm text-gray-600 mb-2">Price</div>
+                        <div class="text-2xl font-bold text-green-600">₹{{ number_format($course->price ?? 0, 2) }}</div>
                     </div>
 
-                    <!-- Course Enrollments -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Student Enrollments ({{ $course->enrollments->count() }})</h3>
-                            
-                            @if($course->enrollments->count() > 0)
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payment Status</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Enrolled Date</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Progress</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-200">
-                                            @foreach($course->enrollments as $enrollment)
-                                                <tr>
-                                                    <td class="px-4 py-4">
-                                                        <div class="flex items-center">
-                                                            <div class="flex-shrink-0 h-8 w-8">
-                                                                <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                                                    <span class="text-indigo-600 font-medium text-xs">
-                                                                        {{ strtoupper(substr($enrollment->user->name, 0, 2)) }}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="ml-3">
-                                                                <div class="text-sm font-medium text-gray-900">{{ $enrollment->user->name }}</div>
-                                                                <div class="text-sm text-gray-500">{{ $enrollment->user->email }}</div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-4 py-4">
-                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                            @if($enrollment->payment_status === 'paid') bg-green-100 text-green-800
-                                                            @elseif($enrollment->payment_status === 'pending') bg-yellow-100 text-yellow-800
-                                                            @else bg-red-100 text-red-800 @endif">
-                                                            {{ ucfirst($enrollment->payment_status) }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="px-4 py-4 text-sm text-gray-500">
-                                                        {{ $enrollment->created_at->format('M d, Y') }}
-                                                    </td>
-                                                    <td class="px-4 py-4">
-                                                        <div class="flex items-center">
-                                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                                <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ $enrollment->progress_percentage ?? 0 }}%"></div>
-                                                            </div>
-                                                            <span class="ml-2 text-sm text-gray-500">{{ $enrollment->progress_percentage ?? 0 }}%</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <p class="text-gray-500 text-center py-8">No student enrollments yet.</p>
-                            @endif
-                        </div>
+                    <!-- Category Card -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+                        <div class="text-sm text-gray-600 mb-2">Category</div>
+                        <div class="text-lg font-semibold text-blue-600">{{ $course->category ?? 'General' }}</div>
                     </div>
 
-                    <!-- Course Reviews -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Student Reviews ({{ $course->reviews->count() }})</h3>
-                            
-                            @if($course->reviews->count() > 0)
-                                <div class="space-y-4">
-                                    @foreach($course->reviews as $review)
-                                        <div class="border border-gray-200 rounded-lg p-4">
-                                            <div class="flex items-start justify-between">
-                                                <div class="flex items-center space-x-3">
-                                                    <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                                        <span class="text-indigo-600 font-medium text-xs">
-                                                            {{ strtoupper(substr($review->user->name, 0, 2)) }}
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <h4 class="text-sm font-medium text-gray-900">{{ $review->user->name }}</h4>
-                                                        <div class="flex items-center mt-1">
-                                                            @for($i = 1; $i <= 5; $i++)
-                                                                <i class="fas fa-star text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
-                                                            @endfor
-                                                            <span class="ml-2 text-sm text-gray-500">{{ $review->created_at->format('M d, Y') }}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p class="mt-3 text-sm text-gray-700">{{ $review->review }}</p>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p class="text-gray-500 text-center py-8">No reviews yet.</p>
-                            @endif
-                        </div>
+                    <!-- Enrollments Card -->
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 border border-purple-200">
+                        <div class="text-sm text-gray-600 mb-2">Enrollments</div>
+                        <div class="text-2xl font-bold text-purple-600">{{ $course->enrollments->count() }}</div>
+                    </div>
+
+                    <!-- Status Card -->
+                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
+                        <div class="text-sm text-gray-600 mb-2">Status</div>
+                        <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
+                            @if($course->status === 'published') bg-green-100 text-green-800
+                            @elseif($course->status === 'draft') bg-yellow-100 text-yellow-800
+                            @else bg-gray-100 text-gray-800 @endif">
+                            {{ ucfirst($course->status ?? 'draft') }}
+                        </span>
                     </div>
                 </div>
 
-                <!-- Course Stats Sidebar -->
-                <div class="space-y-6">
-                    <!-- Quick Stats -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Course Statistics</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Price</span>
-                                    <span class="text-lg font-bold text-green-600">${{ number_format($course->price, 2) }}</span>
-                                </div>
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Duration</span>
-                                    <span class="text-sm text-gray-900">{{ $course->duration }} hours</span>
-                                </div>
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Level</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                        @if($course->level === 'beginner') bg-green-100 text-green-800
-                                        @elseif($course->level === 'intermediate') bg-yellow-100 text-yellow-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                        {{ ucfirst($course->level) }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Status</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                        @if($course->status === 'published') bg-green-100 text-green-800
-                                        @elseif($course->status === 'draft') bg-yellow-100 text-yellow-800
-                                        @else bg-gray-100 text-gray-800 @endif">
-                                        {{ ucfirst($course->status) }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Featured</span>
-                                    @if($course->is_featured)
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            <i class="fas fa-star mr-1"></i>Yes
-                                        </span>
-                                    @else
-                                        <span class="text-sm text-gray-500">No</span>
-                                    @endif
-                                </div>
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Total Enrollments</span>
-                                    <span class="text-sm font-bold text-indigo-600">{{ $course->enrollments->count() }}</span>
-                                </div>
-                                <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                                    <span class="text-sm font-medium text-gray-700">Average Rating</span>
-                                    @if($course->reviews->count() > 0)
-                                        <div class="flex items-center">
-                                            <span class="text-sm font-bold text-yellow-600">{{ number_format($course->reviews->avg('rating'), 1) }}</span>
-                                            <i class="fas fa-star text-yellow-400 ml-1 text-xs"></i>
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-500">No ratings</span>
-                                    @endif
-                                </div>
-                                <div class="flex items-center justify-between py-3">
-                                    <span class="text-sm font-medium text-gray-700">Created</span>
-                                    <span class="text-sm text-gray-500">{{ $course->created_at->format('M d, Y') }}</span>
-                                </div>
+                <!-- Instructor Info -->
+                @if($course->teacher)
+                <div class="mb-8 bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Instructor</h3>
+                    <div class="flex items-center">
+                        <img src="{{ $course->teacher->profile_photo_url ?? asset('img/default-avatar.png') }}" 
+                             alt="{{ $course->teacher->name }}" 
+                             class="w-16 h-16 rounded-full mr-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900">{{ $course->teacher->name }}</h4>
+                            <p class="text-gray-600">{{ $course->teacher->email }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Description -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Description</h3>
+                    <p class="text-gray-700 leading-relaxed">{{ $course->description ?? 'No description provided.' }}</p>
+                </div>
+
+                <!-- Course Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    @if($course->duration_hours)
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Duration</h4>
+                        <p class="text-gray-600">{{ $course->duration_hours }} hours</p>
+                    </div>
+                    @endif
+
+                    @if($course->level)
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Level</h4>
+                        <p class="text-gray-600">{{ ucfirst($course->level) }}</p>
+                    </div>
+                    @endif
+
+                    @if($course->language)
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Language</h4>
+                        <p class="text-gray-600">{{ $course->language }}</p>
+                    </div>
+                    @endif
+
+                    @if($course->is_active !== null)
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Active Status</h4>
+                        <p class="text-gray-600">
+                            <span class="px-2 py-1 rounded text-sm {{ $course->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                {{ $course->is_active ? 'Active' : 'Inactive' }}
+                            </span>
+                        </p>
+                    </div>
+                    @endif
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Created</h4>
+                        <p class="text-gray-600">{{ $course->created_at->format('M d, Y') }}</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Last Updated</h4>
+                        <p class="text-gray-600">{{ $course->updated_at->format('M d, Y') }}</p>
+                    </div>
+                </div>
+
+                <!-- Reviews Summary -->
+                @if($course->reviews->count() > 0)
+                <div class="mb-8 bg-yellow-50 rounded-lg p-6 border border-yellow-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Reviews</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Total Reviews</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $course->reviews->count() }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Average Rating</p>
+                            <div class="flex items-center">
+                                <p class="text-2xl font-bold text-yellow-600">{{ number_format($course->reviews->avg('rating'), 1) }}</p>
+                                <span class="ml-2 text-yellow-400">★</span>
                             </div>
                         </div>
                     </div>
+                </div>
+                @endif
 
-                    <!-- Instructor Info -->
-                    @if($course->teacher)
-                        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                            <div class="p-6">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">Instructor</h3>
-                                <div class="text-center">
-                                    <div class="mx-auto h-20 w-20 rounded-full bg-indigo-100 flex items-center justify-center mb-3">
-                                        <span class="text-indigo-600 font-bold text-xl">
-                                            {{ strtoupper(substr($course->teacher->name, 0, 2)) }}
-                                        </span>
-                                    </div>
-                                    <h4 class="text-lg font-semibold text-gray-900">{{ $course->teacher->name }}</h4>
-                                    <p class="text-sm text-gray-500 mb-3">{{ $course->teacher->email }}</p>
-                                    @if($course->teacher->phone)
-                                        <p class="text-sm text-gray-600">{{ $course->teacher->phone }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                <!-- Syllabus -->
+                @if($course->syllabus && isset($course->syllabus['pdf']))
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Course Syllabus</h3>
+                    <a href="{{ asset('storage/' . $course->syllabus['pdf']) }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H7a1 1 0 01-1-1v-6z" clip-rule="evenodd"></path>
+                        </svg>
+                        Download Syllabus PDF
+                    </a>
+                </div>
+                @endif
+
+                <!-- Video URL -->
+                @if($course->video_url)
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Course Video</h3>
+                    <a href="{{ $course->video_url }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                        </svg>
+                        Watch Video
+                    </a>
+                </div>
+                @endif
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 border-t border-gray-200 pt-6">
+                    <a href="{{ route('admin.courses.edit', $course) }}" class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-center font-medium">
+                        Edit Course
+                    </a>
+                    <a href="{{ route('admin.courses.index') }}" class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 text-center font-medium">
+                        Back to Courses
+                    </a>
+                    <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" class="flex-1">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this course?')" 
+                                class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium">
+                            Delete Course
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</x-admin-layout>
+</x-layouts.admin>

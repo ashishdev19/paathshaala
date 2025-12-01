@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'course.access' => \App\Http\Middleware\CheckCourseAccess::class,
+            'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'professor' => \App\Http\Middleware\ProfessorMiddleware::class,
+            'student' => \App\Http\Middleware\StudentMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

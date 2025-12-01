@@ -19,6 +19,11 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
+        // Super admin has access to all routes
+        if ($request->user()->isSuperAdmin()) {
+            return $next($request);
+        }
+
         foreach ($roles as $role) {
             if ($request->user()->hasRole($role)) {
                 return $next($request);

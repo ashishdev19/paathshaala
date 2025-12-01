@@ -17,9 +17,21 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user();
+        
+        // Determine which view to return based on user role using RBAC helper methods
+        if ($user->isSuperAdmin()) {
+            return view('admin.profile.edit', ['user' => $user]);
+        } elseif ($user->isAdmin()) {
+            return view('admin.profile.edit', ['user' => $user]);
+        } elseif ($user->isInstructor()) {
+            return view('instructor.profile.edit', ['user' => $user]);
+        } elseif ($user->isStudent()) {
+            return view('students.profile.edit', ['user' => $user]);
+        }
+        
+        // Fallback to instructor profile edit if no role matches
+        return view('instructor.profile.edit', ['user' => $user]);
     }
 
     /**

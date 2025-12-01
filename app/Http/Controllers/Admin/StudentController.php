@@ -16,7 +16,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = User::role('student')
+        $students = User::byRole('student')
             ->with(['enrollments.course'])
             ->latest()
             ->paginate(10);

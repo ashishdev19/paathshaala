@@ -24,8 +24,8 @@ class HomeController extends Controller
 
         $stats = [
             'total_courses' => Course::active()->count(),
-            'total_students' => User::role('student')->count(),
-            'total_teachers' => User::role('teacher')->count(),
+            'total_students' => User::byRole('student')->count(),
+            'total_teachers' => User::byRole('instructor')->count(),
             'total_enrollments' => Enrollment::count(),
         ];
 
@@ -45,7 +45,7 @@ class HomeController extends Controller
             ->with(['teacher', 'reviews'])
             ->paginate(12);
 
-        return view('courses.index', compact('courses'));
+        return view('admin.courses.public-index', compact('courses'));
     }
 
     public function courseDetail($id)
@@ -74,7 +74,7 @@ class HomeController extends Controller
 
     public function about()
     {
-        $teachers = User::role('teacher')
+        $teachers = User::byRole('instructor')
             ->with(['teacherCourses' => function ($query) {
                 $query->where('status', 'active');
             }])

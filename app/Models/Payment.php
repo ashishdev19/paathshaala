@@ -14,12 +14,15 @@ class Payment extends Model
         'course_id',
         'enrollment_id',
         'amount',
+        'original_amount',
         'discount_amount',
         'final_amount',
+        'offer_id',
         'payment_method',
         'transaction_id',
         'status',
         'payment_details',
+        'payment_date',
     ];
 
     protected $casts = [
@@ -43,6 +46,11 @@ class Payment extends Model
     public function enrollment()
     {
         return $this->belongsTo(Enrollment::class);
+    }
+
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
     }
 
     // Scopes

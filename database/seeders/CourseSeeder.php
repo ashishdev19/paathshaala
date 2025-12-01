@@ -14,7 +14,7 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        $teacher = User::role('teacher')->first();
+        $teacher = User::byRole('instructor')->first();
 
         if ($teacher) {
             Course::create([

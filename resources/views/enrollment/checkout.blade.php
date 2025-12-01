@@ -1,273 +1,287 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Checkout - {{ $course->title }} - Paathshaala</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="font-sans antialiased bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
-                        <h1 class="text-2xl font-bold text-indigo-600">Paathshaala</h1>
-                    </a>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="text-sm text-gray-600">
-                        Welcome, {{ auth()->user()->name }}
-                    </div>
-                    <a href="{{ route('dashboard') }}" class="text-indigo-600 hover:text-indigo-800">
-                        Dashboard
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<x-layouts.student>
+    <x-slot name="header">
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            Enrollment Checkout
+        </h2>
+    </x-slot>
 
-    <div class="min-h-screen py-8">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Progress Steps -->
-            <div class="mb-8">
-                <div class="flex items-center justify-center">
-                    <div class="flex items-center">
-                        <div class="flex items-center text-indigo-600">
-                            <div class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white rounded-full text-sm font-medium">
-                                1
+    <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column - Course Details & Offers -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Course Details Card -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Course Details</h3>
+                        <div class="flex gap-4">
+                            @if($course->thumbnail)
+                                <img src="{{ asset('storage/' . $course->thumbnail) }}" 
+                                     alt="{{ $course->title }}" 
+                                     class="w-32 h-24 object-cover rounded-lg">
+                            @else
+                                <div class="w-32 h-24 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                            @endif
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-lg text-gray-900">{{ $course->title }}</h4>
+                                <p class="text-sm text-gray-600 mt-1">{{ $course->category }}</p>
+                                <div class="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        {{ $course->instructor->name ?? 'N/A' }}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        4.5 (120 reviews)
+                                    </span>
+                                </div>
                             </div>
-                            <span class="ml-2 text-sm font-medium">Course Selection</span>
-                        </div>
-                        <div class="flex-1 h-0.5 bg-indigo-600 mx-4 w-16"></div>
-                        <div class="flex items-center text-indigo-600">
-                            <div class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white rounded-full text-sm font-medium">
-                                2
-                            </div>
-                            <span class="ml-2 text-sm font-medium">Payment</span>
-                        </div>
-                        <div class="flex-1 h-0.5 bg-gray-300 mx-4 w-16"></div>
-                        <div class="flex items-center text-gray-400">
-                            <div class="flex items-center justify-center w-8 h-8 bg-gray-300 text-gray-600 rounded-full text-sm font-medium">
-                                3
-                            </div>
-                            <span class="ml-2 text-sm font-medium">Confirmation</span>
                         </div>
                     </div>
                 </div>
+
+                <!-- Available Offers -->
+                @if($allOffers->count() > 0)
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Available Offers</h3>
+                        <div class="space-y-3">
+                            @foreach($allOffers as $offer)
+                            <div class="border-2 {{ $autoAppliedOffer && $autoAppliedOffer->id == $offer->id ? 'border-green-500 bg-green-50' : 'border-gray-200' }} rounded-lg p-4 offer-card cursor-pointer hover:border-blue-500 transition"
+                                 data-offer-id="{{ $offer->id }}"
+                                 data-discount-type="{{ $offer->discount_type }}"
+                                 data-discount-value="{{ $offer->discount_value }}"
+                                 data-course-price="{{ $course->price }}">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded">
+                                                {{ $offer->code }}
+                                            </span>
+                                            @if($autoAppliedOffer && $autoAppliedOffer->id == $offer->id)
+                                            <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                                AUTO APPLIED
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900">{{ $offer->name }}</h4>
+                                        <p class="text-sm text-gray-600 mt-1">{{ $offer->description }}</p>
+                                        <p class="text-sm font-semibold text-green-600 mt-2">
+                                            Save {{ $offer->discount_type === 'percentage' ? $offer->discount_value . '%' : '₹' . number_format($offer->discount_value, 2) }}
+                                        </p>
+                                    </div>
+                                    <input type="radio" 
+                                           name="offer_id" 
+                                           value="{{ $offer->id }}"
+                                           {{ $autoAppliedOffer && $autoAppliedOffer->id == $offer->id ? 'checked' : '' }}
+                                           class="mt-1 w-5 h-5 text-blue-600">
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- New Student Notice -->
+                @if($isNewStudent)
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <h4 class="font-semibold text-blue-900">Welcome New Student!</h4>
+                            <p class="text-sm text-blue-700 mt-1">This is your first course enrollment. Enjoy special new student discounts!</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Payment Form -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Payment Information</h2>
+            <!-- Right Column - Price Summary & Payment -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden sticky top-4">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Order Summary</h3>
                         
-                        @if ($errors->any())
-                            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
-                                <ul class="list-disc list-inside space-y-1">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
+                        <!-- Error Messages -->
+                        @if($errors->any())
+                        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="text-sm text-red-800">
+                                    <strong>Error:</strong>
+                                    <ul class="mt-1 list-disc list-inside">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
+                        </div>
                         @endif
 
-                        <form action="{{ route('enrollment.store', $course->id) }}" method="POST" id="paymentForm">
-                            @csrf
+                        @if(session('error'))
+                        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div class="text-sm text-red-800">
+                                    <strong>Error:</strong> {{ session('error') }}
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        <!-- Price Breakdown -->
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-gray-700">
+                                <span>Course Price</span>
+                                <span class="font-semibold">₹{{ number_format($course->price, 2) }}</span>
+                            </div>
                             
-                            <!-- Payment Method Selection -->
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-3">Payment Method</label>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <label class="payment-method-option cursor-pointer">
-                                        <input type="radio" name="payment_method" value="credit_card" class="sr-only payment-method-radio" required>
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-indigo-500 transition duration-200">
-                                            <div class="text-2xl mb-2">💳</div>
-                                            <div class="text-sm font-medium">Credit Card</div>
-                                        </div>
-                                    </label>
-                                    
-                                    <label class="payment-method-option cursor-pointer">
-                                        <input type="radio" name="payment_method" value="debit_card" class="sr-only payment-method-radio">
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-indigo-500 transition duration-200">
-                                            <div class="text-2xl mb-2">💳</div>
-                                            <div class="text-sm font-medium">Debit Card</div>
-                                        </div>
-                                    </label>
-                                    
-                                    <label class="payment-method-option cursor-pointer">
-                                        <input type="radio" name="payment_method" value="upi" class="sr-only payment-method-radio">
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-indigo-500 transition duration-200">
-                                            <div class="text-2xl mb-2">📱</div>
-                                            <div class="text-sm font-medium">UPI</div>
-                                        </div>
-                                    </label>
-                                    
-                                    <label class="payment-method-option cursor-pointer">
-                                        <input type="radio" name="payment_method" value="net_banking" class="sr-only payment-method-radio">
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-indigo-500 transition duration-200">
-                                            <div class="text-2xl mb-2">🏦</div>
-                                            <div class="text-sm font-medium">Net Banking</div>
-                                        </div>
-                                    </label>
+                            <div id="discount-section" class="flex justify-between text-green-600 {{ !$autoAppliedOffer ? 'hidden' : '' }}">
+                                <span>Discount</span>
+                                <span class="font-semibold">-₹<span id="discount-amount">{{ $autoAppliedOffer ? number_format($course->price - $discountedPrice, 2) : '0.00' }}</span></span>
+                            </div>
+                            
+                            <div class="border-t pt-3">
+                                <div class="flex justify-between text-lg font-bold text-gray-900">
+                                    <span>Total Amount</span>
+                                    <span id="final-price">₹<span id="final-amount">{{ number_format($discountedPrice ?? $course->price, 2) }}</span></span>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Card Details -->
-                            <div id="cardDetails" class="payment-details hidden">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                    <div class="md:col-span-2">
-                                        <label for="card_holder_name" class="block text-sm font-medium text-gray-700 mb-2">Card Holder Name</label>
-                                        <input type="text" id="card_holder_name" name="card_holder_name" 
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                               placeholder="John Doe">
-                                    </div>
-                                    
-                                    <div class="md:col-span-2">
-                                        <label for="card_number" class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
-                                        <input type="text" id="card_number" name="card_number" 
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                               placeholder="1234567812345678" maxlength="16">
-                                    </div>
-                                    
-                                    <div>
-                                        <label for="card_expiry" class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-                                        <input type="text" id="card_expiry" name="card_expiry" 
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                               placeholder="MM/YY" maxlength="5">
-                                    </div>
-                                    
-                                    <div>
-                                        <label for="card_cvv" class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
-                                        <input type="text" id="card_cvv" name="card_cvv" 
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                               placeholder="123" maxlength="3">
-                                    </div>
+                        <!-- Payment Form -->
+                        <form action="{{ route('enrollment.store', $course->id) }}" method="POST" id="enrollment-form">
+                            @csrf
+                            <input type="hidden" name="offer_id" id="selected-offer-id" value="{{ $autoAppliedOffer?->id }}">
+                            <input type="hidden" name="amount" id="payment-amount" value="{{ $discountedPrice ?? $course->price }}">
+
+                            <!-- Payment Method -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Payment Method (Development Mode)</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-500 transition payment-method-option">
+                                        <input type="radio" name="payment_method" value="credit_card" checked class="w-4 h-4 text-blue-600">
+                                        <span class="ml-3">
+                                            <span class="font-medium text-gray-900 block">Credit Card</span>
+                                            <span class="text-xs text-gray-500">Test mode - No actual charge</span>
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-500 transition payment-method-option">
+                                        <input type="radio" name="payment_method" value="debit_card" class="w-4 h-4 text-blue-600">
+                                        <span class="ml-3">
+                                            <span class="font-medium text-gray-900 block">Debit Card</span>
+                                            <span class="text-xs text-gray-500">Test mode - No actual charge</span>
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-500 transition payment-method-option">
+                                        <input type="radio" name="payment_method" value="upi" class="w-4 h-4 text-blue-600">
+                                        <span class="ml-3">
+                                            <span class="font-medium text-gray-900 block">UPI</span>
+                                            <span class="text-xs text-gray-500">Test mode - No actual charge</span>
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-500 transition payment-method-option">
+                                        <input type="radio" name="payment_method" value="net_banking" class="w-4 h-4 text-blue-600">
+                                        <span class="ml-3">
+                                            <span class="font-medium text-gray-900 block">Net Banking</span>
+                                            <span class="text-xs text-gray-500">Test mode - No actual charge</span>
+                                        </span>
+                                    </label>
                                 </div>
+                                @error('payment_method')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- UPI Details -->
-                            <div id="upiDetails" class="payment-details hidden">
-                                <div class="mb-6">
-                                    <label for="upi_id" class="block text-sm font-medium text-gray-700 mb-2">UPI ID</label>
-                                    <input type="email" id="upi_id" name="upi_id" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                           placeholder="your-upi@paytm">
-                                </div>
-                            </div>
-
-                            <!-- Net Banking Details -->
-                            <div id="netBankingDetails" class="payment-details hidden">
-                                <div class="mb-6">
-                                    <label for="bank_name" class="block text-sm font-medium text-gray-700 mb-2">Select Bank</label>
-                                    <select id="bank_name" name="bank_name" 
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="">Choose your bank</option>
-                                        <option value="State Bank of India">State Bank of India</option>
-                                        <option value="HDFC Bank">HDFC Bank</option>
-                                        <option value="ICICI Bank">ICICI Bank</option>
-                                        <option value="Axis Bank">Axis Bank</option>
-                                        <option value="Punjab National Bank">Punjab National Bank</option>
-                                        <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
-                                        <option value="IndusInd Bank">IndusInd Bank</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Security Notice -->
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            <!-- Development Mode Notice -->
+                            <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
-                                    <div class="text-sm text-blue-800">
-                                        <p class="font-medium mb-1">Secure Payment</p>
-                                        <p>Your payment information is encrypted and secure. We do not store your card details.</p>
+                                    <div class="text-sm text-yellow-800">
+                                        <strong>Development Mode:</strong> Payment fields are not required. Click "Complete Enrollment" to proceed.
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Submit Button -->
-                            <button type="submit" 
-                                    class="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 disabled:opacity-50"
-                                    id="submitBtn">
-                                Complete Payment - ₹{{ number_format($course->price) }}
+                            <!-- Card Details (shown when credit/debit card selected) - Optional in dev mode -->
+                            <div id="card-details" class="mb-4 space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Card Number <span class="text-gray-400">(Optional)</span></label>
+                                    <input type="text" name="card_number" maxlength="16" placeholder="1234 5678 9012 3456" value="4111111111111111"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Card Holder Name <span class="text-gray-400">(Optional)</span></label>
+                                    <input type="text" name="card_holder_name" placeholder="John Doe" value="Test User"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50">
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Expiry <span class="text-gray-400">(Optional)</span></label>
+                                        <input type="text" name="card_expiry" maxlength="5" placeholder="12/25" value="12/25"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">CVV <span class="text-gray-400">(Optional)</span></label>
+                                        <input type="text" name="card_cvv" maxlength="3" placeholder="123" value="123"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- UPI Details (shown when UPI selected) - Optional in dev mode -->
+                            <div id="upi-details" class="mb-4 hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">UPI ID <span class="text-gray-400">(Optional)</span></label>
+                                <input type="text" name="upi_id" placeholder="yourname@upi" value="test@upi"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50">
+                            </div>
+
+                            <!-- Net Banking Details (shown when Net Banking selected) - Optional in dev mode -->
+                            <div id="netbanking-details" class="mb-4 hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Select Bank <span class="text-gray-400">(Optional)</span></label>
+                                <select name="bank_name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50">
+                                    <option value="Test Bank" selected>Test Bank</option>
+                                    <option value="SBI">State Bank of India</option>
+                                    <option value="HDFC">HDFC Bank</option>
+                                    <option value="ICICI">ICICI Bank</option>
+                                    <option value="Axis">Axis Bank</option>
+                                    <option value="PNB">Punjab National Bank</option>
+                                    <option value="BOB">Bank of Baroda</option>
+                                </select>
+                            </div>
+
+                            <!-- Proceed Button -->
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Complete Enrollment (Dev Mode)
                             </button>
                         </form>
-                    </div>
-                </div>
 
-                <!-- Order Summary -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow p-6 sticky top-8">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="flex space-x-4">
-                                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-xs font-medium">{{ substr($course->category, 0, 3) }}</span>
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="font-medium text-gray-900">{{ $course->title }}</h4>
-                                    <p class="text-sm text-gray-600">by {{ $course->teacher->name }}</p>
-                                    <p class="text-sm text-gray-500">{{ $course->duration }} hours</p>
-                                </div>
-                            </div>
-                            
-                            <div class="border-t pt-4">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Course Price</span>
-                                    <span class="text-gray-900">₹{{ number_format($course->price) }}</span>
-                                </div>
-                                <div class="flex justify-between text-sm mt-2">
-                                    <span class="text-gray-600">Tax</span>
-                                    <span class="text-gray-900">₹0</span>
-                                </div>
-                                <div class="flex justify-between text-lg font-semibold mt-4 pt-4 border-t">
-                                    <span>Total</span>
-                                    <span class="text-indigo-600">₹{{ number_format($course->price) }}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="border-t pt-4">
-                                <h4 class="font-medium text-gray-900 mb-2">What you'll get:</h4>
-                                <ul class="space-y-2 text-sm text-gray-600">
-                                    <li class="flex items-center">
-                                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                        Lifetime access
-                                    </li>
-                                    <li class="flex items-center">
-                                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                        {{ $course->duration }} hours of content
-                                    </li>
-                                    <li class="flex items-center">
-                                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                        Certificate of completion
-                                    </li>
-                                    <li class="flex items-center">
-                                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                        Mobile access
-                                    </li>
-                                </ul>
-                            </div>
+                        <!-- Development Note -->
+                        <div class="mt-4 flex items-start gap-2 text-xs text-gray-500">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p>Development mode: No actual payment will be processed. Enrollment will be completed automatically.</p>
                         </div>
                     </div>
                 </div>
@@ -275,65 +289,101 @@
         </div>
     </div>
 
+    @push('scripts')
     <script>
-        // Payment method selection
-        document.querySelectorAll('.payment-method-radio').forEach(radio => {
+        // Handle payment method changes
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
             radio.addEventListener('change', function() {
-                // Reset all options
-                document.querySelectorAll('.payment-method-option > div').forEach(div => {
-                    div.classList.remove('border-indigo-500', 'bg-indigo-50');
-                    div.classList.add('border-gray-200');
-                });
-                
                 // Hide all payment details
-                document.querySelectorAll('.payment-details').forEach(details => {
-                    details.classList.add('hidden');
-                });
-                
-                // Highlight selected option
-                const selectedDiv = this.parentElement.querySelector('div');
-                selectedDiv.classList.remove('border-gray-200');
-                selectedDiv.classList.add('border-indigo-500', 'bg-indigo-50');
+                document.getElementById('card-details').classList.add('hidden');
+                document.getElementById('upi-details').classList.add('hidden');
+                document.getElementById('netbanking-details').classList.add('hidden');
                 
                 // Show relevant payment details
-                const method = this.value;
-                if (method === 'credit_card' || method === 'debit_card') {
-                    document.getElementById('cardDetails').classList.remove('hidden');
-                } else if (method === 'upi') {
-                    document.getElementById('upiDetails').classList.remove('hidden');
-                } else if (method === 'net_banking') {
-                    document.getElementById('netBankingDetails').classList.remove('hidden');
+                if (this.value === 'credit_card' || this.value === 'debit_card') {
+                    document.getElementById('card-details').classList.remove('hidden');
+                } else if (this.value === 'upi') {
+                    document.getElementById('upi-details').classList.remove('hidden');
+                } else if (this.value === 'net_banking') {
+                    document.getElementById('netbanking-details').classList.remove('hidden');
                 }
+                
+                // Update border highlight
+                document.querySelectorAll('.payment-method-option').forEach(option => {
+                    option.classList.remove('border-blue-500', 'bg-blue-50');
+                    option.classList.add('border-gray-200');
+                });
+                this.closest('.payment-method-option').classList.remove('border-gray-200');
+                this.closest('.payment-method-option').classList.add('border-blue-500', 'bg-blue-50');
             });
         });
 
-        // Card number formatting
-        document.getElementById('card_number')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            e.target.value = value;
+        // Handle offer selection
+        document.querySelectorAll('.offer-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                updatePrice();
+                
+                // Update visual state
+                document.querySelectorAll('.offer-card').forEach(c => {
+                    c.classList.remove('border-green-500', 'bg-green-50');
+                    c.classList.add('border-gray-200');
+                });
+                this.classList.remove('border-gray-200');
+                this.classList.add('border-green-500', 'bg-green-50');
+            });
         });
 
-        // Expiry date formatting
-        document.getElementById('card_expiry')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        // Update price when offer changes
+        function updatePrice() {
+            const selectedOffer = document.querySelector('input[name="offer_id"]:checked');
+            const coursePrice = {{ $course->price }};
+            
+            if (selectedOffer) {
+                const offerId = selectedOffer.value;
+                const card = selectedOffer.closest('.offer-card');
+                const discountType = card.dataset.discountType;
+                const discountValue = parseFloat(card.dataset.discountValue);
+                
+                let discount = 0;
+                if (discountType === 'percentage') {
+                    discount = (coursePrice * discountValue) / 100;
+                } else {
+                    discount = discountValue;
+                }
+                
+                const finalPrice = coursePrice - discount;
+                
+                // Update UI
+                document.getElementById('discount-section').classList.remove('hidden');
+                document.getElementById('discount-amount').textContent = discount.toFixed(2);
+                document.getElementById('final-amount').textContent = finalPrice.toFixed(2);
+                document.getElementById('selected-offer-id').value = offerId;
+                document.getElementById('payment-amount').value = finalPrice.toFixed(2);
+            } else {
+                // No offer selected
+                document.getElementById('discount-section').classList.add('hidden');
+                document.getElementById('final-amount').textContent = coursePrice.toFixed(2);
+                document.getElementById('selected-offer-id').value = '';
+                document.getElementById('payment-amount').value = coursePrice.toFixed(2);
             }
-            e.target.value = value;
-        });
+        }
 
-        // CVV formatting
-        document.getElementById('card_cvv')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            e.target.value = value;
-        });
-
-        // Form submission
-        document.getElementById('paymentForm').addEventListener('submit', function(e) {
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Processing Payment...';
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkedOffer = document.querySelector('input[name="offer_id"]:checked');
+            if (checkedOffer) {
+                updatePrice();
+            }
+            
+            // Highlight default payment method
+            const defaultPaymentMethod = document.querySelector('input[name="payment_method"]:checked');
+            if (defaultPaymentMethod) {
+                defaultPaymentMethod.closest('.payment-method-option').classList.add('border-blue-500', 'bg-blue-50');
+                defaultPaymentMethod.closest('.payment-method-option').classList.remove('border-gray-200');
+            }
         });
     </script>
-</body>
-</html>
+    @endpush
+</x-layouts.student>

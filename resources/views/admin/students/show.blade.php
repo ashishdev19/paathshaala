@@ -1,211 +1,174 @@
-<x-admin-layout>
+<x-layouts.admin>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Student Details: ') . $student->name }}
-            </h2>
-            <div class="flex space-x-2">
-                <!-- Edit Student -->
-                <a href="{{ route('admin.students.edit', $student) }}" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
-                    <i class="fas fa-edit mr-2"></i>Edit Student
-                </a>
-                
-                <!-- Delete Student -->
-                <form action="{{ route('admin.students.destroy', $student) }}" method="POST" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" 
-                            class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out"
-                            onclick="return confirm('Are you sure you want to delete {{ $student->name }}? This will remove all their enrollments, certificates, and payment records. This action cannot be undone.')">
-                        <i class="fas fa-trash mr-2"></i>Delete Student
-                    </button>
-                </form>
-                
-                <!-- Back to List -->
-                <a href="{{ route('admin.students.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Students
-                </a>
-            </div>
-        </div>
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            Student Details
+        </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Student Information Card -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="text-center">
-                                <div class="mx-auto h-24 w-24 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-                                    <span class="text-indigo-600 font-bold text-2xl">
-                                        {{ strtoupper(substr($student->name, 0, 2)) }}
+    <div class="max-w-6xl mx-auto">
+        <!-- Student Profile Card -->
+        <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+            <div class="p-6">
+                <div class="flex items-start space-x-6">
+                    <!-- Profile Picture -->
+                    <div class="flex-shrink-0">
+                        <div class="h-24 w-24 rounded-full bg-blue-500 flex items-center justify-center text-white text-3xl font-semibold">
+                            {{ strtoupper(substr($student->name ?? 'S', 0, 1)) }}
+                        </div>
+                    </div>
+                    
+                    <!-- Student Info -->
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $student->name }}</h3>
+                                <p class="text-gray-600 mt-1">{{ $student->qualification ?? 'N/A' }}</p>
+                                <div class="flex items-center mt-2 space-x-4">
+                                    <span class="text-sm text-gray-500">
+                                        <svg class="inline-block h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                        {{ $student->email }}
                                     </span>
+                                    @if($student->phone)
+                                    <span class="text-sm text-gray-500">
+                                        <svg class="inline-block h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                        </svg>
+                                        {{ $student->phone }}
+                                    </span>
+                                    @endif
                                 </div>
-                                <h3 class="text-lg font-medium text-gray-900">{{ $student->name }}</h3>
-                                <p class="text-sm text-gray-500 mb-4">Student ID: #{{ $student->id }}</p>
                             </div>
-
-                            <div class="border-t border-gray-200 pt-4">
-                                <dl class="space-y-3">
-                                    <div>
-                                        <dt class="text-sm font-medium text-gray-500">Email</dt>
-                                        <dd class="text-sm text-gray-900">{{ $student->email }}</dd>
-                                    </div>
-                                    <div>
-                                        <dt class="text-sm font-medium text-gray-500">Phone</dt>
-                                        <dd class="text-sm text-gray-900">{{ $student->phone ?: 'Not provided' }}</dd>
-                                    </div>
-                                    <div>
-                                        <dt class="text-sm font-medium text-gray-500">Address</dt>
-                                        <dd class="text-sm text-gray-900">{{ $student->address ?: 'Not provided' }}</dd>
-                                    </div>
-                                    <div>
-                                        <dt class="text-sm font-medium text-gray-500">Joined Date</dt>
-                                        <dd class="text-sm text-gray-900">{{ $student->created_at->format('M d, Y') }}</dd>
-                                    </div>
-                                    <div>
-                                        <dt class="text-sm font-medium text-gray-500">Email Verified</dt>
-                                        <dd class="text-sm">
-                                            @if($student->email_verified_at)
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    <i class="fas fa-check-circle mr-1"></i>Verified
-                                                </span>
-                                            @else
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                    <i class="fas fa-times-circle mr-1"></i>Not Verified
-                                                </span>
-                                            @endif
-                                        </dd>
-                                    </div>
-                                </dl>
+                            <div class="flex space-x-2">
+                                <a href="{{ route('admin.students.edit', $student) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                                    Edit Profile
+                                </a>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Enrollments and Activity -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Enrollments -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Course Enrollments ({{ $student->enrollments->count() }})</h3>
-                            
-                            @if($student->enrollments->count() > 0)
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Enrolled Date</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Progress</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-200">
-                                            @foreach($student->enrollments as $enrollment)
-                                                <tr>
-                                                    <td class="px-4 py-4">
-                                                        <div class="text-sm font-medium text-gray-900">{{ $enrollment->course->title }}</div>
-                                                        <div class="text-sm text-gray-500">${{ number_format($enrollment->course->price, 2) }}</div>
-                                                    </td>
-                                                    <td class="px-4 py-4">
-                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                            @if($enrollment->payment_status === 'paid') bg-green-100 text-green-800
-                                                            @elseif($enrollment->payment_status === 'pending') bg-yellow-100 text-yellow-800
-                                                            @else bg-red-100 text-red-800 @endif">
-                                                            {{ ucfirst($enrollment->payment_status) }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="px-4 py-4 text-sm text-gray-500">
-                                                        {{ $enrollment->created_at->format('M d, Y') }}
-                                                    </td>
-                                                    <td class="px-4 py-4">
-                                                        <div class="flex items-center">
-                                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                                <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ $enrollment->progress_percentage ?? 0 }}%"></div>
-                                                            </div>
-                                                            <span class="ml-2 text-sm text-gray-500">{{ $enrollment->progress_percentage ?? 0 }}%</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <p class="text-gray-500 text-center py-8">No course enrollments yet.</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Certificates -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Certificates ({{ $student->certificates->count() }})</h3>
-                            
-                            @if($student->certificates->count() > 0)
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    @foreach($student->certificates as $certificate)
-                                        <div class="border border-gray-200 rounded-lg p-4">
-                                            <div class="flex items-start justify-between">
-                                                <div>
-                                                    <h4 class="text-sm font-medium text-gray-900">{{ $certificate->course->title }}</h4>
-                                                    <p class="text-sm text-gray-500">{{ $certificate->issued_at->format('M d, Y') }}</p>
-                                                </div>
-                                                <i class="fas fa-certificate text-yellow-500"></i>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p class="text-gray-500 text-center py-8">No certificates earned yet.</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Payment History -->
-                    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Payment History ({{ $student->payments->count() }})</h3>
-                            
-                            @if($student->payments->count() > 0)
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-200">
-                                            @foreach($student->payments as $payment)
-                                                <tr>
-                                                    <td class="px-4 py-4 text-sm text-gray-900">{{ $payment->course->title }}</td>
-                                                    <td class="px-4 py-4 text-sm text-gray-900">${{ number_format($payment->amount, 2) }}</td>
-                                                    <td class="px-4 py-4">
-                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                            @if($payment->status === 'completed') bg-green-100 text-green-800
-                                                            @elseif($payment->status === 'pending') bg-yellow-100 text-yellow-800
-                                                            @else bg-red-100 text-red-800 @endif">
-                                                            {{ ucfirst($payment->status) }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="px-4 py-4 text-sm text-gray-500">{{ $payment->created_at->format('M d, Y') }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <p class="text-gray-500 text-center py-8">No payment history.</p>
-                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Enrolled Courses</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $student->enrollments_count ?? 0 }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Completed</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $student->completed_courses ?? 0 }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Certificates</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $student->certificates_count ?? 0 }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Total Spent</p>
+                        <p class="text-2xl font-semibold text-gray-900">₹{{ number_format($student->total_spent ?? 0) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enrollments -->
+        <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Course Enrollments</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instructor</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enrolled On</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse($student->enrollments ?? [] as $enrollment)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $enrollment->course->title ?? 'N/A' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $enrollment->course->teacher->name ?? 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $enrollment->created_at->format('M d, Y') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $enrollment->progress ?? 0 }}%"></div>
+                                    </div>
+                                    <span class="text-sm text-gray-900">{{ $enrollment->progress ?? 0 }}%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    @if($enrollment->status == 'active') bg-green-100 text-green-800
+                                    @elseif($enrollment->status == 'completed') bg-blue-100 text-blue-800
+                                    @else bg-gray-100 text-gray-800 @endif">
+                                    {{ ucfirst($enrollment->status) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                No enrollments found
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="flex justify-start">
+            <a href="{{ route('admin.students.index') }}" class="text-gray-600 hover:text-gray-900">
+                ← Back to Students
+            </a>
+        </div>
     </div>
-</x-admin-layout>
+</x-layouts.admin>
