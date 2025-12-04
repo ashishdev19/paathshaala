@@ -27,7 +27,7 @@ class ProfileController extends Controller
         } elseif ($user->isInstructor()) {
             return view('instructor.profile.edit', ['user' => $user]);
         } elseif ($user->isStudent()) {
-            return view('students.profile.edit', ['user' => $user]);
+            return view('student.profile.edit', ['user' => $user]);
         }
         
         // Fallback to instructor profile edit if no role matches

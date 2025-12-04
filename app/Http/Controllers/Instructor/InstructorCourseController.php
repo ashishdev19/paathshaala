@@ -16,7 +16,14 @@ class InstructorCourseController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:teacher');
+        // Allow both 'instructor' and 'teacher' roles for backward compatibility
+        $this->middleware(function ($request, $next) {
+            $user = $request->user();
+            if (!$user || (!$user->isInstructor() && !$user->isAdmin() && !$user->isSuperAdmin())) {
+                abort(403, 'You must be an instructor to access this resource.');
+            }
+            return $next($request);
+        });
     }
 
     // Step 1: Course Basics

@@ -14,7 +14,7 @@ class CustomRegisterController extends Controller
 {
     public function showRegistrationForm()
     {
-        return view('auth.custom-register');
+        return view('auth.register');
     }
 
     public function register(Request $request)

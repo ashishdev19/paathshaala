@@ -48,7 +48,7 @@ class WalletController extends Controller
             'pending_topups' => $student->walletTopups()->pending()->sum('amount'),
         ];
 
-        return view('students.wallet.index', compact(
+        return view('student.wallet.index', compact(
             'wallet',
             'transactions',
             'topups',
@@ -64,7 +64,7 @@ class WalletController extends Controller
         $student = Auth::user();
         $wallet = $student->getOrCreateWallet();
 
-        return view('students.wallet.topup', compact('wallet'));
+        return view('student.wallet.topup', compact('wallet'));
     }
 
     /**

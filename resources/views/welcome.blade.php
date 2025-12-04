@@ -772,8 +772,6 @@
                             <p>&copy; {{ date('Y') }} Paathshaala Medical Education Platform. All rights reserved.</p>
                         </div>
                         <div class="flex gap-6 text-sm">
-                            <a href="#privacy" class="text-gray-400 hover:text-blue-400 transition-colors">Privacy Policy</a>
-                            <a href="#terms" class="text-gray-400 hover:text-blue-400 transition-colors">Terms of Service</a>
                             <a href="#cookies" class="text-gray-400 hover:text-blue-400 transition-colors">Cookie Policy</a>
                         </div>
                     </div>

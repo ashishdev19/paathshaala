@@ -19,8 +19,13 @@ class StudentMiddleware
             return redirect()->route('login');
         }
 
+        $user = auth()->user();
+        
+        // Force refresh the role relationship from database
+        $user->load('role');
+        
         // Allow all authenticated users to access student routes
-        if (!auth()->user()->isStudent() && !auth()->user()->isInstructor() && !auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin()) {
+        if (!$user->isStudent() && !$user->isInstructor() && !$user->isAdmin() && !$user->isSuperAdmin()) {
             abort(403, 'You do not have permission to access this resource. Only authenticated users can access.');
         }
 

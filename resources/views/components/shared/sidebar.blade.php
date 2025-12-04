@@ -4,9 +4,6 @@
 $config = match($role) {
     'admin' => [
         'title' => 'Admin Panel',
-        'bgColor' => 'bg-gray-900',
-        'activeColor' => 'bg-indigo-600',
-        'hoverColor' => 'hover:bg-gray-800',
         'menuItems' => [
             ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'dashboard'],
             ['label' => 'Courses', 'route' => 'admin.courses.index', 'icon' => 'courses', 'match' => 'admin.courses.*'],
@@ -21,9 +18,6 @@ $config = match($role) {
     ],
     'instructor', 'professor', 'teacher' => [
         'title' => 'Instructor Panel',
-        'bgColor' => 'bg-gray-900',
-        'activeColor' => 'bg-indigo-600',
-        'hoverColor' => 'hover:bg-gray-800',
         'menuItems' => [
             ['label' => 'Dashboard', 'route' => 'instructor.dashboard', 'icon' => 'dashboard'],
             ['label' => 'My Courses', 'route' => 'instructor.courses.index', 'icon' => 'courses', 'match' => 'instructor.courses*'],
@@ -37,9 +31,6 @@ $config = match($role) {
     ],
     'student' => [
         'title' => 'Student Panel',
-        'bgColor' => 'bg-gray-900',
-        'activeColor' => 'bg-indigo-600',
-        'hoverColor' => 'hover:bg-gray-800',
         'menuItems' => [
             ['label' => 'Dashboard', 'route' => 'student.dashboard', 'icon' => 'dashboard'],
             ['label' => 'My Courses', 'route' => 'student.courses.index', 'icon' => 'courses', 'match' => 'student.courses.index'],
@@ -53,9 +44,6 @@ $config = match($role) {
     ],
     default => [
         'title' => 'Dashboard',
-        'bgColor' => 'bg-gray-900',
-        'activeColor' => 'bg-indigo-600',
-        'hoverColor' => 'hover:bg-gray-800',
         'menuItems' => []
     ]
 };
@@ -79,24 +67,51 @@ $icons = [
 ];
 @endphp
 
-<aside class="w-64 {{ $config['bgColor'] }} text-white h-screen fixed left-0 top-0 overflow-y-auto z-40">
-    <div class="p-6">
-        <h2 class="text-2xl font-bold mb-8">{{ $config['title'] }}</h2>
+<style>
+    /* Reuse instructor sidebar styling to ensure consistent look */
+    .shared-sidebar { /* container fallback */ }
+    .instructor-sidebar { position: fixed; left: 0; top: 0; width: 16rem; height: 100vh; background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); color: white; box-shadow: 2px 0 8px rgba(0,0,0,0.3); z-index:50; display:flex;flex-direction:column;overflow-y:auto;border-right:1px solid rgba(255,255,255,0.1);} 
+    .sidebar-header{ padding:2rem 1.5rem; border-bottom:1px solid rgba(255,255,255,0.1); background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(30,58,138,0.1)); }
+    .sidebar-logo{ display:flex; align-items:center; gap:1rem; }
+    .logo-badge{ width:2.75rem;height:2.75rem;border-radius:0.75rem;background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.25rem;color:white;box-shadow:0 4px 15px rgba(59,130,246,0.4); }
+    .logo-text h2{ font-size:1.25rem;font-weight:700;color:white;margin:0 }
+    .sidebar-nav{ flex:1; padding:1.5rem 0.75rem; }
+    .nav-section-title{ padding:0.75rem 1rem; margin-top:1.25rem; margin-bottom:0.5rem; font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.1em }
+    .nav-item{ display:flex; align-items:center; gap:0.875rem; padding:0.875rem 1rem; border-radius:0.65rem; transition:all 0.25s; color:#cbd5e1; text-decoration:none; margin:0.25rem 0; font-weight:500; font-size:0.9375rem; border-left:3px solid transparent; }
+    .nav-item:hover{ background-color: rgba(59,130,246,0.15); color:#e2e8f0; border-left-color:#3b82f6; transform:translateX(4px);} 
+    .nav-item.active{ background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(59,130,246,0.15)); color:#60a5fa; border-left-color:#3b82f6; }
+    .sidebar-footer{ padding:1.25rem 0.75rem; border-top:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.15)}
+</style>
 
-        <nav class="space-y-2">
-            @foreach($config['menuItems'] as $item)
-                @php
-                    $matchRoute = $item['match'] ?? $item['route'];
-                    $isActive = request()->routeIs($matchRoute);
-                @endphp
-                <a href="{{ route($item['route']) }}" 
-                   class="flex items-center space-x-3 px-4 py-3 rounded-lg {{ $isActive ? $config['activeColor'] : $config['hoverColor'] }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icons[$item['icon']] ?? $icons['dashboard'] }}"></path>
-                    </svg>
-                    <span>{{ $item['label'] }}</span>
-                </a>
-            @endforeach
-        </nav>
+<aside class="instructor-sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-badge">PS</div>
+            <div class="logo-text">
+                <h2>PaathShaala</h2>
+                <p style="margin:0.25rem 0 0 0; color:#94a3b8; font-weight:500; font-size:0.75rem">{{ ucfirst($role) }}</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        @foreach($config['menuItems'] as $item)
+            @php $match = $item['match'] ?? $item['route']; $active = request()->routeIs($match); @endphp
+            <a href="{{ route($item['route']) }}" class="nav-item {{ $active ? 'active' : '' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:1.25rem;height:1.25rem;opacity:0.9;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icons[$item['icon']] ?? $icons['dashboard'] }}"></path>
+                </svg>
+                <span>{{ $item['label'] }}</span>
+            </a>
+        @endforeach
+    </nav>
+
+    <div class="sidebar-footer">
+        <form action="{{ route('logout') }}" method="POST" style="margin:0">@csrf
+            <button type="submit" class="logout-btn" style="width:100%;display:flex;align-items:center;gap:.875rem;padding:.875rem 1rem;border-radius:.65rem;background:linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.1));color:#fca5a5;border:1px solid rgba(239,68,68,0.2);">
+                <i class="fas fa-sign-out-alt" style="width:1.25rem;height:1.25rem"></i>
+                <span>Logout</span>
+            </button>
+        </form>
     </div>
 </aside>

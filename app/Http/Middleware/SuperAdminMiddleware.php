@@ -19,7 +19,12 @@ class SuperAdminMiddleware
             return redirect()->route('login');
         }
 
-        if (!auth()->user()->isSuperAdmin()) {
+        $user = auth()->user();
+        
+        // Force refresh the role relationship from database
+        $user->load('role');
+        
+        if (!$user->isSuperAdmin()) {
             abort(403, 'You do not have permission to access this resource. Only Super Admins can access.');
         }
 

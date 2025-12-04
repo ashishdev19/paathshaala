@@ -1,7 +1,7 @@
 {{-- Main Footer Component --}}
 <footer class="bg-gray-900 text-white mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {{-- About Section --}}
             <div>
                 <h3 class="text-xl font-bold mb-4">Paathshaala</h3>
@@ -19,16 +19,7 @@
                 </ul>
             </div>
 
-            {{-- Resources --}}
-            <div>
-                <h4 class="text-lg font-semibold mb-4">Resources</h4>
-                <ul class="space-y-2 text-gray-400">
-                    <li><a href="#" class="hover:text-white">Help Center</a></li>
-                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-white">Terms of Service</a></li>
-                    <li><a href="#" class="hover:text-white">FAQ</a></li>
-                </ul>
-            </div>
+            {{-- Resources section removed per request --}}
 
             {{-- Contact Info --}}
             <div>

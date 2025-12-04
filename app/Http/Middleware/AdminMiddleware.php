@@ -19,8 +19,13 @@ class AdminMiddleware
             return redirect()->route('login');
         }
 
+        $user = auth()->user();
+        
+        // Force refresh the role relationship from database
+        $user->load('role');
+        
         // Allow both SuperAdmin and Admin
-        if (!auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin()) {
+        if (!$user->isAdmin() && !$user->isSuperAdmin()) {
             abort(403, 'You do not have permission to access this resource. Only Admins and Super Admins can access.');
         }
 

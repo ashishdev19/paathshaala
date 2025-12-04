@@ -64,7 +64,7 @@ class StudentController extends Controller
             ->take(5)
             ->get();
 
-        return view('students.dashboard.index', compact(
+        return view('student.dashboard', compact(
             'stats',
             'enrollments', 
             'upcomingClasses',
@@ -83,7 +83,7 @@ class StudentController extends Controller
             ->latest()
             ->paginate(9);
 
-        return view('students.courses.index', compact('enrollments'));
+        return view('student.courses.index', compact('enrollments'));
     }
 
     public function browseCourses(Request $request)
@@ -146,7 +146,7 @@ class StudentController extends Controller
 
         $levels = ['beginner', 'intermediate', 'advanced'];
 
-        return view('students.courses.browse', compact('courses', 'enrolledCourseIds', 'categories', 'levels'));
+        return view('student.courses.browse', compact('courses', 'enrolledCourseIds', 'categories', 'levels'));
     }
 
     public function coursePreview($id)
@@ -174,7 +174,7 @@ class StudentController extends Controller
             ->limit(3)
             ->get();
 
-        return view('students.courses.show', compact('course', 'isEnrolled', 'similarCourses'));
+        return view('student.courses.show', compact('course', 'isEnrolled', 'similarCourses'));
     }
 
     public function courseDetail($id)
@@ -221,7 +221,7 @@ class StudentController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('students.certificates.index', compact('certificates'));
+        return view('student.certificates.index', compact('certificates'));
     }
 
     public function enrollments()
@@ -233,7 +233,7 @@ class StudentController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('students.enrollments.index', compact('enrollments'));
+        return view('student.enrollments.index', compact('enrollments'));
     }
 
     public function payments()
@@ -245,7 +245,7 @@ class StudentController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('students.payments.index', compact('payments'));
+        return view('student.payments.index', compact('payments'));
     }
 
     public function classes()
@@ -260,7 +260,7 @@ class StudentController extends Controller
             ->latest('scheduled_at')
             ->paginate(10);
 
-        return view('students.courses.index', compact('classes'));
+        return view('student.courses.index', compact('classes'));
     }
 
     public function updateProfile(Request $request)

@@ -53,6 +53,7 @@ class StudentDashboardController extends Controller
     public function explore()
     {
         $courses = Course::where('status', 'active')->paginate(12);
-        return view('student.explore', compact('courses'));
+        // Redirect to the unified browse-courses handler which prepares all required data
+        return redirect()->route('student.courses.browse');
     }
 }

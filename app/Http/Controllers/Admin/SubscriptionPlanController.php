@@ -183,22 +183,25 @@ class SubscriptionPlanController extends Controller
     // Subscriptions Management
     public function subscriptionsIndex()
     {
-        $subscriptions = TeacherSubscription::with(['user', 'plan'])
-                                          ->latest()
-                                          ->paginate(15);
+        $plans = SubscriptionPlan::orderBy('priority')->paginate(10);
         $stats = [
-            'active' => TeacherSubscription::where('status', 'active')->where('expires_at', '>', now())->count(),
-            'expired' => TeacherSubscription::where('status', 'expired')->orWhere('expires_at', '<=', now())->count(),
-            'cancelled' => TeacherSubscription::where('status', 'cancelled')->count(),
+            'totalPlans' => SubscriptionPlan::count(),
+            'activePlans' => SubscriptionPlan::active()->count(),
+            'totalSubscriptions' => TeacherSubscription::where('status', 'active')->count(),
         ];
 
-        return view('admin.subscriptions.subscriptions.index', compact('subscriptions', 'stats'));
+        return view('admin.subscriptions.plans.index', compact('plans', 'stats'));
     }
 
     public function subscriptionsShow(TeacherSubscription $subscription)
     {
-        $history = $subscription->user->subscriptionHistory()->latest()->paginate(10);
-        return view('admin.subscriptions.subscriptions.show', compact('subscription', 'history'));
+        $plans = SubscriptionPlan::orderBy('priority')->paginate(10);
+        $stats = [
+            'totalPlans' => SubscriptionPlan::count(),
+            'activePlans' => SubscriptionPlan::active()->count(),
+            'totalSubscriptions' => TeacherSubscription::where('status', 'active')->count(),
+        ];
+        return view('admin.subscriptions.plans.index', compact('plans', 'stats'));
     }
 
     // History Management

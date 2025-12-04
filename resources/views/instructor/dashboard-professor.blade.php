@@ -1,16 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Professor Dashboard</h1>
-        <p class="text-gray-600 mt-2">Your Courses & Student Management</p>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <!-- My Courses Card -->
+{{-- DEPRECATED FILE --}}
+{{-- This file is no longer used. Use /instructor/dashboard instead --}}
         <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
             <div class="flex items-center justify-between">
                 <div>

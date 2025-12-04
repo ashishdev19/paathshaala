@@ -12,40 +12,110 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet">
 
     <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Vite CSS & JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* Smooth scrollbar for sidebar */
-        ::-webkit-scrollbar {
-            width: 6px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #111827;
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #1e293b;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #4B5563;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6B7280;
-        }
-
-        /* Main content area */
         main {
             margin-left: 16rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Animation for page load */
+        .top-nav {
+            background: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .nav-content {
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 100%;
+        }
+
+        .nav-left h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info p:first-child {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .user-info p:last-child {
+            font-size: 0.8125rem;
+            color: #64748b;
+            margin: 0.25rem 0 0 0;
+        }
+
+        .page-content {
+            flex: 1;
+            padding: 2rem;
+            animation: fadeIn 0.4s ease-out;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(8px);
             }
             to {
                 opacity: 1;
@@ -53,40 +123,54 @@
             }
         }
 
-        .page-content {
-            animation: fadeIn 0.3s ease-in-out;
+        @media (max-width: 640px) {
+            main {
+                margin-left: 0;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .nav-content {
+                padding: 1rem 1.5rem;
+            }
+
+            .page-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
-<body class="font-sans antialiased bg-gray-100">
-    <div class="min-h-screen bg-gray-100">
+<body class="antialiased">
+    <div style="min-height: 100vh; background-color: #f3f4f6;">
         <!-- Sidebar Component -->
         <x-superadmin-sidebar />
 
         <!-- Main Content -->
-        <main class="transition-all duration-300">
+        <main>
             <!-- Top Navigation Bar -->
-            <div class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-                <div class="px-6 py-4 flex items-center justify-between">
+            <div class="top-nav">
+                <div class="nav-content">
                     <!-- Page Header -->
                     <div>
-                        @if (isset($header))
-                            {{ $header }}
+                        @hasSection('header')
+                            @yield('header')
                         @else
-                            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                            <h1 style="font-size: 1.5rem; font-weight: bold; color: #111827;">Dashboard</h1>
                         @endif
                     </div>
 
                     <!-- Right Actions -->
-                    <div class="flex items-center space-x-4">
-                        <!-- User Profile Dropdown (Optional) -->
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold">
+                    <div class="nav-right">
+                        <!-- User Profile -->
+                        <div class="user-profile">
+                            <div class="user-avatar">
                                 {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
                             </div>
-                            <div class="hidden sm:block">
-                                <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name ?? 'Super Admin' }}</p>
-                                <p class="text-xs text-gray-500">Super Administrator</p>
+                            <div class="user-info">
+                                <p style="font-size: 0.875rem; font-weight: 500; color: #111827; margin: 0;">{{ auth()->user()->name ?? 'Super Admin' }}</p>
+                                <p style="font-size: 0.75rem; color: #6b7280; margin: 0;">Super Administrator</p>
                             </div>
                         </div>
                     </div>
@@ -95,22 +179,12 @@
 
             <!-- Page Content -->
             <div class="page-content">
-                {{ $slot }}
+                @yield('content')
+                
+                <!-- Footer -->
+                <x-dashboard-footer />
             </div>
         </main>
     </div>
-
-    <!-- Optional: Toast Notifications -->
-    @if ($errors->any())
-        <script>
-            console.error(@json($errors->all()));
-        </script>
-    @endif
-
-    @if (session('success'))
-        <script>
-            console.log(@json(session('success')));
-        </script>
-    @endif
 </body>
 </html>
