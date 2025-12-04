@@ -64,10 +64,10 @@ Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->name('superadmi
     Route::get('/settings', [App\Http\Controllers\SuperAdmin\SuperAdminDashboardController::class, 'settings'])->name('settings');
     Route::get('/logs', [App\Http\Controllers\SuperAdmin\SuperAdminDashboardController::class, 'logs'])->name('logs');
     
-    // System Management Routes
-    Route::resource('users', App\Http\Controllers\SuperAdmin\UserManagementController::class);
-    Route::resource('roles', App\Http\Controllers\SuperAdmin\RoleManagementController::class);
-    Route::resource('permissions', App\Http\Controllers\SuperAdmin\PermissionManagementController::class);
+    // Temporary redirect routes for system management (controllers to be implemented)
+    Route::get('/users', function () { return redirect()->route('superadmin.dashboard'); });
+    Route::get('/roles', function () { return redirect()->route('superadmin.dashboard'); });
+    Route::get('/permissions', function () { return redirect()->route('superadmin.dashboard'); });
 });
 
 // Admin Routes
@@ -76,7 +76,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [App\Http\Controllers\Admin\AdminDashboardController::class, 'users'])->name('users');
     Route::get('/courses', [App\Http\Controllers\Admin\AdminDashboardController::class, 'courses'])->name('courses');
     Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
-    Route::resource('teachers', AdminTeacherController::class);
+    // Backwards-compatibility: keep a redirect for legacy teachers path
+    Route::get('/teachers', function () {
+        return redirect()->route('admin.instructors.index');
+    })->name('teachers.redirect');
+    // Also expose the same teacher management under 'instructors' URI and route names
+    // Keep route-model binding working by mapping the resource parameter to 'teacher'
+    Route::resource('instructors', AdminTeacherController::class)->parameters([
+        'instructors' => 'teacher'
+    ]);
     Route::resource('professional-teachers', ProfessionalTeacherController::class);
     Route::resource('students', StudentController::class);
     Route::resource('courses', AdminCourseController::class);
@@ -138,14 +146,39 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/user/{userId}', [WalletManagementController::class, 'userWallet'])->name('user-wallet');
         Route::post('/user/{userId}/adjust', [WalletManagementController::class, 'manualAdjustment'])->name('user-wallet.adjust');
     });
+
+    // ════════════════════════════════════════════════════════════════════════════
+    // Admin Sub-Accounts, Roles & Permissions Management
+    // ════════════════════════════════════════════════════════════════════════════
+    
+    // Unified Access Control Management (Roles & Permissions)
+    Route::get('access-control', [App\Http\Controllers\Admin\AccessControlController::class, 'index'])->name('access-control.index');
+    
+    // Admin Roles Management
+    Route::resource('roles', App\Http\Controllers\Admin\AdminRoleController::class);
+    
+    // Admin Permissions Management
+    Route::prefix('permissions')->name('permissions.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\AdminPermissionController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\AdminPermissionController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\Admin\AdminPermissionController::class, 'store'])->name('store');
+        Route::get('/assign', [App\Http\Controllers\Admin\AdminPermissionController::class, 'assign'])->name('assign');
+        Route::post('/assign', [App\Http\Controllers\Admin\AdminPermissionController::class, 'assignStore'])->name('assign-store');
+        Route::put('/{permission}', [App\Http\Controllers\Admin\AdminPermissionController::class, 'update'])->name('update');
+        Route::delete('/{permission}', [App\Http\Controllers\Admin\AdminPermissionController::class, 'destroy'])->name('destroy');
+    });
+    
+    // Admin Accounts Management
+    Route::resource('accounts', App\Http\Controllers\Admin\AdminAccountController::class);
+    Route::post('/accounts/{account}/toggle-status', [App\Http\Controllers\Admin\AdminAccountController::class, 'toggleStatus'])->name('accounts.toggle-status');
 });
 
-// Professor Routes
-Route::middleware(['auth', 'professor'])->prefix('professor')->name('professor.')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\Professor\ProfessorDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/courses', [App\Http\Controllers\Professor\ProfessorDashboardController::class, 'courses'])->name('courses');
-    Route::get('/students', [App\Http\Controllers\Professor\ProfessorDashboardController::class, 'students'])->name('students');
-});
+// Professor Routes - DEPRECATED (Use instructor routes instead)
+// Route::middleware(['auth', 'professor'])->prefix('professor')->name('professor.')->group(function () {
+//     Route::get('/dashboard', [App\Http\Controllers\Professor\ProfessorDashboardController::class, 'index'])->name('dashboard');
+//     Route::get('/courses', [App\Http\Controllers\Professor\ProfessorDashboardController::class, 'courses'])->name('courses');
+//     Route::get('/students', [App\Http\Controllers\Professor\ProfessorDashboardController::class, 'students'])->name('students');
+// });
 
 // Student Routes
 Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function () {
@@ -156,7 +189,7 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
 });
 
 // Instructor Routes (Existing - keeping for backward compatibility)
-Route::middleware(['auth', 'professor'])->prefix('instructor')->name('instructor.')->group(function () {
+Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
     Route::put('/profile', [TeacherController::class, 'updateProfile'])->name('profile.update');
     Route::get('/courses', [TeacherController::class, 'courses'])->name('courses.index');
