@@ -214,8 +214,8 @@
                 <span>Manage Admins</span>
             </a>
 
-            <!-- Manage Instructors -->
-            <a href="{{ route('admin.teachers.index') }}" class="nav-item {{ request()->routeIs('admin.teachers.*') ? 'active' : '' }}">
+            <!-- Instructors -->
+            <a href="{{ route('admin.instructors.index') }}" class="nav-item {{ request()->routeIs('admin.instructors.*') || request()->routeIs('admin.teachers.*') ? 'active' : '' }}">
                 <i class="fas fa-chalkboard-user icon"></i>
                 <span>Manage Instructors</span>
             </a>

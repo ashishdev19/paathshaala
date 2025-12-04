@@ -76,7 +76,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [App\Http\Controllers\Admin\AdminDashboardController::class, 'users'])->name('users');
     Route::get('/courses', [App\Http\Controllers\Admin\AdminDashboardController::class, 'courses'])->name('courses');
     Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
+    // Backwards-compatibility: redirect legacy teachers index to instructors index
+    Route::get('/teachers', function () {
+        return redirect()->route('admin.instructors.index');
+    })->name('teachers.redirect');
     Route::resource('teachers', AdminTeacherController::class);
+    // Also expose the same teacher management under 'instructors' URI and route names
+    // Keep route-model binding working by mapping the resource parameter to 'teacher'
+    Route::resource('instructors', AdminTeacherController::class)->parameters([
+        'instructors' => 'teacher'
+    ]);
     Route::resource('professional-teachers', ProfessionalTeacherController::class);
     Route::resource('students', StudentController::class);
     Route::resource('courses', AdminCourseController::class);

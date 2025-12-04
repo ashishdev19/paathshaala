@@ -197,56 +197,56 @@
     <!-- Sidebar Navigation -->
     <nav class="sidebar-nav">
         <!-- Ordered Navigation -->
-        <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.dashboard')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
             <i class="fas fa-chart-line icon"></i>
             <span>Dashboard</span>
         </a>
 
-        <a href="{{ route('admin.courses.index') }}" class="nav-item {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.courses.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.courses.*') ? 'active' : ''); ?>">
             <i class="fas fa-book icon"></i>
             <span>Courses</span>
         </a>
 
-        <a href="{{ route('admin.instructors.index') }}" class="nav-item {{ request()->routeIs('admin.instructors.*') || request()->routeIs('admin.teachers.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.instructors.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.instructors.*') || request()->routeIs('admin.teachers.*') ? 'active' : ''); ?>">
             <i class="fas fa-chalkboard-user icon"></i>
             <span>Instructors</span>
         </a>
 
-        <a href="{{ route('admin.students.index') }}" class="nav-item {{ request()->routeIs('admin.students.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.students.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.students.*') ? 'active' : ''); ?>">
             <i class="fas fa-users icon"></i>
             <span>Students</span>
         </a>
 
-        <a href="{{ route('admin.payments.index') }}" class="nav-item {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.payments.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.payments.*') ? 'active' : ''); ?>">
             <i class="fas fa-money-bill-wave icon"></i>
             <span>Payments</span>
         </a>
 
-        <a href="{{ route('admin.subscriptions.list') }}" class="nav-item {{ request()->routeIs('admin.subscriptions.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.subscriptions.list')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.subscriptions.*') ? 'active' : ''); ?>">
             <i class="fas fa-credit-card icon"></i>
             <span>Subscription</span>
         </a>
 
-        <a href="{{ route('admin.wallet.index') }}" class="nav-item {{ request()->routeIs('admin.wallet.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.wallet.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.wallet.*') ? 'active' : ''); ?>">
             <i class="fas fa-wallet icon"></i>
             <span>Wallet</span>
         </a>
 
-        <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.reports.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.reports.*') ? 'active' : ''); ?>">
             <i class="fas fa-chart-bar icon"></i>
             <span>Reports</span>
         </a>
 
-        <a href="{{ route('admin.access-control.index') }}" class="nav-item {{ request()->routeIs('admin.access-control.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.access-control.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.access-control.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'active' : ''); ?>">
             <i class="fas fa-shield-alt icon"></i>
             <span>Roles & Permissions</span>
         </a>
 
-        <a href="{{ route('admin.accounts.index') }}" class="nav-item {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.accounts.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.accounts.*') ? 'active' : ''); ?>">
             <i class="fas fa-user-cog icon"></i>
             <span>Admin Accounts</span>
         </a>
-        <a href="{{ route('admin.settings.index') }}" class="nav-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+        <a href="<?php echo e(route('admin.settings.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.settings.*') ? 'active' : ''); ?>">
             <i class="fas fa-cog icon"></i>
             <span>Settings</span>
         </a>
@@ -254,8 +254,8 @@
 
     <!-- Sidebar Footer - Logout -->
     <div class="sidebar-footer">
-        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-            @csrf
+        <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+            <?php echo csrf_field(); ?>
             <button type="submit" class="logout-btn">
                 <i class="fas fa-sign-out-alt icon"></i>
                 <span>Logout</span>
@@ -263,3 +263,4 @@
         </form>
     </div>
 </div>
+<?php /**PATH C:\laragon\www\paathshaala\resources\views/components/admin-sidebar.blade.php ENDPATH**/ ?>

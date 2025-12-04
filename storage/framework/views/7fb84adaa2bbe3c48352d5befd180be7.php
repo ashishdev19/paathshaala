@@ -1,6 +1,34 @@
-@props(['role' => 'admin'])
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
-@php
+$__newAttributes = [];
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['role' => 'admin']));
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (in_array($__key, $__propNames)) {
+        $$__key = $$__key ?? $__value;
+    } else {
+        $__newAttributes[$__key] = $__value;
+    }
+}
+
+$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+
+unset($__propNames);
+unset($__newAttributes);
+
+foreach (array_filter((['role' => 'admin']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+}
+
+$__defined_vars = get_defined_vars();
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (array_key_exists($__key, $__defined_vars)) unset($$__key);
+}
+
+unset($__defined_vars, $__key, $__value); ?>
+
+<?php
 $config = match($role) {
     'admin' => [
         'title' => 'Admin Panel',
@@ -79,32 +107,32 @@ $icons = [
     'wallet' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
     'video' => 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
 ];
-@endphp
+?>
 
-<aside class="w-64 {{ $config['bgColor'] }} text-white h-screen fixed left-0 top-0 overflow-y-auto z-40">
+<aside class="w-64 <?php echo e($config['bgColor']); ?> text-white h-screen fixed left-0 top-0 overflow-y-auto z-40">
     <div class="p-6">
-        <h2 class="text-2xl font-bold mb-8">{{ $config['title'] }}</h2>
+        <h2 class="text-2xl font-bold mb-8"><?php echo e($config['title']); ?></h2>
 
         <nav class="space-y-2">
-            @foreach($config['menuItems'] as $item)
-                @php
+            <?php $__currentLoopData = $config['menuItems']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php
                     $matchRoute = $item['match'] ?? $item['route'];
                     $isActive = request()->routeIs($matchRoute);
-                @endphp
-                <a href="{{ route($item['route']) }}" 
-                   class="flex items-center space-x-3 px-4 py-3 rounded-lg {{ $isActive ? $config['activeColor'] : $config['hoverColor'] }}">
+                ?>
+                <a href="<?php echo e(route($item['route'])); ?>" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg <?php echo e($isActive ? $config['activeColor'] : $config['hoverColor']); ?>">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icons[$item['icon']] ?? $icons['dashboard'] }}"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<?php echo e($icons[$item['icon']] ?? $icons['dashboard']); ?>"></path>
                     </svg>
-                    <span>{{ $item['label'] }}</span>
+                    <span><?php echo e($item['label']); ?></span>
                 </a>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </nav>
     </div>
 
     <div class="p-4 border-t border-white/10 mt-auto">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
+        <form method="POST" action="<?php echo e(route('logout')); ?>">
+            <?php echo csrf_field(); ?>
             <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 <span>Logout</span>
@@ -112,3 +140,4 @@ $icons = [
         </form>
     </div>
 </aside>
+<?php /**PATH C:\laragon\www\paathshaala\resources\views/components/shared/sidebar.blade.php ENDPATH**/ ?>

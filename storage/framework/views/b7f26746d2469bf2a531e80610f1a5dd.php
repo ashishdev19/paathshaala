@@ -1,0 +1,1 @@
+components.dashboard-footer<?php /**PATH C:\laragon\www\paathshaala\storage\framework\views/1bae36cc6351382490b20022ed02fe37.blade.php ENDPATH**/ ?>
