@@ -73,8 +73,6 @@ Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->name('superadmi
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/users', [App\Http\Controllers\Admin\AdminDashboardController::class, 'users'])->name('users');
-    Route::get('/courses', [App\Http\Controllers\Admin\AdminDashboardController::class, 'courses'])->name('courses');
     Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
     // Backwards-compatibility: redirect legacy teachers index to instructors index
     Route::get('/teachers', function () {

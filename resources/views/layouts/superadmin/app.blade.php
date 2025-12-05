@@ -182,7 +182,7 @@
                 @yield('content')
                 
                 <!-- Footer -->
-                <x-dashboard-footer />
+                <x-footer.main />
             </div>
         </main>
     </div>

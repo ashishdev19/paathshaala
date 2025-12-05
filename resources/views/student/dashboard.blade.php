@@ -322,7 +322,4 @@
     </div>
 </div>
 
-<!-- Footer -->
-<x-dashboard-footer />
-
 @endsection

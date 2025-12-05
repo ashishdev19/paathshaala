@@ -13,8 +13,8 @@
     <!-- FontAwesome 6.4.0 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- Vite CSS/JS -->
-    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
         * {
@@ -184,10 +184,10 @@
         <?php echo $__env->yieldContent('content'); ?>
         
         <!-- Footer -->
-        <?php if (isset($component)) { $__componentOriginalf3cd6cc55531ec5560c66bfe67eac9e7 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf3cd6cc55531ec5560c66bfe67eac9e7 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dashboard-footer','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('dashboard-footer'); ?>
+        <?php if (isset($component)) { $__componentOriginal13c317896897799077c93fa7c21afbaf = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal13c317896897799077c93fa7c21afbaf = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.footer.admin','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('footer.admin'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
@@ -196,13 +196,13 @@
 <?php $component->withAttributes([]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginalf3cd6cc55531ec5560c66bfe67eac9e7)): ?>
-<?php $attributes = $__attributesOriginalf3cd6cc55531ec5560c66bfe67eac9e7; ?>
-<?php unset($__attributesOriginalf3cd6cc55531ec5560c66bfe67eac9e7); ?>
+<?php if (isset($__attributesOriginal13c317896897799077c93fa7c21afbaf)): ?>
+<?php $attributes = $__attributesOriginal13c317896897799077c93fa7c21afbaf; ?>
+<?php unset($__attributesOriginal13c317896897799077c93fa7c21afbaf); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginalf3cd6cc55531ec5560c66bfe67eac9e7)): ?>
-<?php $component = $__componentOriginalf3cd6cc55531ec5560c66bfe67eac9e7; ?>
-<?php unset($__componentOriginalf3cd6cc55531ec5560c66bfe67eac9e7); ?>
+<?php if (isset($__componentOriginal13c317896897799077c93fa7c21afbaf)): ?>
+<?php $component = $__componentOriginal13c317896897799077c93fa7c21afbaf; ?>
+<?php unset($__componentOriginal13c317896897799077c93fa7c21afbaf); ?>
 <?php endif; ?>
     </div>
 </body>

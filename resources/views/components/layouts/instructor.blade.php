@@ -15,9 +15,6 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Vite CSS/JS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>
         * {
@@ -222,6 +219,9 @@
             @endif
             {{ $slot }}
         </div>
+        
+        <!-- Footer -->
+        <x-footer.instructor />
     </div>
 </body>
 </html>

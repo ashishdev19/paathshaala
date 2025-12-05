@@ -97,10 +97,25 @@
     /* Navigation layout */
     .sidebar-nav {
         flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 0.75rem 0;
+        padding: 1.5rem 0.75rem;
         overflow-y: auto;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 2px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb:hover {
+        background: rgba(148, 163, 184, 0.5);
     }
 
     .nav-section {
@@ -109,75 +124,101 @@
     }
 
     .nav-section-title {
-        padding: 0.5rem 1rem;
-        color: rgba(255,255,255,0.45);
-        font-size: 0.75rem;
+        padding: 0.75rem 1rem;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.7rem;
         font-weight: 700;
+        color: #64748b;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
+        transition: color 0.2s ease;
     }
 
     .nav-item {
         display: flex;
         align-items: center;
-        gap: 0.9rem;
-        padding: 0.9rem 1rem;
-        color: rgba(255,255,255,0.85);
+        gap: 0.875rem;
+        padding: 0.875rem 1rem;
+        border-radius: 0.65rem;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #cbd5e1;
         text-decoration: none;
-        transition: all 0.18s ease;
-        margin: 0.25rem 0.5rem;
-        border-radius: 0.75rem;
+        margin: 0.25rem 0;
+        font-weight: 500;
+        font-size: 0.9375rem;
+        border-left: 3px solid transparent;
+        position: relative;
     }
 
     .nav-item .icon {
-        width: 2.1rem;
-        height: 2.1rem;
-        display: inline-flex;
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+        display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 0.5rem;
-        background: rgba(255,255,255,0.03);
-        font-size: 1rem;
+        opacity: 0.9;
     }
 
     .nav-item:hover {
+        background-color: rgba(59, 130, 246, 0.15);
+        color: #e2e8f0;
+        border-left-color: #3b82f6;
         transform: translateX(4px);
-        background: rgba(99,102,241,0.08);
-        color: #e6efff;
+    }
+
+    .nav-item:hover .icon,
+    .nav-item.active .icon {
+        opacity: 1;
     }
 
     /* Active pill like the screenshot */
     .nav-item.active {
-        background: linear-gradient(90deg, rgba(59,130,246,0.12), rgba(99,102,241,0.06));
-        color: #dbeafe;
-        box-shadow: 0 6px 18px rgba(15,23,42,0.25);
-    }
-
-    .nav-item.active .icon {
-        background: linear-gradient(135deg,#3b82f6,#2563eb);
-        color: white;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.15));
+        color: #60a5fa;
+        border-left-color: #3b82f6;
+        box-shadow: inset 0 0 8px rgba(59, 130, 246, 0.15);
+        font-weight: 600;
     }
 
     .logout-section {
         margin-top: auto;
-        padding: 1rem 0.75rem;
-        border-top: 1px solid rgba(255,255,255,0.04);
+        padding: 1.25rem 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.2);
     }
 
     .logout-btn {
+        width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.9rem 1rem;
-        border-radius: 0.75rem;
-        background: rgba(220,38,38,0.06);
-        color: #fecaca;
-        border: 1px solid rgba(220,38,38,0.08);
-        margin: 0 0.5rem;
-        font-weight: 600;
+        gap: 0.875rem;
+        padding: 0.875rem 1rem;
+        border-radius: 0.65rem;
+        border: none;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+        color: #fca5a5;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+        text-align: left;
+        font-size: 0.9375rem;
+        border: 1px solid rgba(239, 68, 68, 0.2);
     }
 
-    .logout-btn:hover { transform: translateX(4px); }
+    .logout-btn:hover {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.25));
+        color: #fecaca;
+        border-color: rgba(239, 68, 68, 0.4);
+        transform: translateX(4px);
+    }
+
+    .logout-btn .icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
 </style>
 
 <div class="admin-sidebar">

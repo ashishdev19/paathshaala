@@ -334,7 +334,4 @@
     </p>
 </div>
 
-<!-- Footer -->
-<x-dashboard-footer />
-
 @endsection

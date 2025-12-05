@@ -326,15 +326,12 @@
 </div>
 
 <!-- About Section -->
-<div class="section-card" style="margin-top: 2rem;">
+<!-- <div class="section-card" style="margin-top: 2rem;">
     <h2 class="section-title">About Your Dashboard</h2>
     <p style="color: #6b7280; line-height: 1.6; margin: 0;">
         Welcome to your Instructor Dashboard! Here you can manage all your courses, track student progress, and monitor course enrollments. 
         Use the navigation menu to access course creation tools, student management features, and detailed analytics to help you deliver the best educational experience.
     </p>
-</div>
-
-<!-- Footer -->
-<x-dashboard-footer />
+</div> -->
 
 @endsection
