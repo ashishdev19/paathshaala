@@ -143,9 +143,9 @@
                     SHOW_WATERMARK_FOR_GUESTS: false,
                     SHOW_BRAND_WATERMARK: false,
                     BRAND_WATERMARK_LINK: '',
-                    APP_NAME: 'Paathshaala Live Class',
-                    NATIVE_APP_NAME: 'Paathshaala',
-                    PROVIDER_NAME: 'Paathshaala',
+                    APP_NAME: 'Medniks Live Class',
+                    NATIVE_APP_NAME: 'Medniks',
+                    PROVIDER_NAME: 'Medniks',
                     DEFAULT_REMOTE_DISPLAY_NAME: 'Student',
                     HIDE_INVITE_MORE_HEADER: false,
                 }

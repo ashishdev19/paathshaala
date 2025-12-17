@@ -23,7 +23,7 @@
                         @endif
                     </div>
                     <div class="p-8 flex-1">
-                        <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{{ $course->category }}</div>
+                        <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{{ $course->category->name ?? 'General' }}</div>
                         <h1 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                             {{ $course->title }}
                         </h1>

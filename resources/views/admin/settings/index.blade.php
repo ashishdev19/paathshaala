@@ -14,7 +14,7 @@
             <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Site Name</label>
-                    <input type="text" value="Paathshaala" class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
+                    <input type="text" value="Medniks" class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Site Description</label>
@@ -22,7 +22,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
-                    <input type="email" value="info@paathshaala.com" class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
+                    <input type="email" value="info@medniks.com" class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Support Phone</label>
@@ -48,7 +48,7 @@
                     <select class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
                         <option>INR (₹)</option>
                         <option>USD ($)</option>
-                        <option>EUR (€)</option>
+                        <!-- <option>EUR (€)</option> -->
                     </select>
                 </div>
                 <div>

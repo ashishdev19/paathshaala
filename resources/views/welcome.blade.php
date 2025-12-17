@@ -1,858 +1,1055 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Paathshaala - Your trusted online medical education platform. Learn from expert instructors and advance your medical career.">
+    <title>{{ config('app.name') }} - Medical Education Platform</title>
     
-    <title>Paathshaala - Your Trusted Online Medical Education Platform</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        /* Success Modal Animation */
-        #successModal {
-            animation: fadeInModal 0.3s ease-out;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        #successModal > div {
-            animation: slideInModal 0.3s ease-out;
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
         
-        @keyframes fadeInModal {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .montserrat {
+            font-family: 'Montserrat', sans-serif;
         }
         
-        @keyframes slideInModal {
-            from { 
+        /* Header Styling */
+        .site-header {
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .cpd-badge {
+            background: white;
+            border-radius: 8px;
+            padding: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .social-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: transform 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-2px);
+        }
+        
+        .partner-logo {
+            height: 30px;
+            object-fit: contain;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+        
+        .partner-logo:hover {
+            opacity: 1;
+        }
+        
+        .nav-button {
+            background: transparent;
+            color: #374151;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-button:hover {
+            color: #2563EB;
+            background: #f3f4f6;
+        }
+        
+        .dropdown-menu {
+            position: relative;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 0.25rem);
+            right: 0;
+            background: white;
+            min-width: 220px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            pointer-events: none;
+        }
+        
+        .dropdown-menu:hover .dropdown-content,
+        .group:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background: #f3f4f6;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: #2563EB;
+            color: white;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.5;
+        }
+        
+        /* Course Card Styling */
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .course-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Footer Styling */
+        .site-footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+        
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-desktop {
+                display: none;
+            }
+            
+            .hero-section {
+                padding: 4rem 1rem;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .nav-mobile {
+                display: none;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
                 opacity: 0;
-                transform: scale(0.8) translateY(-20px);
+                transform: translateY(30px);
             }
-            to { 
+            to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: translateY(0);
             }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
         }
     </style>
 </head>
-<body class="font-sans text-slate-800 bg-white overflow-x-hidden">
-    <!-- Success Popup Modal -->
-    @if(session('show_success_popup'))
-    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
-        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl">
-            <!-- Success Icon -->
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            
-            <!-- Success Message -->
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Account Created Successfully!</h3>
-            <p class="text-gray-600 mb-6">Welcome to Paathshaala! Your account has been created and you're now logged in.</p>
-            
-            <!-- Close Button -->
-            <button onclick="closeSuccessModal()" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all">
-                Continue
-            </button>
-        </div>
-    </div>
-    @endif
+<body>
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg shadow-sm border-b border-gray-100 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
-                    <div class="relative">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                            <i class="fas fa-graduation-cap text-white text-sm"></i>
+    <header class="site-header sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <!-- Top Bar with Logo, CPD Badge, Social Links -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <!-- Logo Section -->
+                <div class="logo-container">
+                    <a href="{{ url('/') }}" class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
                         </div>
-                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Paathshaala</h1>
-                        <p class="text-xs text-gray-500 font-medium">Medical Excellence</p>
-                    </div>
-                </a>
+                        <div>
+                            <h1 class="text-2xl font-bold text-blue-600 montserrat">
+                                {{ config('app.name', 'Medniks') }}
+                            </h1>
+                            <p class="text-xs text-gray-500">Medical Excellence</p>
+                        </div>
+                    </a>
+                </div>
                 
-                <!-- Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
-                    <a href="{{ route('about') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                    <a href="#instructors" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Instructors</a>
-                    <a href="{{ route('contact') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
-                </nav>
+                <!-- CPD Badge -->
+                <!-- <div class="cpd-badge hidden md:block">
+                    <p class="text-xs font-semibold text-blue-600 montserrat">CPD Provider No. 60107</p>
+                    <a href="https://www.cpdstandards.com" target="_blank" class="text-xs text-blue-500 underline">www.cpdstandards.com</a>
+                </div> -->
                 
-                <!-- Auth Links - Always visible -->
-                <div class="flex items-center space-x-2">
+                <!-- Social Links -->
+                <!-- <div class="social-links hidden md:flex">
+                    <a href="https://www.facebook.com" target="_blank" class="social-icon" aria-label="Facebook">
+                        <i class="fab fa-facebook-f text-blue-600"></i>
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank" class="social-icon" aria-label="Instagram">
+                        <i class="fab fa-instagram text-pink-600"></i>
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank" class="social-icon" aria-label="YouTube">
+                        <i class="fab fa-youtube text-red-600"></i>
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" class="social-icon" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in text-blue-700"></i>
+                    </a>
+                    <a href="https://www.twitter.com" target="_blank" class="social-icon" aria-label="Twitter">
+                        <i class="fab fa-twitter text-blue-400"></i>
+                    </a>
+                </div> -->
+                
+                <!-- Partner Logos -->
+                <!-- <div class="hidden lg:flex items-center gap-3">
+                    <img src="https://via.placeholder.com/80x30?text=Partner1" alt="Partner 1" class="partner-logo">
+                    <img src="https://via.placeholder.com/80x30?text=Partner2" alt="Partner 2" class="partner-logo">
+                    <img src="https://via.placeholder.com/80x30?text=Partner3" alt="Partner 3" class="partner-logo">
+                </div> -->
+                
+                <!-- Auth Section -->
+                <div class="flex items-center gap-2">
                     @auth
-                        <!-- User Dropdown -->
-                        <div class="relative">
-                            <button onclick="toggleUserDropdown()" class="flex items-center space-x-2 px-4 py-2 md:px-6 md:py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm md:text-base rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02]">
-                                <span>{{ Auth::user()->name }}</span>
-                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
+                        <div class="relative group">
+                            <button class="nav-button flex items-center gap-2">
+                                <i class="fas fa-user"></i>
+                                {{ Auth::user()->name }}
+                                <i class="fas fa-chevron-down text-xs"></i>
                             </button>
-                            
-                            <!-- Dropdown Menu -->
-                            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
-                                <a href="{{ url('/dashboard') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                    Profile Settings
+                            <div class="dropdown-content">
+                                <a href="{{ route('dashboard') }}" class="dropdown-item">
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
-                                <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                                    </svg>
-                                    My Certificates
-                                </a>
-                                <hr class="my-2">
-                                <form action="{{ route('logout') }}" method="POST" class="inline w-full">
+                                <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors text-left">
-                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                        </svg>
-                                        Logout
+                                    <button type="submit" class="dropdown-item w-full text-left">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
                                     </button>
                                 </form>
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="px-4 py-2 md:px-6 md:py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm md:text-base rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] whitespace-nowrap">Login/Register</a>
+                        <a href="{{ route('login') }}" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105">Login/Register</a>
                     @endauth
-                    
-                    <!-- Mobile Menu Button -->
-                    <button class="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none" onclick="toggleMobileMenu()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons (Desktop) -->
+            <nav class="nav-desktop hidden md:flex flex-wrap items-center justify-center gap-3">
+                <a href="{{ url('/') }}" class="nav-button">
+                    <i class="fas fa-home mr-2"></i>HOME
+                </a>
+                
+               
+               <div class="nav-menu">
+    <a href="{{ route('courses.index') }}" class="nav-button flex items-center gap-2">
+        <i class="fas fa-book-medical mr-2"></i>
+        COURSES
+    </a>
+</div>
+                <!-- <div class="dropdown-menu">
+
+                     <button class="nav-button flex items-center gap-2">
+                        <i class="fas fa-book-medical mr-2"></i>COURSES
+                        <i class="fas fa-chevron-down text-xs"></i>
                     </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('courses.index') }}" class="dropdown-item">All Courses</a>
+                        <a href="#" class="dropdown-item">Aesthetic Medicine</a>
+                        <a href="#" class="dropdown-item">Aesthetic Gynecology</a>
+                        <a href="#" class="dropdown-item">Ultrasound</a>
+                        <a href="#" class="dropdown-item">IVF & Reproductive Medicine</a>
+                        <a href="#" class="dropdown-item">Surgical Courses</a>
+                    </div>
+                </div> -->
+                
+                <a href="{{ route('about') }}" class="nav-button">
+                    <i class="fas fa-info-circle mr-2"></i>ABOUT US
+                </a>
+                
+                               
+                               
+                <a href="{{ route('contact') }}" class="nav-button">
+                    <i class="fas fa-envelope mr-2"></i>CONTACT US
+                </a>
+                
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <div class="nav-mobile md:hidden">
+                <button onclick="toggleMobileMenu()" class="nav-button w-full">
+                    <i class="fas fa-bars mr-2"></i>MENU
+                </button>
+                
+                <!-- Mobile Menu -->
+                <div id="mobileMenu" class="hidden mt-4 space-y-2">
+                    <a href="{{ url('/') }}" class="nav-button block w-full text-center">HOME</a>
+                    <a href="{{ route('courses.index') }}" class="nav-button block w-full text-center">COURSES</a>
+                    <a href="{{ route('about') }}" class="nav-button block w-full text-center">ABOUT US</a>
+                    <a href="#faculty" class="nav-button block w-full text-center">FACULTY</a>
+                    <a href="#gallery" class="nav-button block w-full text-center">GALLERY</a>
+                    <a href="{{ route('contact') }}" class="nav-button block w-full text-center">CONTACT US</a>
+                    <a href="#cancellation" class="nav-button block w-full text-center">CANCELLATION</a>
                 </div>
             </div>
         </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg">
-            <div class="px-4 py-3 space-y-2">
-                <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
-                <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                <a href="#instructors" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Instructors</a>
-                <a href="{{ route('contact') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
-            </div>
-        </div>
     </header>
-
-    <!-- Service Quick Links -->
-    <section class="pt-16 pb-8 bg-gradient-to-b from-gray-50 to-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Explore Our Services</h2>
-                <p class="text-gray-600">Comprehensive medical education solutions at your fingertips</p>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                <a href="{{ route('courses.index') }}" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <i class="fas fa-book-medical text-white text-lg"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800 text-center">Medical Courses</span>
-                    <span class="text-xs text-gray-500 mt-1">1,200+ Courses</span>
-                </a>
-                
-                <a href="#live-classes" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <i class="fas fa-video text-white text-lg"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800 text-center">Live Classes</span>
-                    <span class="text-xs text-gray-500 mt-1">Interactive Sessions</span>
-                </a>
-                
-                <a href="#expert-consultation" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <i class="fas fa-user-md text-white text-lg"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800 text-center">Expert Consultation</span>
-                    <span class="text-xs text-gray-500 mt-1">1-on-1 Guidance</span>
-                </a>
-                
-                <a href="#certifications" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                    <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <i class="fas fa-certificate text-white text-lg"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800 text-center">Certifications</span>
-                    <span class="text-xs text-gray-500 mt-1">Industry Recognized</span>
-                </a>
-                
-                <a href="#study-materials" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                    <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <i class="fas fa-file-medical text-white text-lg"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800 text-center">Study Materials</span>
-                    <span class="text-xs text-gray-500 mt-1">Comprehensive Library</span>
-                </a>
-                
-                <a href="#career-guidance" class="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                    <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <i class="fas fa-user-graduate text-white text-lg"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800 text-center">Career Guidance</span>
-                    <span class="text-xs text-gray-500 mt-1">Expert Mentorship</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
+    
     <!-- Hero Section -->
-    <section class="relative pt-24 pb-16 overflow-hidden">
-        <!-- Background -->
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"></div>
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23f1f5f9" fill-opacity="0.4"%3E%3Ccircle cx="7" cy="7" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
-        
-        <!-- Single Container -->
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white/80 backdrop-blur-lg rounded-3xl p-12 shadow-2xl border border-white/20">
-                <div class="grid lg:grid-cols-2 gap-24 items-center">
-                    <!-- Left Content -->
-                    <div class="space-y-8">
-                        <div class="space-y-6">
-                           
-                            
-                            <!-- Main Heading -->
-                            <h1 class="text-4xl lg:text-5xl font-bold leading-tight text-gray-900">
-                                Transform Your 
-                                <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Medical Career</span>
-                            </h1>
-                            
-                            <!-- Description -->
-                            <p class="text-lg lg:text-xl text-gray-600 leading-relaxed">
-                                Join 50,000+ healthcare professionals learning from world-renowned experts. Access premium courses, live mentorship, and industry-recognized certifications.
-                            </p>
-                        </div>
-                        
-                        <!-- CTA Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="{{ route('courses.index') }}" class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                                <span>Start Learning Today</span>
-                                <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
-                            </a>
-                            
-                        </div>
-                        
-                        <!-- Stats -->
-                        <div class="grid grid-cols-3 gap-8 pt-8">
-                            <div class="text-center">
-                                <div class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">1,200+</div>
-                                <div class="text-sm text-gray-600 font-medium">Premium Courses</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">50k+</div>
-                                <div class="text-sm text-gray-600 font-medium">Active Students</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">98%</div>
-                                <div class="text-sm text-gray-600 font-medium">Success Rate</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Right Content - Feature Cards -->
-                    <div class="relative">
-                        <div class="space-y-6">
-                            <!-- Feature Item 1 -->
-                            <div class="flex items-center gap-5 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-md">
-                                <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <i class="fas fa-graduation-cap text-white text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900 text-lg">Expert-Led Courses</h3>
-                                    <p class="text-gray-600">Learn from top medical professionals</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Feature Item 2 -->
-                            <div class="flex items-center gap-5 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-md">
-                                <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <i class="fas fa-video text-white text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900 text-lg">Live Interactive Sessions</h3>
-                                    <p class="text-gray-600">Real-time Q&A with instructors</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Feature Item 3 -->
-                            <div class="flex items-center gap-5 p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-100 shadow-md">
-                                <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <i class="fas fa-certificate text-white text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900 text-lg">Industry Certifications</h3>
-                                    <p class="text-gray-600">Recognized by healthcare institutions</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Floating Elements -->
-                        <div class="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce">
-                            <i class="fas fa-star text-white text-xl"></i>
-                        </div>
-                        
-                        <div class="absolute -bottom-4 -left-4 w-14 h-14 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
-                            <i class="fas fa-award text-white text-lg"></i>
-                        </div>
-                    </div>
+    <section class="hero-section relative z-10">
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 fade-in-up montserrat">
+                Transform Your Medical Career
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in-up" style="animation-delay: 0.2s;">
+                Advance your skills with world-class medical education programs
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 fade-in-up" style="animation-delay: 0.4s;">
+                <a href="{{ route('courses.index') }}" class="btn-primary text-lg">
+                    <i class="fas fa-graduation-cap mr-2"></i>Explore Courses
+                </a>
+                <a href="{{ route('register') }}" class="btn-primary text-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Get Started
+                </a>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">500+</div>
+                    <div class="text-sm opacity-90">Courses</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">50K+</div>
+                    <div class="text-sm opacity-90">Students</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">200+</div>
+                    <div class="text-sm opacity-90">Expert Instructors</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">98%</div>
+                    <div class="text-sm opacity-90">Success Rate</div>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- Medical Specializations -->
-    <section class="py-24 bg-gradient-to-b from-gray-50 to-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
-            <div class="text-center mb-20">
-                <div class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-                    <i class="fas fa-stethoscope mr-2"></i>
-                    Medical Specializations
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 montserrat">Why Choose Us</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-video text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 montserrat">Live Interactive Classes</h3>
+                    <p class="text-gray-600">Engage with expert instructors in real-time through our interactive virtual classrooms</p>
                 </div>
-                <h2 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                    Choose Your <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Specialty</span>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-book-open text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 montserrat">Comprehensive Courses</h3>
+                    <p class="text-gray-600">Access a wide range of medical specializations and certification programs</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-certificate text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 montserrat">Certifications & Support</h3>
+                    <p class="text-gray-600">Earn globally recognized certifications with continuous learning support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Courses Section -->
+    <section class="py-16 bg-white" id="courses">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4 montserrat">Featured Courses</h2>
+                <p class="text-xl text-gray-600">Discover our most popular medical education programs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Course Card 1 -->
+                <div class="course-card">
+                    <img src="https://via.placeholder.com/400x200?text=Aesthetic+Medicine" alt="Aesthetic Medicine" class="course-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 montserrat">Fundamentals of Aesthetic Medicine</h3>
+                        <p class="text-gray-600 mb-4">Comprehensive introduction to aesthetic medicine techniques and practices</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>6 weeks
+                            </span>
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-users mr-1"></i>250 enrolled
+                            </span>
+                        </div>
+                        <a href="#" class="btn-primary w-full text-center">View Course</a>
+                    </div>
+                </div>
+                
+                <!-- Course Card 2 -->
+                <div class="course-card">
+                    <img src="https://via.placeholder.com/400x200?text=Ultrasound" alt="Ultrasound" class="course-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 montserrat">Advanced Ultrasound Training</h3>
+                        <p class="text-gray-600 mb-4">Master diagnostic ultrasound techniques for various medical applications</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>8 weeks
+                            </span>
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-users mr-1"></i>180 enrolled
+                            </span>
+                        </div>
+                        <a href="#" class="btn-primary w-full text-center">View Course</a>
+                    </div>
+                </div>
+                
+                <!-- Course Card 3 -->
+                <div class="course-card">
+                    <img src="https://via.placeholder.com/400x200?text=IVF+Medicine" alt="IVF & Reproductive Medicine" class="course-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 montserrat">IVF & Reproductive Medicine</h3>
+                        <p class="text-gray-600 mb-4">Comprehensive training in assisted reproductive technologies</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>10 weeks
+                            </span>
+                            <span class="text-sm text-gray-500">
+                                <i class="fas fa-users mr-1"></i>320 enrolled
+                            </span>
+                        </div>
+                        <a href="#" class="btn-primary w-full text-center">View Course</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="{{ route('courses.index') }}" class="btn-primary text-lg">
+                    View All Courses <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plans Section -->
+    <section id="plans" class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-3">
+                    Choose Your Plan
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-3">
+                    Flexible Plans for Instructors
                 </h2>
-                <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                    Master your field with comprehensive courses designed by leading specialists. Each program includes practical case studies, latest research, and hands-on training.
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Select the perfect plan to start teaching. All plans include course creation tools, analytics dashboard, and instructor support.
                 </p>
             </div>
-            
-            <!-- Specialization Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-16">
-                <!-- Cardiology -->
-                <a href="#cardiology" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-heartbeat text-white text-2xl"></i>
-                        </div>
-                        <span class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Cardiology</span>
-                        <div class="text-xs text-gray-500 mt-1">120+ Courses</div>
+
+            <div class="flex flex-wrap justify-center gap-4 max-w-7xl mx-auto">
+                <!-- Sample Plan Cards - Replace with dynamic content as needed -->
+                <div class="w-full max-w-sm bg-white border-2 border-gray-200 shadow-lg rounded-xl p-8 relative hover:shadow-xl transition-all flex flex-col min-h-[550px]">
+                    <div class="text-center mb-5">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Starter Plan</h3>
+                        <p class="text-gray-600 text-sm">Perfect for new instructors</p>
                     </div>
-                </a>
-                
-                <!-- Neurology -->
-                <a href="#neurology" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-red-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-brain text-white text-2xl"></i>
+
+                    <div class="text-center mb-6">
+                        <div class="mb-4">
+                            <div class="text-4xl font-bold text-gray-900">
+                                Free
+                            </div>
+                            <div class="text-gray-600 text-sm">forever</div>
                         </div>
-                        <span class="font-bold text-gray-900 group-hover:text-red-600 transition-colors">Neurology</span>
-                        <div class="text-xs text-gray-500 mt-1">95+ Courses</div>
                     </div>
-                </a>
-                
-                <!-- Pediatrics -->
-                <a href="#pediatrics" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-child text-white text-2xl"></i>
+
+                    <div class="text-center mb-5 pb-5 border-b border-gray-200">
+                        <div class="text-3xl font-bold text-blue-600">2</div>
+                        <div class="text-gray-600 text-sm">Active Courses</div>
+                    </div>
+
+                    <ul class="space-y-4 mb-6 flex-grow">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Up to 100 students per course</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Basic course builder</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Email support</span>
+                        </li>
+                    </ul>
+
+                    <a href="{{ route('register') }}" 
+                        class="block w-full text-center bg-gray-100 text-gray-900 hover:bg-gray-200 px-6 py-3.5 rounded-lg font-semibold transition-all transform hover:scale-105 mt-auto">
+                        Get Started
+                    </a>
+                </div>
+
+                <div class="w-full max-w-sm bg-white border-2 border-blue-600 shadow-2xl transform scale-105 rounded-xl p-8 relative hover:shadow-xl transition-all flex flex-col min-h-[550px]">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold">
+                            Most Popular
+                        </span>
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Professional Plan</h3>
+                        <p class="text-gray-600 text-sm">Best for growing instructors</p>
+                    </div>
+
+                    <div class="text-center mb-6">
+                        <div class="mb-4">
+                            <div class="text-4xl font-bold text-gray-900">
+                                ₹2,499
+                            </div>
+                            <div class="text-gray-600 text-sm">per month</div>
                         </div>
-                        <span class="font-bold text-gray-900 group-hover:text-green-600 transition-colors">Pediatrics</span>
-                        <div class="text-xs text-gray-500 mt-1">85+ Courses</div>
-                    </div>
-                </a>
-                
-                <!-- Surgery -->
-                <a href="#surgery" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-orange-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-50 to-yellow-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-user-md text-white text-2xl"></i>
+                        <div class="text-sm text-gray-600">
+                            or ₹24,990/year
+                            <span class="text-green-600 font-semibold">
+                                (Save 17%)
+                            </span>
                         </div>
-                        <span class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">Surgery</span>
-                        <div class="text-xs text-gray-500 mt-1">150+ Courses</div>
                     </div>
-                </a>
-                
-                <!-- Psychiatry -->
-                <a href="#psychiatry" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-purple-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-head-side-virus text-white text-2xl"></i>
+
+                    <div class="text-center mb-5 pb-5 border-b border-gray-200">
+                        <div class="text-3xl font-bold text-blue-600">10</div>
+                        <div class="text-gray-600 text-sm">Active Courses</div>
+                    </div>
+
+                    <ul class="space-y-4 mb-6 flex-grow">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">All Starter Features</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Unlimited students</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Advanced analytics & reports</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Live class integration</span>
+                        </li>
+                    </ul>
+
+                    <a href="{{ route('register') }}" 
+                        class="block w-full text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 px-6 py-3.5 rounded-lg font-semibold transition-all transform hover:scale-105 mt-auto">
+                        Get Started
+                    </a>
+                </div>
+
+                <div class="w-full max-w-sm bg-white border-2 border-gray-200 shadow-lg rounded-xl p-8 relative hover:shadow-xl transition-all flex flex-col min-h-[550px]">
+                    <div class="text-center mb-5">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Premium Plan</h3>
+                        <p class="text-gray-600 text-sm">For established instructors</p>
+                    </div>
+
+                    <div class="text-center mb-6">
+                        <div class="mb-4">
+                            <div class="text-4xl font-bold text-gray-900">
+                                ₹4,999
+                            </div>
+                            <div class="text-gray-600 text-sm">per month</div>
                         </div>
-                        <span class="font-bold text-gray-900 group-hover:text-purple-600 transition-colors">Psychiatry</span>
-                        <div class="text-xs text-gray-500 mt-1">70+ Courses</div>
-                    </div>
-                </a>
-                
-                <!-- Dermatology -->
-                <a href="#dermatology" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-teal-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-teal-50 to-cyan-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-hand-holding-medical text-white text-2xl"></i>
+                        <div class="text-sm text-gray-600">
+                            or ₹49,990/year
+                            <span class="text-green-600 font-semibold">
+                                (Save 17%)
+                            </span>
                         </div>
-                        <span class="font-bold text-gray-900 group-hover:text-teal-600 transition-colors">Dermatology</span>
-                        <div class="text-xs text-gray-500 mt-1">65+ Courses</div>
                     </div>
-                </a>
-                
-                <!-- Radiology -->
-                <a href="#radiology" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-indigo-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-x-ray text-white text-2xl"></i>
-                        </div>
-                        <span class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">Radiology</span>
-                        <div class="text-xs text-gray-500 mt-1">80+ Courses</div>
+
+                    <div class="text-center mb-5 pb-5 border-b border-gray-200">
+                        <div class="text-3xl font-bold text-blue-600">Unlimited</div>
+                        <div class="text-gray-600 text-sm">Active Courses</div>
                     </div>
-                </a>
-                
-                <!-- Oncology -->
-                <a href="#oncology" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-pink-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-pink-50 to-rose-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-ribbon text-white text-2xl"></i>
-                        </div>
-                        <span class="font-bold text-gray-900 group-hover:text-pink-600 transition-colors">Oncology</span>
-                        <div class="text-xs text-gray-500 mt-1">90+ Courses</div>
-                    </div>
-                </a>
-                
-                <!-- Orthopedics -->
-                <a href="#orthopedics" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-amber-200 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-bone text-white text-2xl"></i>
-                        </div>
-                        <span class="font-bold text-gray-900 group-hover:text-amber-600 transition-colors">Orthopedics</span>
-                        <div class="text-xs text-gray-500 mt-1">110+ Courses</div>
-                    </div>
-                </a>
-                
-                <!-- General Medicine -->
-                <a href="#general-medicine" class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-300 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-gray-50 to-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-gray-600 to-slate-700 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                            <i class="fas fa-stethoscope text-white text-2xl"></i>
-                        </div>
-                        <span class="font-bold text-gray-900 group-hover:text-gray-700 transition-colors">General Medicine</span>
-                        <div class="text-xs text-gray-500 mt-1">200+ Courses</div>
-                    </div>
-                </a>
+
+                    <ul class="space-y-4 mb-6 flex-grow">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">All Professional Features</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Priority listing in search</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Marketing & promotional support</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700 text-base">Dedicated account manager</span>
+                        </li>
+                    </ul>
+
+                    <a href="{{ route('register') }}" 
+                        class="block w-full text-center bg-gray-100 text-gray-900 hover:bg-gray-200 px-6 py-3.5 rounded-lg font-semibold transition-all transform hover:scale-105 mt-auto">
+                        Get Started
+                    </a>
+                </div>
             </div>
-            
-            <!-- View All Specializations Button -->
-            <div class="text-center">
-                <a href="{{ route('courses.index') }}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                    <span>View All Specializations</span>
-                    <i class="fas fa-arrow-right ml-3"></i>
-                </a>
+
+            <div class="text-center mt-8">
+                <p class="text-gray-600 text-sm mb-3">All plans include:</p>
+                <div class="flex flex-wrap justify-center gap-4 text-xs text-gray-700">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Course Creation Tools
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Student Management
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Revenue Tracking
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Instructor Community
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Why Choose Us -->
-    <section class="py-24 bg-white">
+    <!-- Join as Professional Section -->
+    <section class="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
-            <div class="text-center mb-20">
-                <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-6">
-                    <i class="fas fa-award mr-2"></i>
-                    Why Paathshaala?
-                </div>
-                <h2 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                    India's Leading <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Medical Platform</span>
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    Become an Instructor
                 </h2>
-                <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                    Trusted by 50,000+ healthcare professionals nationwide. Experience world-class medical education with cutting-edge technology and personalized learning paths.
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Share your medical expertise with thousands of eager learners. Join our teaching community and make an impact.
                 </p>
             </div>
-            
-            <!-- Features Grid -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Expert Faculty -->
-                <div class="group relative bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div class="relative z-10 text-center">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-xl">
-                            <i class="fas fa-graduation-cap text-white text-3xl"></i>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- Doctor/Instructor Registration -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col min-h-[480px]">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-700 p-8 text-white">
+                        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-5 mx-auto">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">World-Class Faculty</h3>
-                        <p class="text-gray-600 leading-relaxed mb-4">Learn from internationally renowned medical experts, department heads, and practicing specialists with decades of experience.</p>
-                        <div class="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">500+ Expert Instructors</div>
+                        <h3 class="text-2xl font-bold text-center">Join as Instructor</h3>
+                    </div>
+                    <div class="p-10 flex flex-col flex-grow">
+                        <ul class="space-y-5 mb-10 flex-grow">
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Reach thousands of students nationwide</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Flexible teaching hours</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Share your medical expertise</span>
+                            </li>
+                        </ul>
+                        <a href="{{ route('register') }}" 
+                           class="block w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white text-center font-semibold py-4 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all mt-auto">
+                            Apply Now
+                        </a>
                     </div>
                 </div>
-                
-                <!-- Industry Recognition -->
-                <div class="group relative bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div class="relative z-10 text-center">
-                        <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-xl">
-                            <i class="fas fa-certificate text-white text-3xl"></i>
+
+                <!-- Agency Registration -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col min-h-[480px]">
+                    <div class="bg-gradient-to-r from-purple-500 to-purple-700 p-8 text-white">
+                        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-5 mx-auto">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors">Globally Recognized</h3>
-                        <p class="text-gray-600 leading-relaxed mb-4">Industry-accredited certifications accepted by top hospitals, medical institutions, and healthcare organizations worldwide.</p>
-                        <div class="text-sm font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full inline-block">WHO & AMA Approved</div>
+                        <h3 class="text-2xl font-bold text-center">Join as Institution</h3>
+                    </div>
+                    <div class="p-10 flex flex-col flex-grow">
+                        <ul class="space-y-5 mb-10 flex-grow">
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Manage multiple instructors</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Expand your digital presence</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Centralized dashboard</span>
+                            </li>
+                        </ul>
+                        <a href="{{ route('register') }}" 
+                           class="block w-full bg-gradient-to-r from-purple-500 to-purple-700 text-white text-center font-semibold py-4 rounded-lg hover:from-purple-600 hover:to-purple-800 transition-all mt-auto">
+                            Apply Now
+                        </a>
                     </div>
                 </div>
-                
-                <!-- 24/7 Support -->
-                <div class="group relative bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div class="relative z-10 text-center">
-                        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-xl">
-                            <i class="fas fa-headset text-white text-3xl"></i>
+
+                <!-- Hospital/Provider Registration -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col min-h-[480px]">
+                    <div class="bg-gradient-to-r from-green-500 to-green-700 p-8 text-white">
+                        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-5 mx-auto">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-600 transition-colors">Premium Support</h3>
-                        <p class="text-gray-600 leading-relaxed mb-4">Round-the-clock academic mentorship, technical assistance, and personalized career guidance from dedicated support teams.</p>
-                        <div class="text-sm font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full inline-block">24/7 Live Chat</div>
+                        <h3 class="text-2xl font-bold text-center">Join as Hospital</h3>
                     </div>
-                </div>
-                
-                <!-- Advanced Technology -->
-                <div class="group relative bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-50 to-red-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div class="relative z-10 text-center">
-                        <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-xl">
-                            <i class="fas fa-mobile-alt text-white text-3xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-orange-600 transition-colors">Advanced Learning</h3>
-                        <p class="text-gray-600 leading-relaxed mb-4">AI-powered learning paths, virtual simulations, interactive case studies, and seamless multi-device accessibility.</p>
-                        <div class="text-sm font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full inline-block">AI-Powered Platform</div>
+                    <div class="p-10 flex flex-col flex-grow">
+                        <ul class="space-y-5 mb-10 flex-grow">
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Register your hospital/clinic</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Host medical training programs</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-700">Partner for medical education</span>
+                            </li>
+                        </ul>
+                        <a href="{{ route('register') }}" 
+                           class="block w-full bg-gradient-to-r from-green-500 to-green-700 text-white text-center font-semibold py-4 rounded-lg hover:from-green-600 hover:to-green-800 transition-all mt-auto">
+                            Apply Now
+                        </a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Statistics Banner -->
-            <div class="mt-20 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-12 text-center text-white">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    <div>
-                        <div class="text-4xl font-bold mb-2">98%</div>
-                        <div class="text-blue-200">Success Rate</div>
+
+            <!-- Simple Application Process -->
+            <div class="bg-white rounded-2xl shadow-lg p-10 text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-8">Simple Application Process</h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <div class="px-4">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-lg mb-4">1</div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Submit Application</h4>
+                        <p class="text-sm text-gray-600">Fill out our comprehensive application form with your details and credentials</p>
                     </div>
-                    <div>
-                        <div class="text-4xl font-bold mb-2">50k+</div>
-                        <div class="text-blue-200">Active Students</div>
+
+                    <div class="px-4">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-lg mb-4">2</div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Document Review</h4>
+                        <p class="text-sm text-gray-600">Our team reviews your credentials and supporting documents thoroughly</p>
                     </div>
-                    <div>
-                        <div class="text-4xl font-bold mb-2">1,200+</div>
-                        <div class="text-blue-200">Expert Courses</div>
+
+                    <div class="px-4">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-lg mb-4">3</div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Verification</h4>
+                        <p class="text-sm text-gray-600">Quick verification process completed within 2-3 business days</p>
                     </div>
-                    <div>
-                        <div class="text-4xl font-bold mb-2">24/7</div>
-                        <div class="text-blue-200">Support Available</div>
+
+                    <div class="px-4">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-lg mb-4">4</div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Get Started</h4>
+                        <p class="text-sm text-gray-600">Account setup and onboarding to help you start teaching immediately</p>
                     </div>
                 </div>
+
+                <p class="text-gray-600 mb-6">Questions about joining our platform?</p>
+
+                <a href="{{ route('contact') }}" class="inline-flex items-center px-6 py-3 bg-white border border-gray-200 rounded-lg shadow-sm text-gray-700 font-medium hover:bg-gray-50 transition">
+                    <svg class="mr-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Contact Us
+                </a>
             </div>
         </div>
     </section>
-
-    <!-- Platform Services Section -->
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-5">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="inline-block px-4 py-2 bg-green-50 text-green-600 rounded-full text-sm font-semibold mb-4">Platform Services</span>
-                <h2 class="font-display text-4xl lg:text-5xl font-bold">How We Serve You</h2>
-                <p class="text-lg text-slate-600 mt-4">Comprehensive medical education solutions designed for students, professionals, and healthcare organizations</p>
-            </div>
-            
-            <div class="grid lg:grid-cols-3 gap-8">
-                <div class="service-card bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl overflow-hidden shadow-md border border-blue-100 transition-all hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="p-10">
-                        <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mb-6">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                <circle cx="8.5" cy="7" r="4" stroke="white" stroke-width="2"/>
-                                <path d="M20 8v6M23 11h-6" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4">For Students</h3>
-                        <p class="text-slate-600 mb-6 leading-relaxed">Access quality medical education with ease. Enroll in courses, attend live classes, manage your learning journey, and track your progress.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Comprehensive course library</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Live interactive classes</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Digital certificates</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Progress tracking</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Expert consultation</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Career guidance</li>
-                        </ul>
-                        <a href="{{ url('/register?type=student') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg transition-all hover:from-purple-700 hover:to-indigo-700 hover:translate-x-1 shadow-md hover:shadow-lg">Get Started →</a>
-                    </div>
-                </div>
-                
-                <div class="service-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl overflow-hidden shadow-md border border-green-100 transition-all hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="p-10">
-                        <div class="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center mb-6">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4">For Instructors</h3>
-                        <p class="text-slate-600 mb-6 leading-relaxed">Share your expertise with aspiring medical professionals. Create courses, conduct live sessions, and build your teaching portfolio.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Course creation tools</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Live teaching platform</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Student management</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Revenue analytics</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Assessment tools</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Professional profile</li>
-                        </ul>
-                        <a href="{{ url('/register?type=teacher') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg transition-all hover:from-purple-700 hover:to-indigo-700 hover:translate-x-1 shadow-md hover:shadow-lg">Join as Instructor →</a>
-                    </div>
-                </div>
-                
-                <div class="service-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl overflow-hidden shadow-md border border-purple-100 transition-all hover:-translate-y-2 hover:shadow-2xl">
-                    <div class="p-10">
-                        <div class="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center mb-6">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                <path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                <circle cx="12" cy="7" r="4" stroke="white" stroke-width="2"/>
-                                <path d="M19 8v6M22 11h-6" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4">For Institutions</h3>
-                        <p class="text-slate-600 mb-6 leading-relaxed">Partner with us to expand your educational reach. Manage multiple courses, instructors, and students on our platform.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Multi-course management</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Instructor network</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Analytics dashboard</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Revenue management</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Quality assurance</li>
-                            <li class="flex items-start text-slate-600 pl-7 relative before:content-['✓'] before:absolute before:left-0 before:text-green-500 before:font-bold">Branding options</li>
-                        </ul>
-                        <a href="{{ url('/register?type=institution') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg transition-all hover:from-purple-700 hover:to-indigo-700 hover:translate-x-1 shadow-md hover:shadow-lg">Partner With Us →</a>
-                    </div>
-                </div>
-            </div>
+    
+    <!-- CTA Section -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-4 montserrat">Ready to Start Your Journey?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Join thousands of medical professionals advancing their careers</p>
+            <a href="{{ route('register') }}" class="btn-primary bg-white text-blue-700 hover:bg-gray-100">
+                <i class="fas fa-rocket mr-2"></i>Get Started Today
+            </a>
         </div>
     </section>
-
+    
     <!-- Footer -->
-    <footer class="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
-        <!-- Newsletter Section -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h3 class="text-4xl font-bold mb-4">Stay Updated with Medical Insights</h3>
-                <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Get the latest medical research updates, course announcements, and exclusive healthcare content delivered to your inbox.</p>
-                <div class="max-w-md mx-auto flex gap-4">
-                    <input type="email" placeholder="Enter your email address" class="flex-1 px-6 py-4 rounded-2xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                    <button class="px-8 py-4 bg-white text-blue-600 rounded-2xl font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">Subscribe</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Main Footer Content -->
-        <div class="py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                    <!-- Company Info -->
-                    <div class="lg:col-span-2">
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
-                                <i class="fas fa-graduation-cap text-white text-2xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Paathshaala</h3>
-                                <p class="text-blue-300 text-sm">Medical Education Excellence</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-300 mb-8 text-lg leading-relaxed max-w-lg">Transforming medical education in India through innovative online learning experiences. Join 50,000+ healthcare professionals advancing their careers with us.</p>
-                        
-                        <!-- Social Links -->
-                        <div class="flex gap-4 mb-8">
-                            <a href="#" class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center hover:from-blue-500 hover:to-blue-600 transition-all transform hover:scale-110 shadow-lg" aria-label="Facebook">
-                                <i class="fab fa-facebook-f text-white"></i>
-                            </a>
-                            <a href="#" class="w-12 h-12 bg-gradient-to-br from-sky-600 to-sky-700 rounded-2xl flex items-center justify-center hover:from-sky-500 hover:to-sky-600 transition-all transform hover:scale-110 shadow-lg" aria-label="Twitter">
-                                <i class="fab fa-twitter text-white"></i>
-                            </a>
-                            <a href="#" class="w-12 h-12 bg-gradient-to-br from-pink-600 to-pink-700 rounded-2xl flex items-center justify-center hover:from-pink-500 hover:to-pink-600 transition-all transform hover:scale-110 shadow-lg" aria-label="Instagram">
-                                <i class="fab fa-instagram text-white"></i>
-                            </a>
-                            <a href="#" class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl flex items-center justify-center hover:from-indigo-500 hover:to-indigo-600 transition-all transform hover:scale-110 shadow-lg" aria-label="LinkedIn">
-                                <i class="fab fa-linkedin-in text-white"></i>
-                            </a>
-                        </div>
-                        
-                        <!-- Trust Badges -->
-                        <div class="flex gap-4 text-sm text-gray-400">
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-shield-alt text-green-500"></i>
-                                <span>SSL Secured</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-award text-yellow-500"></i>
-                                <span>ISO Certified</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Links -->
-                    <div>
-                        <h4 class="text-xl font-bold mb-6 text-white">Platform</h4>
-                        <ul class="space-y-4">
-                            <li><a href="{{ route('courses.index') }}" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>Browse Courses</a></li>
-                            <li><a href="{{ route('about') }}" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>About Us</a></li>
-                            <li><a href="#instructors" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>Expert Faculty</a></li>
-                            <li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>Contact Support</a></li>
-                            <li><a href="#certifications" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>Certifications</a></li>
-                            <li><a href="#careers" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>Careers</a></li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Medical Specializations -->
-                    <div>
-                        <h4 class="text-xl font-bold mb-6 text-white">Specializations</h4>
-                        <ul class="space-y-4">
-                            <li><a href="#cardiology" class="text-gray-300 hover:text-red-400 transition-colors flex items-center gap-2 group"><i class="fas fa-heartbeat text-red-500 text-xs"></i>Cardiology</a></li>
-                            <li><a href="#neurology" class="text-gray-300 hover:text-blue-400 transition-colors flex items-center gap-2 group"><i class="fas fa-brain text-blue-500 text-xs"></i>Neurology</a></li>
-                            <li><a href="#surgery" class="text-gray-300 hover:text-orange-400 transition-colors flex items-center gap-2 group"><i class="fas fa-user-md text-orange-500 text-xs"></i>Surgery</a></li>
-                            <li><a href="#pediatrics" class="text-gray-300 hover:text-green-400 transition-colors flex items-center gap-2 group"><i class="fas fa-child text-green-500 text-xs"></i>Pediatrics</a></li>
-                            <li><a href="#radiology" class="text-gray-300 hover:text-indigo-400 transition-colors flex items-center gap-2 group"><i class="fas fa-x-ray text-indigo-500 text-xs"></i>Radiology</a></li>
-                            <li><a href="#general-medicine" class="text-gray-300 hover:text-gray-400 transition-colors flex items-center gap-2 group"><i class="fas fa-stethoscope text-gray-500 text-xs"></i>General Medicine</a></li>
-                        </ul>
-                        
-                        <!-- Contact Info -->
-                        <div class="mt-12">
-                            <h4 class="text-xl font-bold mb-6 text-white">Contact</h4>
-                            <ul class="space-y-4">
-                                <li class="flex items-start gap-3 text-gray-300">
-                                    <div class="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
-                                        <i class="fas fa-envelope text-blue-400 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <div class="font-semibold text-white">Email Support</div>
-                                        <div class="text-sm">support@paathshaala.com</div>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-3 text-gray-300">
-                                    <div class="w-8 h-8 bg-green-600/20 rounded-lg flex items-center justify-center mt-0.5">
-                                        <i class="fas fa-phone text-green-400 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <div class="font-semibold text-white">24/7 Helpline</div>
-                                        <div class="text-sm">+91-800-MEDICAL</div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+    <footer class="site-footer">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 montserrat">{{ config('app.name') }}</h3>
+                    <p class="text-gray-400 mb-4">Empowering medical professionals through quality education and training</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="social-icon bg-gray-700 hover:bg-blue-600">
+                            <i class="fab fa-facebook-f text-white"></i>
+                        </a>
+                        <a href="#" class="social-icon bg-gray-700 hover:bg-pink-600">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        <a href="#" class="social-icon bg-gray-700 hover:bg-red-600">
+                            <i class="fab fa-youtube text-white"></i>
+                        </a>
+                        <a href="#" class="social-icon bg-gray-700 hover:bg-blue-700">
+                            <i class="fab fa-linkedin-in text-white"></i>
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Bottom Section -->
-                <div class="pt-8 border-t border-gray-700">
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div class="text-gray-400 text-center md:text-left">
-                            <p>&copy; {{ date('Y') }} Paathshaala Medical Education Platform. All rights reserved.</p>
-                        </div>
-                        <div class="flex gap-6 text-sm">
-                            <a href="#cookies" class="text-gray-400 hover:text-blue-400 transition-colors">Cookie Policy</a>
-                        </div>
-                    </div>
+                <!-- Quick Links -->
+                <div class="footer-links">
+                    <h4 class="text-lg font-semibold mb-4 montserrat">Platform</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{{ route('courses.index') }}">Browse Courses</a></li>
+                        <li><a href="{{ route('about') }}">About Us</a></li>
+                        <li><a href="#faculty">Our Faculty</a></li>
+                        <li><a href="{{ route('contact') }}">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Specializations -->
+                <div class="footer-links">
+                    <h4 class="text-lg font-semibold mb-4 montserrat">Specializations</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#">Aesthetic Medicine</a></li>
+                        <li><a href="#">Aesthetic Gynecology</a></li>
+                        <li><a href="#">Ultrasound</a></li>
+                        <li><a href="#">IVF & Reproductive Medicine</a></li>
+                        <li><a href="#">Surgical Courses</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 montserrat">Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>
+                            <i class="fas fa-envelope mr-2"></i>
+                            info@medniks.com
+                        </li>
+                        <li>
+                            <i class="fas fa-phone mr-2"></i>
+                            +1 234 567 8900
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            123 Medical Plaza, Healthcare City
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                <div class="mt-2">
+                    <span class="inline-block mr-4">
+                        <i class="fas fa-shield-alt mr-1"></i>SSL Secured
+                    </span>
+                    <span class="inline-block">
+                        <i class="fas fa-certificate mr-1"></i>ISO Certified
+                    </span>
                 </div>
             </div>
         </div>
     </footer>
+    
+    <!-- Scripts -->
     <script>
-        // Simple smooth scrolling for anchor links
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
                     });
                 }
             });
         });
-
-        // Header scroll effect
+        
+        // Add scroll effect to header
         window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.classList.add('shadow-lg');
+            const header = document.querySelector('.site-header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
             } else {
-                header.classList.remove('shadow-lg');
-            }
-        });
-
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('hidden');
-        }
-
-        // User dropdown toggle
-        function toggleUserDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('userDropdown');
-            const button = event.target.closest('button[onclick="toggleUserDropdown()"]');
-            
-            if (!button && dropdown && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // Success modal functions
-        function closeSuccessModal() {
-            const modal = document.getElementById('successModal');
-            if (modal) {
-                modal.style.opacity = '0';
-                modal.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    modal.remove();
-                }, 300);
-            }
-        }
-
-        // Auto-close success modal after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const successModal = document.getElementById('successModal');
-            console.log('Checking for success modal...', successModal);
-            @if(session('show_success_popup'))
-                console.log('Session has show_success_popup flag');
-            @endif
-            
-            if (successModal) {
-                console.log('Success modal found, auto-closing in 5 seconds');
-                setTimeout(() => {
-                    closeSuccessModal();
-                }, 5000);
-            } else {
-                console.log('No success modal found');
+                header.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
             }
         });
     </script>

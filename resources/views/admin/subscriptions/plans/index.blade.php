@@ -87,13 +87,13 @@
                                     @elseif(strtolower($plan->name) == 'gold') bg-gradient-to-br from-yellow-100 to-yellow-200 border border-yellow-300
                                     @elseif(strtolower($plan->name) == 'platinum') bg-gradient-to-br from-purple-100 to-purple-200 border border-purple-300
                                     @else bg-gradient-to-br from-indigo-100 to-indigo-200 border border-indigo-300 @endif shadow-sm">
-                                    <svg class="h-6 w-6 
+                                    <!-- <svg class="h-6 w-6 
                                         @if(strtolower($plan->name) == 'silver') text-gray-700
                                         @elseif(strtolower($plan->name) == 'gold') text-yellow-700
                                         @elseif(strtolower($plan->name) == 'platinum') text-purple-700
                                         @else text-indigo-700 @endif" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
+                                    </svg> -->
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">{{ $plan->name }}</div>
@@ -132,9 +132,9 @@
                     @empty
                     <tr>
                         <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                            </svg>
+                            </svg> -->
                             <p class="mt-2 text-lg">No subscription plans created yet</p>
                             <a href="{{ route('admin.subscriptions.plans.create') }}" class="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
                                 Create Your First Plan

@@ -286,7 +286,7 @@
         <div class="info-grid">
             <div class="info-row">
                 <span class="info-label">Application Name:</span>
-                <span class="info-value"><?php echo e(config('app.name', 'PaathShaala')); ?></span>
+                <span class="info-value"><?php echo e(config('app.name', 'Medniks')); ?></span>
             </div>
             <div class="info-row">
                 <span class="info-label">Environment:</span>

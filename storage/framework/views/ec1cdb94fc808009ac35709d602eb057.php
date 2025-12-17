@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <title><?php echo e(config('app.name', 'PaathShaala')); ?> - <?php echo $__env->yieldContent('title', 'Admin Panel'); ?></title>
+    <title><?php echo e(config('app.name', 'Medniks')); ?> - <?php echo $__env->yieldContent('title', 'Admin Panel'); ?></title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -182,28 +182,6 @@
     <!-- Main Content Area -->
     <div class="page-content">
         <?php echo $__env->yieldContent('content'); ?>
-        
-        <!-- Footer -->
-        <?php if (isset($component)) { $__componentOriginal13c317896897799077c93fa7c21afbaf = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal13c317896897799077c93fa7c21afbaf = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.footer.admin','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('footer.admin'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal13c317896897799077c93fa7c21afbaf)): ?>
-<?php $attributes = $__attributesOriginal13c317896897799077c93fa7c21afbaf; ?>
-<?php unset($__attributesOriginal13c317896897799077c93fa7c21afbaf); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal13c317896897799077c93fa7c21afbaf)): ?>
-<?php $component = $__componentOriginal13c317896897799077c93fa7c21afbaf; ?>
-<?php unset($__componentOriginal13c317896897799077c93fa7c21afbaf); ?>
-<?php endif; ?>
     </div>
 </body>
 </html>

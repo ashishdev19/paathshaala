@@ -182,6 +182,46 @@
         font-weight: 600;
     }
 
+    /* Special styling for Roles & Permissions menu item */
+    .nav-item.roles-permissions {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.15));
+        border-left-color: #a855f7;
+        color: #c084fc;
+    }
+
+    .nav-item.roles-permissions:hover {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(168, 85, 247, 0.25));
+        border-left-color: #c084fc;
+        color: #e9d5ff;
+    }
+
+    .nav-item.roles-permissions.active {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(168, 85, 247, 0.3));
+        border-left-color: #a855f7;
+        color: #e9d5ff;
+        box-shadow: inset 0 0 12px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Special styling for Admin Accounts menu item */
+    .nav-item.admin-accounts {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
+        border-left-color: #3b82f6;
+        color: #60a5fa;
+    }
+
+    .nav-item.admin-accounts:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.25));
+        border-left-color: #60a5fa;
+        color: #93c5fd;
+    }
+
+    .nav-item.admin-accounts.active {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3));
+        border-left-color: #3b82f6;
+        color: #93c5fd;
+        box-shadow: inset 0 0 12px rgba(59, 130, 246, 0.2);
+    }
+
     .logout-section {
         margin-top: auto;
         padding: 1.25rem 0.75rem;
@@ -229,7 +269,7 @@
                 AD
             </div>
             <div class="logo-text">
-                <h2>PaathShaala</h2>
+                <h2>Medniks</h2>
                 <p>Admin</p>
             </div>
         </div>
@@ -246,6 +286,11 @@
         <a href="<?php echo e(route('admin.courses.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.courses.*') ? 'active' : ''); ?>">
             <i class="fas fa-book icon"></i>
             <span>Courses</span>
+        </a>
+
+        <a href="<?php echo e(route('admin.course-categories.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.course-categories.*') ? 'active' : ''); ?>">
+            <i class="fas fa-folder-tree icon"></i>
+            <span>Course Categories</span>
         </a>
 
         <a href="<?php echo e(route('admin.instructors.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.instructors.*') || request()->routeIs('admin.teachers.*') ? 'active' : ''); ?>">
@@ -278,12 +323,12 @@
             <span>Reports</span>
         </a>
 
-        <a href="<?php echo e(route('admin.access-control.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.access-control.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('admin.access-control.index')); ?>" class="nav-item roles-permissions <?php echo e(request()->routeIs('admin.access-control.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'active' : ''); ?>">
             <i class="fas fa-shield-alt icon"></i>
             <span>Roles & Permissions</span>
         </a>
 
-        <a href="<?php echo e(route('admin.accounts.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.accounts.*') ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('admin.accounts.index')); ?>" class="nav-item admin-accounts <?php echo e(request()->routeIs('admin.accounts.*') ? 'active' : ''); ?>">
             <i class="fas fa-user-cog icon"></i>
             <span>Admin Accounts</span>
         </a>

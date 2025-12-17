@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Instructor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\CourseCategory;
 use App\Models\CourseSection;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
@@ -29,7 +30,11 @@ class InstructorCourseController extends Controller
     // Step 1: Course Basics
     public function createBasics()
     {
-        return view('instructor.courses.create.basics');
+        $categories = CourseCategory::active()
+            ->orderBy('name')
+            ->get();
+
+        return view('instructor.courses.create.basics', compact('categories'));
     }
 
     public function storeBasics(Request $request)
@@ -38,10 +43,15 @@ class InstructorCourseController extends Controller
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|string|max:100',
+            'category_id' => 'required|exists:course_categories,id',
             'level' => 'required|in:beginner,intermediate,advanced',
             'language' => 'required|string|max:50',
             'course_mode' => 'required|in:online,offline,hybrid',
+            'duration' => 'nullable|string|max:100',
+            'class_start_time' => 'nullable|date_format:H:i',
+            'class_end_time' => 'nullable|date_format:H:i|after:class_start_time',
+            'batch_start_date' => 'nullable|date',
+            'batch_end_date' => 'nullable|date|after_or_equal:batch_start_date',
         ]);
 
         $course = new Course();
@@ -50,6 +60,10 @@ class InstructorCourseController extends Controller
         $course->status = 'draft';
         $course->price = 0; // Default price, will be updated in pricing step
         $course->slug = Str::slug($validated['title']) . '-' . uniqid();
+        
+        // Set mode field separately as it's called 'course_mode' in form but 'mode' in database
+        $course->mode = $validated['course_mode'];
+        
         $course->save();
 
         session(['course_id' => $course->id]);

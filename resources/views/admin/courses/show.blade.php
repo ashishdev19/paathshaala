@@ -39,7 +39,7 @@
                     <!-- Category Card -->
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
                         <div class="text-sm text-gray-600 mb-2">Category</div>
-                        <div class="text-lg font-semibold text-blue-600">{{ $course->category ?? 'General' }}</div>
+                        <div class="text-lg font-semibold text-blue-600">{{ $course->category->name ?? 'General' }}</div>
                     </div>
 
                     <!-- Enrollments Card -->

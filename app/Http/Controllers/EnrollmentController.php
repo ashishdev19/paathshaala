@@ -213,6 +213,9 @@ class EnrollmentController extends Controller
 
     public function checkout(Course $course)
     {
+        // Load category relationship
+        $course->load('category', 'teacher');
+        
         $user = Auth::user();
 
         // Check if user is already enrolled

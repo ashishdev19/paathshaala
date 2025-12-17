@@ -16,7 +16,7 @@ use App\Models\User;
 use App\Models\Role;
 
 // Configuration
-$userEmail = 'professor@paathshaala.com';
+$userEmail = 'professor@medniks.com';
 $roleName = 'Instructor';
 $roleSlug = 'instructor';
 

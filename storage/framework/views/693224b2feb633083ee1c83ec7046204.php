@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <title><?php echo e(config('app.name', 'PaathShaala')); ?> - <?php echo $__env->yieldContent('title', 'Admin Panel'); ?></title>
+    <title><?php echo e(config('app.name', 'Medniks')); ?> - Admin Panel</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -16,9 +16,6 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
     <style>
         * {
             margin: 0;
@@ -27,94 +24,134 @@
         }
 
         body {
-            font-family: 'Figtree', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        .main-content-wrapper {
+            margin-left: 16rem;
             min-height: 100vh;
-        }
-
-        .top-nav {
-            position: fixed;
-            left: 16rem;
-            top: 0;
-            right: 0;
-            height: 4rem;
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
             display: flex;
-            align-items: center;
-            padding: 0 2rem;
-            z-index: 40;
+            flex-direction: column;
         }
 
-        .nav-content {
+        .top-navbar {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            height: 4rem;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .navbar-content {
+            height: 100%;
+            padding: 0 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
         }
 
-        .nav-left {
+        .navbar-left {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .nav-right {
+        .navbar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #4f46e5;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-right {
             display: flex;
             align-items: center;
             gap: 1.5rem;
         }
 
-        .user-info {
+        .notification-bell {
+            position: relative;
+            font-size: 1.25rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .notification-bell:hover {
+            color: #4f46e5;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 700;
+        }
+
+        .user-profile {
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            padding-left: 1rem;
+            border-left: 1px solid #e5e7eb;
         }
 
         .user-avatar {
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
         }
 
-        .user-details {
+        .user-info {
             display: flex;
             flex-direction: column;
-            gap: 0.125rem;
         }
 
         .user-name {
-            font-weight: 600;
             font-size: 0.875rem;
-            color: #0f172a;
+            font-weight: 600;
+            color: #1f2937;
         }
 
         .user-role {
             font-size: 0.75rem;
-            color: #64748b;
-            text-transform: capitalize;
+            color: #6b7280;
         }
 
         .page-content {
-            margin-left: 16rem;
-            margin-top: 4rem;
+            flex: 1;
             padding: 2rem;
+            padding-bottom: 3rem;
+            overflow-y: auto;
             animation: fadeIn 0.4s ease-out;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -122,29 +159,38 @@
             }
         }
 
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .top-nav {
-                left: 0;
+            .main-content-wrapper {
+                margin-left: 0;
+            }
+
+            .navbar-content {
+                padding: 0 1rem;
             }
 
             .page-content {
-                margin-left: 0;
                 padding: 1rem;
             }
+        }
 
-            .user-details {
-                display: none;
-            }
+        /* Footer full width */
+        .admin-footer {
+            margin-left: 0;
+            width: 100%;
         }
     </style>
-    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
     <!-- Admin Sidebar -->
-    <?php if (isset($component)) { $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin-sidebar'); ?>
+    <?php if (isset($component)) { $__componentOriginal6702637fcda68559f293a0e6ab31b9f6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal6702637fcda68559f293a0e6ab31b9f6 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sidebar.admin','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('sidebar.admin'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
@@ -153,69 +199,56 @@
 <?php $component->withAttributes([]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
-<?php $attributes = $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
-<?php unset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
+<?php if (isset($__attributesOriginal6702637fcda68559f293a0e6ab31b9f6)): ?>
+<?php $attributes = $__attributesOriginal6702637fcda68559f293a0e6ab31b9f6; ?>
+<?php unset($__attributesOriginal6702637fcda68559f293a0e6ab31b9f6); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
-<?php $component = $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
-<?php unset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
+<?php if (isset($__componentOriginal6702637fcda68559f293a0e6ab31b9f6)): ?>
+<?php $component = $__componentOriginal6702637fcda68559f293a0e6ab31b9f6; ?>
+<?php unset($__componentOriginal6702637fcda68559f293a0e6ab31b9f6); ?>
 <?php endif; ?>
 
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <div class="nav-content">
-            <div class="nav-left">
-                <?php if(isset($header)): ?>
-                    <?php echo e($header); ?>
+    <!-- Main Content Wrapper -->
+    <div class="main-content-wrapper">
+        <!-- Top Navigation Bar -->
+        <nav class="top-navbar">
+            <div class="navbar-content">
+                <div class="navbar-left">
+                    <h2 class="navbar-title">Admin Panel</h2>
+                </div>
 
-                <?php else: ?>
-                    <h2 style="font-size: 1.25rem; font-weight: 700; color: #0f172a;">Dashboard</h2>
-                <?php endif; ?>
-            </div>
-            <div class="nav-right">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <?php echo e(strtoupper(substr(auth()->user()->name ?? 'A', 0, 1))); ?>
-
+                <div class="navbar-right">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
                     </div>
-                    <div class="user-details">
-                        <div class="user-name"><?php echo e(auth()->user()->name ?? 'Admin'); ?></div>
-                        <div class="user-role">Admin</div>
+
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <?php echo e(strtoupper(substr(auth()->user()->name, 0, 1))); ?>
+
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name"><?php echo e(auth()->user()->name); ?></span>
+                            <span class="user-role">Administrator</span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <?php if(isset($header)): ?>
+                <div class="page-header">
+                    <?php echo e($header); ?>
+
+                </div>
+            <?php endif; ?>
+            <?php echo e($slot); ?>
+
         </div>
     </div>
-
-    <!-- Main Content Area -->
-    <div class="page-content">
-        <?php echo e($slot); ?>
-
-        
-        <!-- Footer -->
-        <?php if (isset($component)) { $__componentOriginal13c317896897799077c93fa7c21afbaf = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal13c317896897799077c93fa7c21afbaf = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.footer.admin','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('footer.admin'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal13c317896897799077c93fa7c21afbaf)): ?>
-<?php $attributes = $__attributesOriginal13c317896897799077c93fa7c21afbaf; ?>
-<?php unset($__attributesOriginal13c317896897799077c93fa7c21afbaf); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal13c317896897799077c93fa7c21afbaf)): ?>
-<?php $component = $__componentOriginal13c317896897799077c93fa7c21afbaf; ?>
-<?php unset($__componentOriginal13c317896897799077c93fa7c21afbaf); ?>
-<?php endif; ?>
-    </div>
-    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
 <?php /**PATH C:\laragon\www\paathshaala\resources\views/components/layouts/admin.blade.php ENDPATH**/ ?>

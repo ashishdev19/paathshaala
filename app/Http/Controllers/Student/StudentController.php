@@ -97,20 +97,22 @@ class StudentController extends Controller
 
         // Get all active courses with search and filter options
         $query = Course::where('is_active', true)
-            ->with(['teacher', 'enrollments', 'reviews']);
+            ->with(['teacher', 'enrollments', 'reviews', 'category']);
 
         // Search functionality
         if ($request->has('search') && $request->search) {
             $query->where(function($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
                   ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('category', 'like', '%' . $request->search . '%');
+                  ->orWhereHas('category', function($q) use ($request) {
+                      $q->where('name', 'like', '%' . $request->search . '%');
+                  });
             });
         }
 
         // Filter by category
         if ($request->has('category') && $request->category) {
-            $query->where('category', $request->category);
+            $query->where('category_id', $request->category);
         }
 
         // Filter by level
@@ -139,10 +141,9 @@ class StudentController extends Controller
         $courses = $query->paginate(12);
 
         // Get unique categories and levels for filters
-        $categories = Course::where('is_active', true)
-            ->distinct()
-            ->pluck('category')
-            ->filter();
+        $categories = \App\Models\CourseCategory::where('status', 'active')
+            ->orderBy('name')
+            ->pluck('name', 'id');
 
         $levels = ['beginner', 'intermediate', 'advanced'];
 
@@ -167,7 +168,7 @@ class StudentController extends Controller
             ->exists();
 
         // Get similar courses
-        $similarCourses = Course::where('category', $course->category)
+        $similarCourses = Course::where('category_id', $course->category_id)
             ->where('id', '!=', $course->id)
             ->where('is_active', true)
             ->with('teacher')
@@ -182,7 +183,7 @@ class StudentController extends Controller
         $student = Auth::user();
         
         // Get course details
-        $course = Course::with(['teacher', 'onlineClasses', 'reviews.user'])
+        $course = Course::with(['teacher', 'onlineClasses', 'reviews.user', 'category'])
             ->withCount(['enrollments', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->findOrFail($id);
@@ -202,7 +203,7 @@ class StudentController extends Controller
         }
 
         // Get related courses
-        $relatedCourses = Course::where('category', $course->category)
+        $relatedCourses = Course::where('category_id', $course->category_id)
             ->where('id', '!=', $course->id)
             ->where('status', 'published')
             ->with('teacher')

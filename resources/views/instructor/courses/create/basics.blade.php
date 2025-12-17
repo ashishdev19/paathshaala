@@ -82,14 +82,20 @@
                 <!-- Category & Level -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="category_id" class="block text-sm font-semibold text-gray-700 mb-2">
                             Category <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" id="category" name="category" value="{{ old('category') }}" 
-                               placeholder="e.g., Medical, Engineering, Web Development"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               required>
-                        @error('category')
+                        <select id="category_id" name="category_id"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                required>
+                            <option value="">-- Select Category --</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -138,10 +144,73 @@
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">Select Mode</option>
                             <option value="online" {{ old('course_mode') === 'online' ? 'selected' : '' }}>Online</option>
-                            <option value="offline" {{ old('course_mode') === 'offline' ? 'selected' : '' }}>Offline</option>
                             <option value="hybrid" {{ old('course_mode') === 'hybrid' ? 'selected' : '' }}>Hybrid</option>
                         </select>
                         @error('course_mode')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Course Duration -->
+                <div>
+                    <label for="duration" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Course Duration
+                    </label>
+                    <input type="text" id="duration" name="duration" value="{{ old('duration') }}" 
+                           placeholder="e.g., 3 Months, 6 Weeks, 1 Year"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="mt-1 text-xs text-gray-500">Enter the total duration of the course</p>
+                    @error('duration')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Class Timings -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="class_start_time" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Class Start Time
+                        </label>
+                        <input type="time" id="class_start_time" name="class_start_time" value="{{ old('class_start_time') }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        @error('class_start_time')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="class_end_time" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Class End Time
+                        </label>
+                        <input type="time" id="class_end_time" name="class_end_time" value="{{ old('class_end_time') }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        @error('class_end_time')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Batch Dates -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="batch_start_date" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Batch Start Date
+                        </label>
+                        <input type="date" id="batch_start_date" name="batch_start_date" value="{{ old('batch_start_date') }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        @error('batch_start_date')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="batch_end_date" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Batch End Date
+                        </label>
+                        <input type="date" id="batch_end_date" name="batch_end_date" value="{{ old('batch_end_date') }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        @error('batch_end_date')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>

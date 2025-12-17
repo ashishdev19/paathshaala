@@ -2,9 +2,9 @@
 <footer class="bg-white border-t border-gray-200 mt-12">
     <div class="max-w-7xl mx-auto px-6 py-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {{-- About Paathshaala --}}
+            {{-- About Medniks --}}
             <div>
-                <h3 class="text-gray-900 font-bold text-lg mb-4 border-b-2 border-indigo-500 pb-2 inline-block">ABOUT PAATHSHAALA</h3>
+                <h3 class="text-gray-900 font-bold text-lg mb-4 border-b-2 border-indigo-500 pb-2 inline-block">ABOUT MEDNIKS</h3>
                 <ul class="space-y-3 text-gray-600">
                     <li><a href="#" class="hover:text-indigo-600 transition-colors">About Us</a></li>
                     <li><a href="#" class="hover:text-indigo-600 transition-colors">Our Mission</a></li>
@@ -48,7 +48,7 @@
         {{-- Bottom Bar --}}
         <div class="border-t border-gray-200 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div class="text-gray-600 text-sm mb-4 md:mb-0">
-                <p>© {{ date('Y') }} PaathShaala. All rights reserved.</p>
+                <p>© {{ date('Y') }} Medniks. All rights reserved.</p>
                 <p class="mt-1">Made with <span class="text-red-500">❤</span> for education</p>
             </div>
             

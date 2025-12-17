@@ -5,7 +5,7 @@
             {{-- Logo --}}
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center">
-                    <span class="text-2xl font-bold text-indigo-600">Paathshaala</span>
+                    <span class="text-2xl font-bold text-indigo-600">Medniks</span>
                 </a>
             </div>
 

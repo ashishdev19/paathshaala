@@ -4,7 +4,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {{-- About Section --}}
             <div>
-                <h3 class="text-xl font-bold mb-4">Paathshaala</h3>
+                <h3 class="text-xl font-bold mb-4">Medniks</h3>
                 <p class="text-gray-400">Empowering education through technology. Learn from the best teachers and courses.</p>
             </div>
 
@@ -25,7 +25,7 @@
             <div>
                 <h4 class="text-lg font-semibold mb-4">Contact</h4>
                 <ul class="space-y-2 text-gray-400">
-                    <li>Email: info@paathshaala.com</li>
+                    <li>Email: info@medniks.com</li>
                     <li>Phone: +91 1234567890</li>
                     <li>Address: India</li>
                 </ul>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; {{ date('Y') }} Paathshaala. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} Medniks. All rights reserved.</p>
         </div>
     </div>
 </footer>

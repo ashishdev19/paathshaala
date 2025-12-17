@@ -14,6 +14,13 @@ class Course extends Model
         'subtitle',
         'description',
         'category',
+        'category_id',
+        'duration',
+        'class_start_time',
+        'class_end_time',
+        'mode',
+        'batch_start_date',
+        'batch_end_date',
         'language',
         'course_mode',
         'price',
@@ -56,6 +63,11 @@ class Course extends Model
     ];
 
     // Relationships
+    public function category()
+    {
+        return $this->belongsTo(CourseCategory::class, 'category_id');
+    }
+
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');

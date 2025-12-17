@@ -27,7 +27,7 @@
             </div>
             <div class="p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">{{ $course->category ?? 'General' }}</span>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">{{ $course->category->name ?? 'General' }}</span>
                     <span class="text-sm text-gray-500">{{ $course->level ?? 'All Levels' }}</span>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $course->title }}</h3>

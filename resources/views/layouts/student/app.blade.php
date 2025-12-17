@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - PaathShaala</title>
+    <title>Student Dashboard - Medniks</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -231,9 +231,6 @@
         <div class="page-content">
             @yield('content')
         </div>
-        
-        <!-- Footer -->
-        <x-footer.student />
     </div>
 </body>
 </html>

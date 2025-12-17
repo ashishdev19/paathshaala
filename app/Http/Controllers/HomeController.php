@@ -56,7 +56,7 @@ class HomeController extends Controller
             ->findOrFail($id);
 
         $relatedCourses = Course::active()
-            ->where('category', $course->category)
+            ->where('category_id', $course->category_id)
             ->where('id', '!=', $course->id)
             ->withCount('enrollments')
             ->limit(4)
@@ -85,11 +85,11 @@ class HomeController extends Controller
             ->limit(8)
             ->get();
 
-        return view('about', compact('teachers'));
+        return view('shared.public.about', compact('teachers'));
     }
 
     public function contact()
     {
-        return view('contact');
+        return view('shared.public.contact');
     }
 }

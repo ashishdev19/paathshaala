@@ -26,7 +26,7 @@
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-4">
-                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-lg">{{ $course->category ?? 'General' }}</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-lg">{{ $course->category->name ?? 'General' }}</span>
                         <span class="ml-2 px-3 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-lg">{{ ucfirst($course->level ?? 'beginner') }}</span>
                     </div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $course->title }}</h1>

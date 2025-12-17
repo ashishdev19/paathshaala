@@ -55,7 +55,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-500">Total Revenue</p>
-                    <p class="text-2xl font-semibold text-gray-900">?{{ number_format($stats['revenue'] ?? 0) }}</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($stats['revenue'] ?? 0) }}</p>
                 </div>
             </div>
         </div>

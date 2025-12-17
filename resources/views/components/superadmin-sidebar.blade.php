@@ -190,7 +190,7 @@
                 SA
             </div>
             <div class="logo-text">
-                <h2>PaathShaala</h2>
+                <h2>Medniks</h2>
                 <p>Super Admin</p>
             </div>
         </div>

@@ -170,6 +170,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Admin Accounts Management
     Route::resource('accounts', App\Http\Controllers\Admin\AdminAccountController::class);
     Route::post('/accounts/{account}/toggle-status', [App\Http\Controllers\Admin\AdminAccountController::class, 'toggleStatus'])->name('accounts.toggle-status');
+    
+    // Course Categories Management
+    Route::resource('course-categories', App\Http\Controllers\Admin\CourseCategoryController::class);
+    Route::post('/course-categories/{courseCategory}/toggle-status', [App\Http\Controllers\Admin\CourseCategoryController::class, 'toggleStatus'])->name('course-categories.toggle-status');
 });
 
 // Professor Routes - DEPRECATED (Use instructor routes instead)
@@ -191,7 +195,6 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
 Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
     Route::put('/profile', [TeacherController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/courses', [TeacherController::class, 'courses'])->name('courses.index');
     
     // New Course Creation Module Routes
     // Redirect /courses/create to /courses/create/basics
@@ -284,6 +287,10 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     Route::put('/lectures/{lecture}', [App\Http\Controllers\Instructor\CourseLectureController::class, 'update'])->name('lectures.update');
     Route::delete('/lectures/{lecture}', [App\Http\Controllers\Instructor\CourseLectureController::class, 'destroy'])->name('lectures.destroy');
     Route::post('/lectures/reorder', [App\Http\Controllers\Instructor\CourseLectureController::class, 'reorder'])->name('lectures.reorder');
+    
+    // Simple Course Creation (Category-based)
+    // Commented out to avoid route conflicts - using explicit routes above instead
+    // Route::resource('courses', App\Http\Controllers\Instructor\CourseController::class)->except(['index', 'show']);
 });
 
 // Online Classes Routes

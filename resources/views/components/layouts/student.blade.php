@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Paathshaala') }} - Student Panel</title>
+    <title>{{ config('app.name', 'Medniks') }} - Student Panel</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -197,6 +197,7 @@
                         <span class="notification-badge">0</span>
                     </div>
 
+                    @auth
                     <div class="user-profile">
                         <div class="user-avatar">
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
@@ -206,6 +207,9 @@
                             <span class="user-role">Student</span>
                         </div>
                     </div>
+                    @else
+                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                    @endauth
                 </div>
             </div>
         </nav>
@@ -219,9 +223,6 @@
             @endif
             {{ $slot }}
         </div>
-        
-        <!-- Footer -->
-        <x-footer.student />
     </div>
 </body>
 </html>

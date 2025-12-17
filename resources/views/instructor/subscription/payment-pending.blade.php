@@ -69,7 +69,7 @@
         //     key: "{{ config('services.razorpay.key') }}",
         //     amount: {{ $amount * 100 }},
         //     currency: "INR",
-        //     name: "Paathshaala",
+        //     name: "Medniks",
         //     description: "Subscription: {{ $plan->name }}",
         //     image: "{{ asset('logo.png') }}",
         //     handler: function(response) {
