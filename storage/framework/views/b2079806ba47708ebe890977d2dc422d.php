@@ -216,6 +216,7 @@
                         <span class="notification-badge">0</span>
                     </div>
 
+                    <?php if(auth()->guard()->check()): ?>
                     <div class="user-profile">
                         <div class="user-avatar">
                             <?php echo e(strtoupper(substr(auth()->user()->name, 0, 1))); ?>
@@ -226,6 +227,9 @@
                             <span class="user-role">Student</span>
                         </div>
                     </div>
+                    <?php else: ?>
+                    <a href="<?php echo e(route('login')); ?>" class="btn btn-primary">Login</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </nav>

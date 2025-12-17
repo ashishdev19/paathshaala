@@ -30,6 +30,17 @@ class InstructorCourseController extends Controller
     // Step 1: Course Basics
     public function createBasics()
     {
+        $user = Auth::user();
+        
+        // Check if user has active subscription
+        $currentSubscription = $user->currentSubscription;
+        
+        // If no active subscription, redirect to subscription page
+        if (!$currentSubscription || $currentSubscription->status !== 'active') {
+            return redirect()->route('instructor.subscription.management')
+                ->with('warning', 'You need an active subscription to create courses. Please choose a plan first.');
+        }
+        
         $categories = CourseCategory::active()
             ->orderBy('name')
             ->get();
