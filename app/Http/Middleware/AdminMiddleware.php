@@ -21,11 +21,21 @@ class AdminMiddleware
 
         $user = auth()->user();
         
-        // Force refresh the role relationship from database
-        $user->load('role');
+        \Log::info('AdminMiddleware Check', [
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'roles' => $user->getRoleNames(),
+            'isAdmin' => $user->isAdmin(),
+            'isSuperAdmin' => $user->isSuperAdmin(),
+        ]);
         
         // Allow both SuperAdmin and Admin
         if (!$user->isAdmin() && !$user->isSuperAdmin()) {
+            \Log::warning('AdminMiddleware: Access Denied', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'roles' => $user->getRoleNames(),
+            ]);
             abort(403, 'You do not have permission to access this resource. Only Admins and Super Admins can access.');
         }
 

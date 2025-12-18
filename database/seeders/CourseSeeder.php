@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Course;
 use App\Models\User;
+use App\Models\CourseCategory;
 
 class CourseSeeder extends Seeder
 {
@@ -14,13 +15,17 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        $teacher = User::byRole('instructor')->first();
+        $teacher = User::role('instructor')->first();
+        
+        // Get categories
+        $medicalScience = CourseCategory::where('name', 'Medical Pharmacology')->first();
+        $healthcareManagement = CourseCategory::where('name', 'Healthcare Management')->first();
 
-        if ($teacher) {
+        if ($teacher && $medicalScience && $healthcareManagement) {
             Course::create([
                 'title' => 'Introduction to Medical Diagnostics',
                 'description' => 'Learn the basics of diagnosing common medical conditions and understand various diagnostic tools and techniques.',
-                'category' => 'Medical Science',
+                'category_id' => $medicalScience->id,
                 'price' => 5000.00,
                 'thumbnail' => 'images/courses/medical-diagnostics-thumb.jpg',
                 'banner' => 'images/courses/medical-diagnostics-banner.jpg',
@@ -40,7 +45,7 @@ class CourseSeeder extends Seeder
             Course::create([
                 'title' => 'Healthcare Management Essentials',
                 'description' => 'Understand key principles of managing healthcare facilities and learn about operational efficiency.',
-                'category' => 'Healthcare Management',
+                'category_id' => $healthcareManagement->id,
                 'price' => 6000.00,
                 'thumbnail' => 'images/courses/healthcare-management-thumb.jpg',
                 'banner' => 'images/courses/healthcare-management-banner.jpg',
@@ -60,7 +65,7 @@ class CourseSeeder extends Seeder
             Course::create([
                 'title' => 'Advanced Clinical Procedures',
                 'description' => 'Master advanced techniques in clinical settings with hands-on practical training.',
-                'category' => 'Medical Science',
+                'category_id' => $medicalScience->id,
                 'price' => 12000.00,
                 'thumbnail' => 'images/courses/clinical-procedures-thumb.jpg',
                 'banner' => 'images/courses/clinical-procedures-banner.jpg',

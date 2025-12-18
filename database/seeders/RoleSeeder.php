@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -15,41 +15,17 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         // ==========================================
         // CREATE ROLES
         // ==========================================
         
-        $superadminRole = Role::firstOrCreate(
-            ['slug' => 'superadmin'],
-            [
-                'name' => 'Super Admin',
-                'description' => 'Full system access - Complete control over the platform',
-            ]
-        );
-
-        $adminRole = Role::firstOrCreate(
-            ['slug' => 'admin'],
-            [
-                'name' => 'Admin',
-                'description' => 'Admin access to manage platform, users, courses, payments',
-            ]
-        );
-
-        $instructorRole = Role::firstOrCreate(
-            ['slug' => 'instructor'],
-            [
-                'name' => 'Instructor',
-                'description' => 'Can create and manage own courses and classes',
-            ]
-        );
-
-        $studentRole = Role::firstOrCreate(
-            ['slug' => 'student'],
-            [
-                'name' => 'Student',
-                'description' => 'Student access to enroll and view courses',
-            ]
-        );
+        $superadminRole = Role::firstOrCreate(['name' => 'superadmin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $instructorRole = Role::firstOrCreate(['name' => 'instructor']);
+        $studentRole = Role::firstOrCreate(['name' => 'student']);
 
         // ==========================================
         // CREATE PERMISSIONS
@@ -57,44 +33,41 @@ class RoleSeeder extends Seeder
 
         $permissions = [
             // Super Admin Permissions (All)
-            'view-dashboard' => 'View Dashboard',
-            'manage-users' => 'Manage Users',
-            'manage-roles' => 'Manage Roles',
-            'manage-permissions' => 'Manage Permissions',
-            'manage-courses' => 'Manage All Courses',
-            'manage-payments' => 'Manage Payments',
-            'manage-settings' => 'Manage Settings',
-            'view-analytics' => 'View Analytics',
-            'manage-admins' => 'Manage Admins',
+            'view-dashboard',
+            'manage-users',
+            'manage-roles',
+            'manage-permissions',
+            'manage-courses',
+            'manage-payments',
+            'manage-settings',
+            'view-analytics',
+            'manage-admins',
 
             // Admin Permissions
-            'view-admin-dashboard' => 'View Admin Dashboard',
-            'manage-content' => 'Manage Content',
-            'manage-instructors' => 'Manage Instructors',
-            'manage-students' => 'Manage Students',
-            'view-reports' => 'View Reports',
+            'view-admin-dashboard',
+            'manage-content',
+            'manage-instructors',
+            'manage-students',
+            'view-reports',
 
             // Instructor Permissions
-            'create-courses' => 'Create Courses',
-            'edit-own-courses' => 'Edit Own Courses',
-            'delete-own-courses' => 'Delete Own Courses',
-            'manage-live-classes' => 'Manage Live Classes',
-            'view-enrollments' => 'View Own Course Enrollments',
-            'access-wallet' => 'Access Wallet',
+            'create-courses',
+            'edit-own-courses',
+            'delete-own-courses',
+            'manage-live-classes',
+            'view-enrollments',
+            'access-wallet',
 
             // Student Permissions
-            'view-courses' => 'View Courses',
-            'enroll-courses' => 'Enroll in Courses',
-            'access-content' => 'Access Course Content',
-            'submit-reviews' => 'Submit Reviews',
-            'view-certificates' => 'View Certificates',
+            'view-courses',
+            'enroll-courses',
+            'access-content',
+            'submit-reviews',
+            'view-certificates',
         ];
 
-        foreach ($permissions as $slug => $name) {
-            Permission::firstOrCreate(
-                ['slug' => $slug],
-                ['name' => $name, 'description' => $name]
-            );
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // ==========================================
@@ -102,39 +75,36 @@ class RoleSeeder extends Seeder
         // ==========================================
 
         // Super Admin - All permissions
-        $superadminRole->permissions()->sync(Permission::pluck('id')->toArray());
+        $superadminRole->givePermissionTo(Permission::all());
 
         // Admin - Limited permissions
-        $adminPermissions = Permission::whereIn('slug', [
+        $adminRole->givePermissionTo([
             'view-admin-dashboard',
             'manage-content',
             'manage-instructors',
             'manage-students',
             'manage-payments',
             'view-reports',
-        ])->pluck('id')->toArray();
-        $adminRole->permissions()->sync($adminPermissions);
+        ]);
 
         // Instructor - Course and class management
-        $instructorPermissions = Permission::whereIn('slug', [
+        $instructorRole->givePermissionTo([
             'create-courses',
             'edit-own-courses',
             'delete-own-courses',
             'manage-live-classes',
             'view-enrollments',
             'access-wallet',
-        ])->pluck('id')->toArray();
-        $instructorRole->permissions()->sync($instructorPermissions);
+        ]);
 
         // Student - Course access and enrollment
-        $studentPermissions = Permission::whereIn('slug', [
+        $studentRole->givePermissionTo([
             'view-courses',
             'enroll-courses',
             'access-content',
             'submit-reviews',
             'view-certificates',
-        ])->pluck('id')->toArray();
-        $studentRole->permissions()->sync($studentPermissions);
+        ]);
 
         // ==========================================
         // CREATE TEST USERS
@@ -146,9 +116,9 @@ class RoleSeeder extends Seeder
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
-                'role_id' => $superadminRole->id,
             ]
         );
+        $superadminUser->assignRole('superadmin');
 
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
@@ -156,9 +126,9 @@ class RoleSeeder extends Seeder
                 'name' => 'Admin User',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
-                'role_id' => $adminRole->id,
             ]
         );
+        $adminUser->assignRole('admin');
 
         $instructorUser = User::firstOrCreate(
             ['email' => 'instructor@example.com'],
@@ -166,9 +136,9 @@ class RoleSeeder extends Seeder
                 'name' => 'Test Instructor',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
-                'role_id' => $instructorRole->id,
             ]
         );
+        $instructorUser->assignRole('instructor');
 
         $studentUser = User::firstOrCreate(
             ['email' => 'student@example.com'],
@@ -176,9 +146,9 @@ class RoleSeeder extends Seeder
                 'name' => 'Test Student',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
-                'role_id' => $studentRole->id,
             ]
         );
+        $studentUser->assignRole('student');
 
         $this->command->info('✅ Roles created successfully!');
         $this->command->info('✅ Permissions created and assigned!');

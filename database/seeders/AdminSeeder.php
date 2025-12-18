@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class AdminSeeder extends Seeder
         // Password: admin123
         // ============================================
         
-        $admin = User::firstOrCreate(
+        $admin = User::updateOrCreate(
             ['email' => 'admin@paathshaala.com'],
             [
                 'name' => 'Admin User',
@@ -31,10 +32,7 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
-        if (!$admin->hasRole('admin')) {
-            $admin->assignRole('admin');
-        }
+        $admin->assignRole('admin');
 
         // ============================================
         // PROFESSOR/TEACHER DASHBOARD CREDENTIALS
@@ -43,7 +41,7 @@ class AdminSeeder extends Seeder
         // Password: professor123
         // ============================================
         
-        $teacher = User::firstOrCreate(
+        $teacher = User::updateOrCreate(
             ['email' => 'professor@paathshaala.com'],
             [
                 'name' => 'Dr. Rajesh Kumar',
@@ -53,13 +51,10 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
-        if (!$teacher->hasRole('teacher')) {
-            $teacher->assignRole('teacher');
-        }
+        $teacher->assignRole('instructor');
 
         // Alternative teacher account
-        $teacher2 = User::firstOrCreate(
+        $teacher2 = User::updateOrCreate(
             ['email' => 'teacher@paathshaala.com'],
             [
                 'name' => 'Prof. Priya Sharma',
@@ -69,10 +64,7 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
-        if (!$teacher2->hasRole('teacher')) {
-            $teacher2->assignRole('teacher');
-        }
+        $teacher2->assignRole('instructor');
 
         // ============================================
         // STUDENT DASHBOARD CREDENTIALS
@@ -81,7 +73,7 @@ class AdminSeeder extends Seeder
         // Password: student123
         // ============================================
         
-        $student = User::firstOrCreate(
+        $student = User::updateOrCreate(
             ['email' => 'student@paathshaala.com'],
             [
                 'name' => 'Amit Singh',
@@ -91,13 +83,10 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
-        if (!$student->hasRole('student')) {
-            $student->assignRole('student');
-        }
+        $student->assignRole('student');
 
         // Additional student account
-        $student2 = User::firstOrCreate(
+        $student2 = User::updateOrCreate(
             ['email' => 'student2@paathshaala.com'],
             [
                 'name' => 'Sneha Patel',
@@ -107,10 +96,7 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
-        if (!$student2->hasRole('student')) {
-            $student2->assignRole('student');
-        }
+        $student2->assignRole('student');
 
         echo "\n✅ Test users created successfully!\n";
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";

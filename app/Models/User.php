@@ -25,7 +25,6 @@ class User extends Authenticatable
         'phone',
         'address',
         'profile_image',
-        'role_id',
         'user_type',
         'profession_type',
         'city',
@@ -57,11 +56,6 @@ class User extends Authenticatable
     }
 
     // Relationships
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
-
     public function teacherCourses()
     {
         return $this->hasMany(Course::class, 'teacher_id');
@@ -156,23 +150,19 @@ class User extends Authenticatable
     // ========================
 
     /**
-     * Filter users by role slug
+     * Filter users by role name
      */
-    public function scopeByRole($query, $roleSlug)
+    public function scopeByRole($query, $roleName)
     {
-        return $query->whereHas('role', function ($q) use ($roleSlug) {
-            $q->where('slug', $roleSlug);
-        });
+        return $query->role($roleName);
     }
 
     /**
-     * Filter users by multiple role slugs
+     * Filter users by multiple role names
      */
-    public function scopeByRoles($query, $roleSlugs)
+    public function scopeByRoles($query, $roleNames)
     {
-        return $query->whereHas('role', function ($q) use ($roleSlugs) {
-            $q->whereIn('slug', (array) $roleSlugs);
-        });
+        return $query->role((array) $roleNames);
     }
 
     // ========================
@@ -184,7 +174,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin(): bool
     {
-        return $this->role?->slug === 'superadmin';
+        return $this->hasRole('superadmin');
     }
 
     /**
@@ -192,7 +182,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role?->slug === 'admin';
+        return $this->hasRole('admin');
     }
 
     /**
@@ -200,7 +190,7 @@ class User extends Authenticatable
      */
     public function isInstructor(): bool
     {
-        return $this->role?->slug === 'instructor';
+        return $this->hasRole('instructor');
     }
 
     /**
@@ -208,42 +198,7 @@ class User extends Authenticatable
      */
     public function isStudent(): bool
     {
-        return $this->role?->slug === 'student';
-    }
-
-    /**
-     * Check if user has a specific role
-     */
-    public function hasRole($roleSlug): bool
-    {
-        if (is_array($roleSlug)) {
-            return in_array($this->role?->slug, $roleSlug);
-        }
-        return $this->role?->slug === $roleSlug;
-    }
-
-    /**
-     * Check if user has permission
-     */
-    public function hasPermission($permission): bool
-    {
-        if (!$this->role) {
-            return false;
-        }
-        return $this->role->hasPermission($permission);
-    }
-
-    /**
-     * Assign role to user
-     */
-    public function assignRole($role): self
-    {
-        if (is_string($role)) {
-            $role = Role::whereSlug($role)->firstOrFail();
-        }
-
-        $this->update(['role_id' => $role->id]);
-        return $this;
+        return $this->hasRole('student');
     }
 }
 

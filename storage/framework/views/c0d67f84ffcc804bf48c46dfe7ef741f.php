@@ -2,6 +2,10 @@
 
 <?php $__env->startSection('content'); ?>
 <style>
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
     .dashboard-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -10,12 +14,12 @@
     }
 
     .welcome-banner {
-        background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%);
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%);
         border-radius: 1.25rem;
         padding: 2.5rem;
         color: white;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -43,20 +47,20 @@
         border-radius: 1rem;
         padding: 1.75rem;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-        border: 1px solid #e9d5ff;
+        border: 1px solid #e5e7eb;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .stat-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        border-color: #d8b4fe;
+        border-color: #d1d5db;
     }
 
     .stat-number {
         font-size: 2.25rem;
         font-weight: 800;
-        color: #7c3aed;
+        color: #3b82f6;
         letter-spacing: -1px;
     }
 
@@ -73,7 +77,7 @@
         width: 3rem;
         height: 3rem;
         border-radius: 0.75rem;
-        background: linear-gradient(135deg, #d8b4fe 0%, #c4b5fd 100%);
+        background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -95,7 +99,7 @@
         gap: 1rem;
         padding: 1.25rem;
         background: white;
-        border: 1px solid #f3e8ff;
+        border: 1px solid #f3f4f6;
         border-left: 3px solid transparent;
         border-radius: 0.75rem;
         text-decoration: none;
@@ -104,8 +108,8 @@
     }
 
     .action-link:hover {
-        background: #f3e8ff;
-        border-left-color: #a855f7;
+        background: #f3f4f6;
+        border-left-color: #3b82f6;
         transform: translateX(4px);
     }
 
@@ -113,7 +117,7 @@
         width: 2.75rem;
         height: 2.75rem;
         border-radius: 0.75rem;
-        background: linear-gradient(135deg, #d8b4fe 0%, #c4b5fd 100%);
+        background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -141,7 +145,7 @@
         background: white;
         border-radius: 1rem;
         padding: 2rem;
-        border: 1px solid #e9d5ff;
+        border: 1px solid #e5e7eb;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     }
 
@@ -151,42 +155,42 @@
         gap: 1rem;
     }
 
-    .recommendation-item {
+    .info-item {
         padding: 1.25rem;
-        background: #f3e8ff;
-        border: 1px solid #d8b4fe;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
         border-radius: 0.75rem;
-        border-left: 3px solid #a855f7;
+        border-left: 3px solid #3b82f6;
     }
 
-    .recommendation-title {
+    .info-title {
         font-weight: 700;
-        color: #6b21a8;
+        color: #1e40af;
         margin-bottom: 0.25rem;
     }
 
-    .recommendation-text {
+    .info-text {
         font-size: 0.875rem;
-        color: #7c3aed;
+        color: #6b7280;
     }
 
-    .streak-box {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
+    .stats-box {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e3a8a;
         border-radius: 1rem;
         padding: 1.75rem;
         text-align: center;
     }
 
-    .streak-number {
-        font-size: 3rem;
+    .stats-number {
+        font-size: 2.5rem;
         font-weight: 800;
         margin: 0.5rem 0;
     }
 
-    .streak-label {
+    .stats-label {
         font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(30, 58, 138, 0.8);
     }
 
     @media (max-width: 1024px) {
@@ -216,112 +220,120 @@
     }
 </style>
 
+<!-- Page Header -->
+<div class="page-header">
+    <h1 style="font-size: 2.25rem; font-weight: 800; color: #1f2937; margin-bottom: 0.5rem;">Instructor Dashboard</h1>
+    <p style="color: #6b7280; font-size: 0.95rem;">Manage courses, students, and track progress</p>
+</div>
+
 <!-- Welcome Banner -->
 <div class="welcome-banner">
     <div class="welcome-content">
         <h1>Welcome back, <?php echo e(auth()->user()->name); ?>!</h1>
-        <p>Keep up your learning journey and achieve your goals</p>
+        <p>Manage your courses and track student progress</p>
     </div>
     <div class="welcome-icon">🎓</div>
 </div>
 
 <!-- Statistics Grid -->
 <div class="dashboard-grid">
-    <!-- Total Enrollments -->
+    <!-- My Courses -->
     <div class="stat-card">
-        <div class="stat-label">Enrolled Courses</div>
-        <div class="stat-number"><?php echo e($stats['total_enrollments'] ?? 0); ?></div>
+        <div class="stat-label">My Courses</div>
+        <div class="stat-number"><?php echo e($stats['total_courses'] ?? 0); ?></div>
         <div class="stat-icon">📚</div>
     </div>
 
-    <!-- Active Courses -->
+    <!-- Total Students -->
     <div class="stat-card">
-        <div class="stat-label">In Progress</div>
-        <div class="stat-number"><?php echo e($stats['active_courses'] ?? 0); ?></div>
-        <div class="stat-icon">▶️</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-number"><?php echo e($stats['total_students'] ?? 0); ?></div>
+        <div class="stat-icon">👥</div>
     </div>
 
-    <!-- Completed Courses -->
+    <!-- Total Enrollments -->
     <div class="stat-card">
-        <div class="stat-label">Completed</div>
-        <div class="stat-number"><?php echo e($stats['completed_courses'] ?? 0); ?></div>
-        <div class="stat-icon">✓</div>
-    </div>
-
-    <!-- Average Progress -->
-    <div class="stat-card">
-        <div class="stat-label">Avg Progress</div>
-        <div class="stat-number"><?php echo e(round($stats['average_progress'] ?? 0)); ?>%</div>
+        <div class="stat-label">Total Enrollments</div>
+        <div class="stat-number"><?php echo e($stats['total_enrollments'] ?? 0); ?></div>
         <div class="stat-icon">📊</div>
     </div>
 </div>
 
 <!-- Main Content Grid -->
 <div class="content-grid">
-    <!-- Learning Path Section -->
+    <!-- Course Management Section -->
     <div class="section-card">
-        <h2 class="section-title">My Learning Path</h2>
+        <h2 class="section-title">Course Management</h2>
         <div class="learning-path">
-            <a href="<?php echo e(route('student.courses')); ?>" class="action-link">
+            <a href="<?php echo e(route('instructor.courses.index')); ?>" class="action-link">
                 <div class="action-icon">📖</div>
                 <div class="action-content">
                     <h3>My Courses</h3>
-                    <p>View and access enrolled courses</p>
+                    <p>View and manage all courses</p>
                 </div>
-                <i class="fas fa-chevron-right" style="margin-left: auto; color: #a855f7;"></i>
+                <i class="fas fa-chevron-right" style="margin-left: auto; color: #3b82f6;"></i>
             </a>
 
-            <a href="<?php echo e(route('student.courses.browse')); ?>" class="action-link">
-                <div class="action-icon">🔍</div>
+            <a href="<?php echo e(route('instructor.courses.create.basics')); ?>" class="action-link">
+                <div class="action-icon">➕</div>
                 <div class="action-content">
-                    <h3>Explore Courses</h3>
-                    <p>Discover new learning opportunities</p>
+                    <h3>Create Course</h3>
+                    <p>Launch a new learning course</p>
                 </div>
-                <i class="fas fa-chevron-right" style="margin-left: auto; color: #a855f7;"></i>
+                <i class="fas fa-chevron-right" style="margin-left: auto; color: #3b82f6;"></i>
             </a>
 
-            <a href="#" class="action-link" style="cursor: not-allowed; opacity: 0.6;">
-                <div class="action-icon">📈</div>
+            <a href="<?php echo e(route('instructor.students.index')); ?>" class="action-link">
+                <div class="action-icon">👨‍🎓</div>
                 <div class="action-content">
-                    <h3>My Progress</h3>
-                    <p>Track your learning performance</p>
+                    <h3>Manage Students</h3>
+                    <p>View enrolled students</p>
                 </div>
-                <i class="fas fa-chevron-right" style="margin-left: auto; color: #a855f7;"></i>
+                <i class="fas fa-chevron-right" style="margin-left: auto; color: #3b82f6;"></i>
             </a>
         </div>
     </div>
 
     <!-- Right Sidebar -->
     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <!-- Recommendations -->
+        <!-- Course Statistics -->
         <div class="section-card">
-            <h2 class="section-title">Recommendations</h2>
+            <h2 class="section-title">Statistics</h2>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <div class="recommendation-item">
-                    <div class="recommendation-title">Python Fundamentals</div>
-                    <div class="recommendation-text">Perfect next step for your learning path</div>
+                <div class="info-item">
+                    <div class="info-title">Active Courses</div>
+                    <div class="info-text"><?php echo e($stats['active_courses'] ?? 0); ?> courses running</div>
                 </div>
-                <div class="recommendation-item">
-                    <div class="recommendation-title">Web Development Path</div>
-                    <div class="recommendation-text">Build modern, responsive applications</div>
+                <div class="info-item">
+                    <div class="info-title">Pending Courses</div>
+                    <div class="info-text"><?php echo e($stats['pending_courses'] ?? 0); ?> awaiting approval</div>
                 </div>
-                <div class="recommendation-item">
-                    <div class="recommendation-title">Data Science Basics</div>
-                    <div class="recommendation-text">Start your data science journey</div>
+                <div class="info-item">
+                    <div class="info-title">Completed Courses</div>
+                    <div class="info-text"><?php echo e($stats['completed_courses'] ?? 0); ?> courses finished</div>
                 </div>
             </div>
         </div>
 
-        <!-- Learning Streak -->
-        <div class="streak-box">
-            <div style="font-size: 2rem;">🔥</div>
-            <div class="streak-number"><?php echo e($stats['streak'] ?? 0); ?></div>
-            <div class="streak-label">Learning Streak - Days in a Row</div>
-            <div style="font-size: 0.875rem; margin-top: 0.75rem; color: rgba(255, 255, 255, 0.8);">Keep it up! You're doing amazing 🚀</div>
+        <!-- Course Overview -->
+        <div class="stats-box">
+            <div style="font-size: 2rem;">📈</div>
+            <div class="stats-number"><?php echo e($stats['total_courses'] ?? 0); ?></div>
+            <div class="stats-label">Active Teaching Courses</div>
+            <div style="font-size: 0.875rem; margin-top: 0.75rem; color: rgba(30, 58, 138, 0.7);">Manage and track all courses</div>
         </div>
     </div>
 </div>
 
+<!-- About Section -->
+<!-- <div class="section-card" style="margin-top: 2rem;">
+    <h2 class="section-title">About Your Dashboard</h2>
+    <p style="color: #6b7280; line-height: 1.6; margin: 0;">
+        Welcome to your Instructor Dashboard! Here you can manage all your courses, track student progress, and monitor course enrollments. 
+        Use the navigation menu to access course creation tools, student management features, and detailed analytics to help you deliver the best educational experience.
+    </p>
+</div> -->
+
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.student.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\paathshaala\resources\views/student/dashboard.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.instructor.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\paathshaala2\resources\views/instructor/dashboard/index.blade.php ENDPATH**/ ?>

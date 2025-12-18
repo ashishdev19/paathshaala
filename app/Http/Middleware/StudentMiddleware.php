@@ -21,12 +21,21 @@ class StudentMiddleware
 
         $user = auth()->user();
         
-        // Force refresh the role relationship from database
-        $user->load('role');
+        \Log::info('StudentMiddleware Check', [
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'roles' => $user->getRoleNames(),
+            'isStudent' => $user->isStudent(),
+        ]);
         
         // Allow all authenticated users to access student routes
         if (!$user->isStudent() && !$user->isInstructor() && !$user->isAdmin() && !$user->isSuperAdmin()) {
-            abort(403, 'You do not have permission to access this resource. Only authenticated users can access.');
+            \Log::warning('StudentMiddleware: Access Denied', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'roles' => $user->getRoleNames(),
+            ]);
+            abort(403, 'Access denied. You do not have the required role.');
         }
 
         return $next($request);

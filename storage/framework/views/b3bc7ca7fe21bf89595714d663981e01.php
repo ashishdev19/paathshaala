@@ -1,5 +1,5 @@
 <style>
-    .student-sidebar {
+    .instructor-sidebar {
         position: fixed;
         left: 0;
         top: 0;
@@ -13,23 +13,6 @@
         flex-direction: column;
         overflow-y: auto;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .student-sidebar::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .student-sidebar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .student-sidebar::-webkit-scrollbar-thumb {
-        background: rgba(148, 163, 184, 0.3);
-        border-radius: 2px;
-    }
-
-    .student-sidebar::-webkit-scrollbar-thumb:hover {
-        background: rgba(148, 163, 184, 0.5);
     }
 
     .sidebar-header {
@@ -83,6 +66,23 @@
         flex: 1;
         padding: 1.5rem 0.75rem;
         overflow-y: auto;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 2px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb:hover {
+        background: rgba(148, 163, 184, 0.5);
     }
 
     .nav-section-title {
@@ -181,16 +181,16 @@
     }
 </style>
 
-<div class="student-sidebar">
+<div class="instructor-sidebar">
     <!-- Sidebar Header -->
     <div class="sidebar-header">
         <div class="sidebar-logo">
             <div class="logo-badge">
-                ST
+                IN
             </div>
             <div class="logo-text">
                 <h2>Medniks</h2>
-                <p>Student</p>
+                <p>Instructor</p>
             </div>
         </div>
     </div>
@@ -198,49 +198,49 @@
     <!-- Sidebar Navigation -->
     <nav class="sidebar-nav">
         <!-- Dashboard -->
-        <a href="<?php echo e(route('student.dashboard')); ?>" class="nav-item <?php echo e(request()->routeIs('student.dashboard') ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('instructor.dashboard')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.dashboard') ? 'active' : ''); ?>">
             <i class="fas fa-chart-line icon"></i>
             <span>Dashboard</span>
         </a>
 
         <!-- My Courses -->
-        <a href="<?php echo e(route('student.courses')); ?>" class="nav-item <?php echo e((request()->routeIs('student.courses') || request()->routeIs('student.courses.index')) ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('instructor.courses.index')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.courses.*') ? 'active' : ''); ?>">
             <i class="fas fa-book icon"></i>
             <span>My Courses</span>
         </a>
 
-        <!-- Browse Courses -->
-        <a href="<?php echo e(route('student.courses.browse')); ?>" class="nav-item <?php echo e(request()->routeIs('student.courses.browse') ? 'active' : ''); ?>">
-            <i class="fas fa-compass icon"></i>
-            <span>Browse Courses</span>
+        <!-- My Students -->
+        <a href="<?php echo e(route('instructor.students.index')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.students.*') ? 'active' : ''); ?>">
+            <i class="fas fa-users icon"></i>
+            <span>My Students</span>
+        </a>
+
+        <!-- Online Classes -->
+        <a href="<?php echo e(route('instructor.classes.index')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.classes.*') ? 'active' : ''); ?>">
+            <i class="fas fa-laptop icon"></i>
+            <span>Online Classes</span>
         </a>
 
         <!-- Live Classes -->
-        <a href="<?php echo e(route('student.live-classes.index')); ?>" class="nav-item <?php echo e(request()->routeIs('student.live-classes*') ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('instructor.live-classes.index')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.live-classes.*') ? 'active' : ''); ?>">
             <i class="fas fa-video icon"></i>
             <span>Live Classes</span>
         </a>
 
-        <!-- Enrollments -->
-        <a href="<?php echo e(route('student.enrollments.index')); ?>" class="nav-item <?php echo e(request()->routeIs('student.enrollments*') ? 'active' : ''); ?>">
-            <i class="fas fa-clipboard icon"></i>
-            <span>Enrollments</span>
-        </a>
-
-        <!-- Certificates -->
-        <a href="<?php echo e(route('student.certificates.index')); ?>" class="nav-item <?php echo e(request()->routeIs('student.certificates*') ? 'active' : ''); ?>">
-            <i class="fas fa-award icon"></i>
-            <span>Certificates</span>
-        </a>
-
         <!-- Wallet -->
-        <a href="<?php echo e(route('student.wallet.index')); ?>" class="nav-item <?php echo e(request()->routeIs('student.wallet*') ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('instructor.wallet.index')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.wallet.*') ? 'active' : ''); ?>">
             <i class="fas fa-wallet icon"></i>
             <span>Wallet</span>
         </a>
 
+        <!-- Subscription -->
+        <a href="<?php echo e(route('instructor.subscription.show')); ?>" class="nav-item <?php echo e(request()->routeIs('instructor.subscription.*') ? 'active' : ''); ?>">
+            <i class="fas fa-star icon"></i>
+            <span>Subscription</span>
+        </a>
+
         <!-- Profile -->
-        <a href="<?php echo e(route('profile.edit')); ?>" class="nav-item <?php echo e(request()->routeIs('profile*') ? 'active' : ''); ?>">
+        <a href="<?php echo e(route('profile.edit')); ?>" class="nav-item <?php echo e(request()->routeIs('profile.*') ? 'active' : ''); ?>">
             <i class="fas fa-user-circle icon"></i>
             <span>Profile</span>
         </a>
@@ -257,4 +257,4 @@
         </form>
     </div>
 </div>
-<?php /**PATH C:\laragon\www\paathshaala\resources\views/components/student-sidebar.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\paathshaala2\resources\views/components/instructor-sidebar.blade.php ENDPATH**/ ?>

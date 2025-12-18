@@ -46,6 +46,13 @@ Route::post('/logout', [App\Http\Controllers\Auth\CustomLogoutController::class,
 // Role-based dashboard routing  
 Route::get('/dashboard', function () {
     $user = Auth::user();
+    
+    \Log::info('Dashboard route accessed', [
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'roles' => $user->getRoleNames(),
+    ]);
+    
     if ($user->isSuperAdmin()) {
         return redirect()->route('admin.dashboard');
     } elseif ($user->isAdmin()) {
@@ -55,6 +62,12 @@ Route::get('/dashboard', function () {
     } elseif ($user->isStudent()) {
         return redirect()->route('student.dashboard');
     }
+    
+    \Log::warning('Dashboard: No matching role found', [
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'roles' => $user->getRoleNames(),
+    ]);
     return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

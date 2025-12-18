@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <title><?php echo e(config('app.name', 'Medniks')); ?> - Student Panel</title>
+    <title><?php echo e(config('app.name', 'Medniks')); ?> - Instructor Panel</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -114,14 +114,14 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
-            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
 
         .user-info {
@@ -143,7 +143,6 @@
         .page-content {
             flex: 1;
             padding: 2rem;
-            overflow-y: auto;
             animation: fadeIn 0.4s ease-out;
         }
 
@@ -162,10 +161,31 @@
             margin-bottom: 2rem;
         }
 
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1f2937;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .main-content-wrapper {
                 margin-left: 0;
+            }
+
+            .instructor-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .instructor-sidebar.open {
+                transform: translateX(0);
             }
 
             .navbar-content {
@@ -175,15 +195,19 @@
             .page-content {
                 padding: 1rem;
             }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Student Sidebar -->
-    <?php if (isset($component)) { $__componentOriginal6fbe3402d2badf7cc8fd23b41008e41a = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal6fbe3402d2badf7cc8fd23b41008e41a = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.student-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('student-sidebar'); ?>
+    <!-- Instructor Sidebar -->
+    <?php if (isset($component)) { $__componentOriginal45f6175c216b154ffdf3823d173600ce = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal45f6175c216b154ffdf3823d173600ce = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.instructor-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('instructor-sidebar'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
@@ -192,13 +216,13 @@
 <?php $component->withAttributes([]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal6fbe3402d2badf7cc8fd23b41008e41a)): ?>
-<?php $attributes = $__attributesOriginal6fbe3402d2badf7cc8fd23b41008e41a; ?>
-<?php unset($__attributesOriginal6fbe3402d2badf7cc8fd23b41008e41a); ?>
+<?php if (isset($__attributesOriginal45f6175c216b154ffdf3823d173600ce)): ?>
+<?php $attributes = $__attributesOriginal45f6175c216b154ffdf3823d173600ce; ?>
+<?php unset($__attributesOriginal45f6175c216b154ffdf3823d173600ce); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal6fbe3402d2badf7cc8fd23b41008e41a)): ?>
-<?php $component = $__componentOriginal6fbe3402d2badf7cc8fd23b41008e41a; ?>
-<?php unset($__componentOriginal6fbe3402d2badf7cc8fd23b41008e41a); ?>
+<?php if (isset($__componentOriginal45f6175c216b154ffdf3823d173600ce)): ?>
+<?php $component = $__componentOriginal45f6175c216b154ffdf3823d173600ce; ?>
+<?php unset($__componentOriginal45f6175c216b154ffdf3823d173600ce); ?>
 <?php endif; ?>
 
     <!-- Main Content Wrapper -->
@@ -207,16 +231,15 @@
         <nav class="top-navbar">
             <div class="navbar-content">
                 <div class="navbar-left">
-                    <h2 class="navbar-title">Student Panel</h2>
+                    <h2 class="navbar-title">Instructor Panel</h2>
                 </div>
 
                 <div class="navbar-right">
                     <div class="notification-bell">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-badge">0</span>
+                        <span class="notification-badge">3</span>
                     </div>
 
-                    <?php if(auth()->guard()->check()): ?>
                     <div class="user-profile">
                         <div class="user-avatar">
                             <?php echo e(strtoupper(substr(auth()->user()->name, 0, 1))); ?>
@@ -224,27 +247,18 @@
                         </div>
                         <div class="user-info">
                             <span class="user-name"><?php echo e(auth()->user()->name); ?></span>
-                            <span class="user-role">Student</span>
+                            <span class="user-role">Instructor</span>
                         </div>
                     </div>
-                    <?php else: ?>
-                    <a href="<?php echo e(route('login')); ?>" class="btn btn-primary">Login</a>
-                    <?php endif; ?>
                 </div>
             </div>
         </nav>
 
         <!-- Page Content -->
         <div class="page-content">
-            <?php if(isset($header)): ?>
-                <div class="page-header">
-                    <?php echo e($header); ?>
-
-                </div>
-            <?php endif; ?>
-            <?php echo e($slot); ?>
-
+            <?php echo $__env->yieldContent('content'); ?>
         </div>
     </div>
 </body>
-</html><?php /**PATH C:\laragon\www\paathshaala\resources\views/components/layouts/student.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\laragon\www\paathshaala2\resources\views/layouts/instructor/app.blade.php ENDPATH**/ ?>
