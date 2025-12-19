@@ -16,7 +16,11 @@
             <!-- Course Header -->
             <div class="relative h-64 bg-gradient-to-r from-blue-500 to-purple-600">
                 @if($course->thumbnail)
-                    <img src="/storage/{{ $course->thumbnail }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
+                    <img 
+                        src="{{ asset('storage/' . $course->thumbnail) }}" 
+                        alt="{{ $course->title }}" 
+                        class="w-full h-full object-cover"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-white\'><svg class=\'h-32 w-32 opacity-50\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'></path></svg><p class=\'mt-4 text-sm\'>Image not found</p></div>';">
                 @else
                     <div class="w-full h-full flex items-center justify-center text-white">
                         <svg class="h-32 w-32 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +42,9 @@
                     <!-- Category Card -->
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
                         <div class="text-sm text-gray-600 mb-2">Category</div>
-                        <div class="text-xl font-semibold text-blue-600">{{ $course->category ?? 'General' }}</div>
+                        <div class="text-xl font-semibold text-blue-600">
+                            {{ $course->category->name ?? 'General' }}
+                        </div>
                     </div>
 
                     <!-- Status Card -->

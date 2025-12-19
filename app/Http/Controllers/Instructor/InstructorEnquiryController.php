@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Teacher;
+namespace App\Http\Controllers\Instructor;
 
 use App\Http\Controllers\Controller;
 use App\Models\SubscriptionPlan;
 use App\Models\TeacherEnquiry;
 use Illuminate\Http\Request;
 
-class TeacherEnquiryController extends Controller
+class InstructorEnquiryController extends Controller
 {
     public function __construct()
     {

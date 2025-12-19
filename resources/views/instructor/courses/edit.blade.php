@@ -4,6 +4,22 @@
     </x-slot>
 
     <div class="max-w-3xl mx-auto bg-white rounded-lg shadow p-6">
+        @if ($errors->any())
+            <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <form action="{{ route('instructor.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -14,16 +30,27 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea name="description" class="mt-1 block w-full border border-gray-300 rounded-md p-2" rows="4">{{ $course->description ?? '' }}</textarea>
+                    <textarea name="description" class="mt-1 block w-full border border-gray-300 rounded-md p-2" rows="4">{{ old('description', $course->description ?? '') }}</textarea>
                 </div>
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Category</label>
-                    <input type="text" name="category" value="{{ $course->category ?? '' }}" placeholder="e.g., Science, Technology, Arts" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                    <select name="category_id" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        <option value="">Select Category</option>
+                        @foreach(\App\Models\CourseCategory::active()->orderBy('name')->get() as $cat)
+                            <option value="{{ $cat->id }}" {{ old('category_id', $course->category_id) == $cat->id ? 'selected' : '' }}>
+                                {{ $cat->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Course Image (thumbnail)</label>
                     @if($course->thumbnail)
-                        <p class="text-xs text-gray-500 mb-2">Current: {{ basename($course->thumbnail) }}</p>
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Current thumbnail" class="h-32 w-auto rounded border">
+                            <p class="text-xs text-gray-500 mt-1">Current: {{ basename($course->thumbnail) }}</p>
+                        </div>
                     @endif
                     <input type="file" name="thumbnail" accept="image/*" class="mt-1 block w-full">
                 </div>

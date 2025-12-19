@@ -242,6 +242,9 @@ class InstructorCourseController extends Controller
     {
         $this->authorize('view', $course);
 
+        // Eager load the category relationship
+        $course->load('category');
+
         return view('instructor.courses.show', compact('course'));
     }
 
@@ -260,7 +263,7 @@ class InstructorCourseController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'nullable|string|max:100',
+            'category_id' => 'nullable|exists:course_categories,id',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'syllabus_pdf' => 'nullable|file|mimes:pdf|max:5120',
             'video_file' => 'nullable|file|mimes:mp4,avi,mov,mkv|max:512000',

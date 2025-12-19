@@ -20,8 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'course.access' => \App\Http\Middleware\CheckCourseAccess::class,
             'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            'professor' => \App\Http\Middleware\ProfessorMiddleware::class,
-            'instructor' => \App\Http\Middleware\ProfessorMiddleware::class,
+            'instructor' => \App\Http\Middleware\InstructorMiddleware::class,
             'student' => \App\Http\Middleware\StudentMiddleware::class,
         ]);
     })

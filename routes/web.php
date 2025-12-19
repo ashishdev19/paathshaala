@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\Admin\SubscriptionPlanController;
 use App\Http\Controllers\Admin\WalletManagementController;
-use App\Http\Controllers\Teacher\SubscriptionController;
-use App\Http\Controllers\Teacher\WalletController as TeacherWalletController;
+use App\Http\Controllers\Instructor\SubscriptionController;
+use App\Http\Controllers\Instructor\WalletController as InstructorWalletController;
 use App\Http\Controllers\Student\WalletController as StudentWalletController;
-use App\Http\Controllers\Teacher\TeacherEnquiryController;
+use App\Http\Controllers\Instructor\InstructorEnquiryController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\Admin\ProfessionalTeacherController;
@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
-use App\Http\Controllers\Teacher\TeacherController;
+use App\Http\Controllers\Instructor\InstructorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\ProfileController;
@@ -206,8 +206,8 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
 
 // Instructor Routes (Existing - keeping for backward compatibility)
 Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
-    Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
-    Route::put('/profile', [TeacherController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/dashboard', [InstructorController::class, 'dashboard'])->name('dashboard');
+    Route::put('/profile', [InstructorController::class, 'updateProfile'])->name('profile.update');
     
     // New Course Creation Module Routes
     // Redirect /courses/create to /courses/create/basics
@@ -244,9 +244,9 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     
     // Resourceful routes for instructor-managed courses (create/store/edit/update/destroy)
     // Note: Using explicit routes instead of resource() to avoid conflicts
-    // Route::resource('courses', App\Http\Controllers\Teacher\CourseController::class)->except(['index']);
-    Route::get('/students', [TeacherController::class, 'students'])->name('students.index');
-    Route::get('/classes', [TeacherController::class, 'classes'])->name('classes.index');
+    // Route::resource('courses', App\Http\Controllers\Instructor\CourseController::class)->except(['index']);
+    Route::get('/students', [InstructorController::class, 'students'])->name('students.index');
+    Route::get('/classes', [InstructorController::class, 'classes'])->name('classes.index');
 
     // Live Classes Routes
     Route::prefix('live-classes')->name('live-classes.')->group(function () {
@@ -268,11 +268,11 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
 
     // Wallet Routes
     Route::prefix('wallet')->name('wallet.')->group(function () {
-        Route::get('/', [TeacherWalletController::class, 'index'])->name('index');
-        Route::get('/withdraw', [TeacherWalletController::class, 'withdrawForm'])->name('withdraw');
-        Route::post('/withdraw-request', [TeacherWalletController::class, 'createWithdrawRequest'])->name('withdraw-request');
-        Route::get('/withdraw-request/{withdrawRequest}', [TeacherWalletController::class, 'showWithdrawRequest'])->name('withdraw-request.show');
-        Route::get('/transaction/{transactionId}', [TeacherWalletController::class, 'transactionDetails'])->name('transaction-details');
+        Route::get('/', [InstructorWalletController::class, 'index'])->name('index');
+        Route::get('/withdraw', [InstructorWalletController::class, 'withdrawForm'])->name('withdraw');
+        Route::post('/withdraw-request', [InstructorWalletController::class, 'createWithdrawRequest'])->name('withdraw-request');
+        Route::get('/withdraw-request/{withdrawRequest}', [InstructorWalletController::class, 'showWithdrawRequest'])->name('withdraw-request.show');
+        Route::get('/transaction/{transactionId}', [InstructorWalletController::class, 'transactionDetails'])->name('transaction-details');
     });
 
     // Subscription Routes
@@ -326,9 +326,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/enrollment/success', [App\Http\Controllers\EnrollmentController::class, 'success'])->name('enrollment.success');
 
     // Teacher Enquiry Routes (Public registration)
-    Route::get('/teacher/register', [TeacherEnquiryController::class, 'create'])->name('teacher.enquiry.create');
-    Route::post('/teacher/register', [TeacherEnquiryController::class, 'store'])->name('teacher.enquiry.store');
-    Route::get('/teacher/enquiry-status', [TeacherEnquiryController::class, 'status'])->name('teacher.enquiry.status');
+    Route::get('/teacher/register', [InstructorEnquiryController::class, 'create'])->name('teacher.enquiry.create');
+    Route::post('/teacher/register', [InstructorEnquiryController::class, 'store'])->name('teacher.enquiry.store');
+    Route::get('/teacher/enquiry-status', [InstructorEnquiryController::class, 'status'])->name('teacher.enquiry.status');
 });
 
 // Notification Routes

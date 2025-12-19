@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProfessorMiddleware
+class InstructorMiddleware
 {
     /**
      * Handle an incoming request.
@@ -22,7 +22,7 @@ class ProfessorMiddleware
         $user = auth()->user();
         
         // Log the authorization check for debugging
-        \Log::info('ProfessorMiddleware Check', [
+        \Log::info('InstructorMiddleware Check', [
             'user_id' => $user->id,
             'user_email' => $user->email,
             'user_name' => $user->name,
@@ -37,7 +37,7 @@ class ProfessorMiddleware
         $isAuthorized = $user->isSuperAdmin() || $user->isAdmin() || $user->isInstructor();
         
         if (!$isAuthorized) {
-            \Log::warning('ProfessorMiddleware: Access Denied', [
+            \Log::warning('InstructorMiddleware: Access Denied', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'roles' => $user->getRoleNames(),
