@@ -22,7 +22,7 @@
                     <option value="cancelled">Cancelled</option>
                 </select>
             </div>
-            <a href="{{ route('online-classes.create') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+            <a href="{{ route('instructor.live-classes.create') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
                 <svg class="inline-block h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
@@ -86,7 +86,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             <p class="mt-2 text-lg">No classes scheduled yet</p>
-                            <a href="#" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                            <a href="{{ route('instructor.live-classes.create') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
                                 Schedule Your First Class
                             </a>
                         </td>

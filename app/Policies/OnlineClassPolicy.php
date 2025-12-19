@@ -13,7 +13,7 @@ class OnlineClassPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['admin', 'teacher', 'student']);
+        return $user->hasRole(['admin', 'teacher', 'instructor', 'student']);
     }
 
     /**
@@ -26,8 +26,8 @@ class OnlineClassPolicy
             return true;
         }
 
-        // Teachers can view classes for their courses
-        if ($user->hasRole('teacher')) {
+        // Teachers/Instructors can view classes for their courses
+        if ($user->hasRole(['teacher', 'instructor'])) {
             return $onlineClass->course->teacher_id === $user->id;
         }
 
@@ -47,7 +47,7 @@ class OnlineClassPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['admin', 'teacher']);
+        return $user->hasRole(['admin', 'teacher', 'instructor']);
     }
 
     /**
@@ -60,8 +60,8 @@ class OnlineClassPolicy
             return true;
         }
 
-        // Teachers can only update classes for their courses
-        if ($user->hasRole('teacher')) {
+        // Teachers/Instructors can only update classes for their courses
+        if ($user->hasRole(['teacher', 'instructor'])) {
             return $onlineClass->course->teacher_id === $user->id;
         }
 
@@ -78,8 +78,8 @@ class OnlineClassPolicy
             return true;
         }
 
-        // Teachers can only delete classes for their courses
-        if ($user->hasRole('teacher')) {
+        // Teachers/Instructors can only delete classes for their courses
+        if ($user->hasRole(['teacher', 'instructor'])) {
             return $onlineClass->course->teacher_id === $user->id;
         }
 

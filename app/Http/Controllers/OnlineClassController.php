@@ -91,7 +91,12 @@ class OnlineClassController extends Controller
         
         $user = Auth::user();
         
-        // Admins can see all courses, teachers can only see their own courses
+        // Redirect instructors to their dedicated live classes creation page
+        if ($user->hasRole(['teacher', 'instructor'])) {
+            return redirect()->route('instructor.live-classes.create');
+        }
+        
+        // Admins can see all courses
         if ($user->hasRole('admin')) {
             $courses = Course::all();
         } else {
