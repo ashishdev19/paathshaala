@@ -4,6 +4,24 @@
             My Courses
         </h2>
     </x-slot>
+    
+    @if (session('error'))
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+            <i class="fas fa-exclamation-circle mr-2"></i>{{ session('error') }}
+        </div>
+    @endif
+    
+    @if (session('warning'))
+        <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-lg">
+            <i class="fas fa-exclamation-triangle mr-2"></i>{{ session('warning') }}
+        </div>
+    @endif
+    
+    @if (session('success'))
+        <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+            <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
+        </div>
+    @endif
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">

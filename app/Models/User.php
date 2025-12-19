@@ -200,5 +200,13 @@ class User extends Authenticatable
     {
         return $this->hasRole('student');
     }
+
+    /**
+     * Check if user has an active subscription
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->currentSubscription()->exists();
+    }
 }
 

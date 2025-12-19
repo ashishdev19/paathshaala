@@ -11,6 +11,25 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto">
+        <!-- Flash Messages -->
+        @if (session('error'))
+            <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                <i class="fas fa-exclamation-circle mr-2"></i>{{ session('error') }}
+            </div>
+        @endif
+        
+        @if (session('warning'))
+            <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-lg">
+                <i class="fas fa-exclamation-triangle mr-2"></i>{{ session('warning') }}
+            </div>
+        @endif
+        
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+                <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Current Subscription & History (Left - 2 columns) -->
             <div class="lg:col-span-2 space-y-6">

@@ -33,12 +33,9 @@ class InstructorCourseController extends Controller
         $user = Auth::user();
         
         // Check if user has active subscription
-        $currentSubscription = $user->currentSubscription;
-        
-        // If no active subscription, redirect to subscription page
-        if (!$currentSubscription || $currentSubscription->status !== 'active') {
-            return redirect()->route('instructor.subscription.management')
-                ->with('warning', 'You need an active subscription to create courses. Please choose a plan first.');
+        if (!$user->hasActiveSubscription()) {
+            return redirect()->route('instructor.subscription.show')
+                ->with('error', 'You need an active subscription to create courses. Please subscribe to a plan first.');
         }
         
         $categories = CourseCategory::active()
@@ -230,11 +227,23 @@ class InstructorCourseController extends Controller
     // Main course list
     public function index()
     {
+        $user = Auth::user();
+        
+        // Check if instructor has active subscription
+        $hasSubscription = $user->hasActiveSubscription();
+        
         $courses = Course::where('teacher_id', Auth::id())
             ->latest()
             ->paginate(10);
 
-        return view('instructor.courses.index', compact('courses'));
+        $stats = [
+            'total' => $courses->total(),
+            'active' => Course::where('teacher_id', Auth::id())->where('status', 'published')->count(),
+            'students' => 0, // Can be calculated from enrollments
+            'revenue' => 0, // Can be calculated from payments
+        ];
+
+        return view('instructor.courses.index', compact('courses', 'stats', 'hasSubscription'));
     }
 
     // View course details

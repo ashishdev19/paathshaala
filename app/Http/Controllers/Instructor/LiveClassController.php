@@ -29,6 +29,12 @@ class LiveClassController extends Controller
      */
     public function create()
     {
+        // Check if instructor has active subscription
+        if (!auth()->user()->hasActiveSubscription()) {
+            return redirect()->route('instructor.subscription.show')
+                ->with('error', 'You need an active subscription to schedule classes. Please subscribe to a plan first.');
+        }
+
         $courses = Course::where('teacher_id', auth()->id())
             ->where('status', 'published')
             ->get();
@@ -41,6 +47,12 @@ class LiveClassController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if instructor has active subscription
+        if (!auth()->user()->hasActiveSubscription()) {
+            return redirect()->route('instructor.subscription.show')
+                ->with('error', 'You need an active subscription to schedule classes. Please subscribe to a plan first.');
+        }
+
         $validated = $request->validate([
             'course_id' => 'nullable|exists:courses,id',
             'topic' => 'required|string|max:255',
