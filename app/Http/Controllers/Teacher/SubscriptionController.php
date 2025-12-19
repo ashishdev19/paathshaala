@@ -89,7 +89,7 @@ class SubscriptionController extends Controller
         ]);
 
         // Redirect to subscription payment page
-        return redirect()->route('teacher.subscription.payment', ['plan' => $plan->id]);
+        return redirect()->route('instructor.subscription.payment', ['plan' => $plan->id]);
     }
 
     // Show payment page for subscription
@@ -136,7 +136,7 @@ class SubscriptionController extends Controller
             'pending_payment_method' => $validated['payment_method'],
         ]);
 
-        return redirect()->route('teacher.subscription.payment-pending', ['plan' => $plan->id]);
+        return redirect()->route('instructor.subscription.payment-pending', ['plan' => $plan->id]);
     }
 
     // Show payment processing page (Razorpay integration point)
@@ -147,7 +147,7 @@ class SubscriptionController extends Controller
         
         $amount = session('pending_subscription_amount');
         if (!$amount) {
-            return redirect()->route('teacher.subscription.upgrade')
+            return redirect()->route('instructor.subscription.upgrade')
                            ->with('error', 'Invalid payment session. Please try again.');
         }
 
@@ -171,7 +171,7 @@ class SubscriptionController extends Controller
         $isUpgrade = session('pending_subscription_is_upgrade');
         
         if (!$amount) {
-            return redirect()->route('teacher.subscription.upgrade')
+            return redirect()->route('instructor.subscription.upgrade')
                            ->with('error', 'Payment session expired. Please try again.');
         }
 
@@ -200,7 +200,7 @@ class SubscriptionController extends Controller
             TeacherSubscriptionHistory::create([
                 'user_id' => $user->id,
                 'to_plan_id' => $plan->id,
-                'action' => 'subscribed',
+                'action' => 'created',
                 'amount_paid' => $amount,
             ]);
         }
@@ -208,7 +208,7 @@ class SubscriptionController extends Controller
         // Clear pending payment session
         session()->forget(['pending_subscription_plan_id', 'pending_subscription_amount', 'pending_subscription_is_upgrade', 'pending_payment_method']);
 
-        return redirect()->route('teacher.subscription.show')
+        return redirect()->route('instructor.subscription.show')
                        ->with('success', "Successfully subscribed to {$plan->name}! Amount: ₹{$amount}");
     }
 
@@ -218,7 +218,7 @@ class SubscriptionController extends Controller
         // Clear pending payment session
         session()->forget(['pending_subscription_plan_id', 'pending_subscription_amount', 'pending_subscription_is_upgrade', 'pending_payment_method']);
 
-        return redirect()->route('teacher.subscription.payment', ['plan' => $planId])
+        return redirect()->route('instructor.subscription.payment', ['plan' => $planId])
                        ->with('error', 'Payment failed. Please try again with a different payment method.');
     }
 
@@ -229,7 +229,7 @@ class SubscriptionController extends Controller
         $currentSubscription = $user->currentSubscription;
 
         if (!$currentSubscription || !$currentSubscription->isExpired()) {
-            return redirect()->route('teacher.subscription.show')
+            return redirect()->route('instructor.subscription.show')
                            ->with('info', 'Your subscription is still active.');
         }
 
@@ -259,7 +259,7 @@ class SubscriptionController extends Controller
         // Renew subscription
         $currentSubscription->renew($renewalCost);
 
-        return redirect()->route('teacher.subscription.show')
+        return redirect()->route('instructor.subscription.show')
                        ->with('success', 'Subscription renewed successfully for another year!');
     }
 
@@ -288,7 +288,7 @@ class SubscriptionController extends Controller
         // Cancel subscription
         $currentSubscription->cancel($validated['reason']);
 
-        return redirect()->route('teacher.subscription.show')
+        return redirect()->route('instructor.subscription.show')
                        ->with('success', 'Subscription cancelled successfully.');
     }
 
