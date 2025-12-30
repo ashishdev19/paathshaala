@@ -157,7 +157,7 @@ class StudentController extends Controller
         // Get course details for preview before enrollment
         $course = Course::where('id', $id)
             ->where('is_active', true)
-            ->with(['teacher', 'enrollments', 'reviews.user'])
+            ->with(['teacher', 'enrollments', 'reviews.student'])
             ->withCount(['enrollments', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->firstOrFail();
@@ -183,7 +183,7 @@ class StudentController extends Controller
         $student = Auth::user();
         
         // Get course details
-        $course = Course::with(['teacher', 'onlineClasses', 'reviews.user', 'category'])
+        $course = Course::with(['teacher', 'onlineClasses', 'reviews.student', 'category'])
             ->withCount(['enrollments', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->findOrFail($id);
@@ -310,5 +310,56 @@ class StudentController extends Controller
 
         return redirect()->route('student.dashboard')
             ->with('success', 'Profile updated successfully');
+    }
+
+    /**
+     * Store a review for a course
+     */
+    public function storeReview(Request $request, $id)
+    {
+        $student = Auth::user();
+        
+        // Check if student is enrolled in this course
+        $isEnrolled = Enrollment::where('student_id', $student->id)
+            ->where('course_id', $id)
+            ->exists();
+
+        if (!$isEnrolled) {
+            return back()->with('error', 'You must be enrolled in this course to leave a review.');
+        }
+
+        // Check if student already reviewed this course
+        $existingReview = Review::where('student_id', $student->id)
+            ->where('course_id', $id)
+            ->first();
+
+        if ($existingReview) {
+            return back()->with('error', 'You have already reviewed this course.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review_text' => 'required|string|min:10|max:1000',
+        ]);
+
+        // Get the course to find the teacher
+        $course = Course::findOrFail($id);
+
+        // Create the review
+        Review::create([
+            'student_id' => $student->id,
+            'course_id' => $id,
+            'teacher_id' => $course->teacher_id,
+            'course_rating' => $validated['rating'],
+            'teacher_rating' => $validated['rating'],
+            'course_review' => $validated['review_text'],
+            'teacher_review' => '',
+            'rating' => $validated['rating'],
+            'review_text' => $validated['review_text'],
+            'is_approved' => true,
+        ]);
+
+        return back()->with('success', 'Thank you for your review!');
     }
 }

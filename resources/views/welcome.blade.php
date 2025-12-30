@@ -860,82 +860,52 @@
         </div>
         
         <div class="popular-courses-grid">
-            <a href="{{ route('courses.index') }}" class="popular-course-card">
-                <img src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=400&h=250&fit=crop" alt="Hyponatraemia Course" class="popular-course-image">
-                <div class="popular-course-content">
-                    <h3 class="popular-course-title">Reducing the risk of hyponatraemia when administering intravenous fluids to children</h3>
-                    <div class="popular-course-footer">
-                        <div class="popular-course-rating">
-                            <div class="rating-stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+            @forelse($featuredCourses->take(4) as $course)
+                @php
+                    $avgRating = $course->reviews->avg('rating') ?? 0;
+                    $reviewCount = $course->reviews_count ?? $course->reviews->count();
+                    $fullStars = floor($avgRating);
+                    $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
+                    $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+                    
+                    // Handle thumbnail URL
+                    $thumbnailUrl = $course->thumbnail 
+                        ? (\Illuminate\Support\Str::startsWith($course->thumbnail, 'courses/') 
+                            ? \Illuminate\Support\Facades\Storage::url($course->thumbnail) 
+                            : asset($course->thumbnail))
+                        : 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop';
+                @endphp
+                <a href="{{ route('courses.show', $course->id) }}" class="popular-course-card">
+                    <img src="{{ $thumbnailUrl }}" alt="{{ $course->title }}" class="popular-course-image">
+                    <div class="popular-course-content">
+                        <h3 class="popular-course-title">{{ $course->title }}</h3>
+                        <div class="popular-course-footer">
+                            <div class="popular-course-rating">
+                                <div class="rating-stars">
+                                    @for($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star"></i>
+                                    @endfor
+                                    @if($hasHalfStar)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @endif
+                                    @for($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star"></i>
+                                    @endfor
+                                </div>
+                                <span class="rating-count">({{ number_format($reviewCount) }})</span>
                             </div>
-                            <span class="rating-count">(2,982)</span>
+                            @if($course->price == 0 || $course->is_free)
+                                <span class="course-free-badge">FREE</span>
+                            @endif
                         </div>
                     </div>
+                </a>
+            @empty
+                <div class="col-span-full text-center text-gray-500 py-8">
+                    <p>No courses available at the moment.</p>
+                    <a href="{{ route('courses.index') }}" class="text-blue-600 hover:underline mt-2 inline-block">Browse all courses</a>
                 </div>
-            </a>
-            
-            <a href="{{ route('courses.index') }}" class="popular-course-card">
-                <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=250&fit=crop" alt="Heart Failure Diagnosis" class="popular-course-image">
-                <div class="popular-course-content">
-                    <h3 class="popular-course-title">Step by step: A guide to diagnosing heart failure</h3>
-                    <div class="popular-course-footer">
-                        <div class="popular-course-rating">
-                            <div class="rating-stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <span class="rating-count">(1,294)</span>
-                        </div>
-                        <span class="course-free-badge">FREE</span>
-                    </div>
-                </div>
-            </a>
-            
-            <a href="{{ route('courses.index') }}" class="popular-course-card">
-                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop" alt="Pain Assessment" class="popular-course-image">
-                <div class="popular-course-content">
-                    <h3 class="popular-course-title">Assessing pain and using the analgesic ladder</h3>
-                    <div class="popular-course-footer">
-                        <div class="popular-course-rating">
-                            <div class="rating-stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <span class="rating-count">(1,164)</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            
-            <a href="{{ route('courses.index') }}" class="popular-course-card">
-                <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=400&h=250&fit=crop" alt="Hyponatraemia Principles" class="popular-course-image">
-                <div class="popular-course-content">
-                    <h3 class="popular-course-title">Hyponatraemia: basic principles, types and causes</h3>
-                    <div class="popular-course-footer">
-                        <div class="popular-course-rating">
-                            <div class="rating-stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <span class="rating-count">(1,340)</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
+            @endforelse
         </div>
     </section>
     

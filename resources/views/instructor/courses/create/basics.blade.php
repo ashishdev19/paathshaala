@@ -128,8 +128,7 @@
                             <option value="">Select Language</option>
                             <option value="English" {{ old('language') === 'English' ? 'selected' : '' }}>English</option>
                             <option value="Hindi" {{ old('language') === 'Hindi' ? 'selected' : '' }}>Hindi</option>
-                            <option value="Marathi" {{ old('language') === 'Marathi' ? 'selected' : '' }}>Marathi</option>
-                            <option value="Gujarati" {{ old('language') === 'Gujarati' ? 'selected' : '' }}>Gujarati</option>
+                            <option value="Bilingual" {{ old('language') === 'Bilingual' ? 'selected' : '' }}>Bilingual</option>
                         </select>
                         @error('language')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>

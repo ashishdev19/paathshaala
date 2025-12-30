@@ -107,29 +107,145 @@
                     </div>
                     @endif
 
-                    <!-- Reviews -->
-                    @if($course->reviews && $course->reviews->count() > 0)
+                    <!-- Reviews Section -->
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <h2 class="text-2xl font-bold text-gray-900 mb-4">Student Reviews</h2>
-                        <div class="space-y-4">
-                            @foreach($course->reviews->take(5) as $review)
-                            <div class="border-b border-gray-200 pb-4 last:border-0">
-                                <div class="flex items-center mb-2">
-                                    <div class="flex text-yellow-400">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <svg class="w-5 h-5 {{ $i <= $review->rating ? 'fill-current' : 'text-gray-300' }}" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                            </svg>
-                                        @endfor
-                                    </div>
-                                    <span class="ml-2 text-sm text-gray-600">{{ $review->user->name ?? 'Student' }}</span>
-                                </div>
-                                <p class="text-gray-700">{{ $review->comment }}</p>
+                        
+                        {{-- Success/Error Messages --}}
+                        @if(session('success'))
+                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                                {{ session('success') }}
                             </div>
-                            @endforeach
-                        </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        {{-- Review Form for Enrolled Students --}}
+                        @auth
+                            @if($isEnrolled)
+                                @php
+                                    $hasReviewed = $course->reviews->where('student_id', auth()->id())->count() > 0;
+                                @endphp
+                                
+                                @if(!$hasReviewed)
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6 border border-gray-200">
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Write a Review</h3>
+                                        <form action="{{ route('student.courses.review.store', $course->id) }}" method="POST">
+                                            @csrf
+                                            
+                                            {{-- Star Rating --}}
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+                                                <div class="flex items-center space-x-1" id="star-rating">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <button type="button" 
+                                                            class="star-btn text-3xl focus:outline-none transition-colors duration-150 text-gray-300 hover:text-yellow-400"
+                                                            data-rating="{{ $i }}"
+                                                            onclick="setRating({{ $i }})">
+                                                            ★
+                                                        </button>
+                                                    @endfor
+                                                </div>
+                                                <input type="hidden" name="rating" id="rating-input" value="" required>
+                                                @error('rating')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                            
+                                            {{-- Review Text --}}
+                                            <div class="mb-4">
+                                                <label for="review_text" class="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
+                                                <textarea 
+                                                    name="review_text" 
+                                                    id="review_text" 
+                                                    rows="4" 
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                                    placeholder="Share your experience with this course..."
+                                                    required
+                                                    minlength="10"
+                                                    maxlength="1000">{{ old('review_text') }}</textarea>
+                                                @error('review_text')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                            
+                                            <button type="submit" 
+                                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
+                                                Submit Review
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <script>
+                                        function setRating(rating) {
+                                            document.getElementById('rating-input').value = rating;
+                                            const stars = document.querySelectorAll('.star-btn');
+                                            stars.forEach((star, index) => {
+                                                if (index < rating) {
+                                                    star.classList.remove('text-gray-300');
+                                                    star.classList.add('text-yellow-400');
+                                                } else {
+                                                    star.classList.remove('text-yellow-400');
+                                                    star.classList.add('text-gray-300');
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                @else
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                                        <p class="text-green-700">
+                                            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            You have already reviewed this course. Thank you!
+                                        </p>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                                    <p class="text-blue-700">
+                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Enroll in this course to leave a review.
+                                    </p>
+                                </div>
+                            @endif
+                        @else
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                                <p class="text-gray-700">
+                                    <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Login</a> to leave a review.
+                                </p>
+                            </div>
+                        @endauth
+
+                        {{-- Existing Reviews --}}
+                        @if($course->reviews && $course->reviews->count() > 0)
+                            <div class="space-y-4">
+                                @foreach($course->reviews->take(5) as $review)
+                                <div class="border-b border-gray-200 pb-4 last:border-0">
+                                    <div class="flex items-center mb-2">
+                                        <div class="flex text-yellow-400">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <svg class="w-5 h-5 {{ $i <= $review->rating ? 'fill-current' : 'text-gray-300' }}" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            @endfor
+                                        </div>
+                                        <span class="ml-2 text-sm text-gray-600">{{ $review->student->name ?? 'Student' }}</span>
+                                        <span class="ml-2 text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
+                                    </div>
+                                    <p class="text-gray-700">{{ $review->review_text ?? $review->comment }}</p>
+                                </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-gray-500 text-center py-4">No reviews yet. Be the first to review this course!</p>
+                        @endif
                     </div>
-                    @endif
                 </div>
 
                 <!-- Sidebar -->

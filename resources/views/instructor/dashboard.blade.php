@@ -229,8 +229,17 @@
 <!-- Welcome Banner -->
 <div class="welcome-banner">
     <div class="welcome-content">
-        <h1>Welcome back, {{ auth()->user()->name }}!</h1>
-        <p>Manage your courses and track student progress</p>
+        @php
+            $user = auth()->user();
+            $isNew = $user->created_at && $user->created_at->gt(now()->subMinutes(5));
+        @endphp
+        @if($isNew)
+            <h1>Welcome, {{ $user->name }}!</h1>
+            <p>We're excited to have you on board. Start by creating your first course or exploring the dashboard features.</p>
+        @else
+            <h1>Welcome back, {{ $user->name }}!</h1>
+            <p>Manage your courses and track student progress</p>
+        @endif
     </div>
     <div class="welcome-icon">🎓</div>
 </div>

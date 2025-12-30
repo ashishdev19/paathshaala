@@ -31,7 +31,7 @@ class HomeController extends Controller
             'total_enrollments' => Enrollment::count(),
         ];
 
-        $testimonials = Review::with(['user', 'course'])
+        $testimonials = Review::with(['student', 'course'])
             ->where('rating', '>=', 4)
             ->latest()
             ->limit(6)
@@ -68,7 +68,7 @@ class HomeController extends Controller
     {
         $course = Course::active()
             ->withCount(['enrollments', 'reviews'])
-            ->with(['teacher', 'reviews.user', 'onlineClasses'])
+            ->with(['teacher', 'reviews.student', 'onlineClasses'])
             ->findOrFail($id);
 
         $relatedCourses = Course::active()

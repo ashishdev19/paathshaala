@@ -364,6 +364,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::get('/browse-courses', [App\Http\Controllers\Student\StudentController::class, 'browseCourses'])->name('courses.browse');
     Route::get('/course/{id}/preview', [App\Http\Controllers\Student\StudentController::class, 'coursePreview'])->name('courses.preview');
     Route::get('/courses/{id}', [App\Http\Controllers\Student\StudentController::class, 'courseDetail'])->name('courses.show');
+    Route::post('/courses/{id}/review', [App\Http\Controllers\Student\StudentController::class, 'storeReview'])->name('courses.review.store');
     Route::get('/enrollments', [App\Http\Controllers\Student\StudentController::class, 'enrollments'])->name('enrollments.index');
     Route::get('/certificates', [App\Http\Controllers\Student\StudentController::class, 'certificates'])->name('certificates.index');
     Route::get('/payments', [App\Http\Controllers\Student\StudentController::class, 'payments'])->name('payments');
