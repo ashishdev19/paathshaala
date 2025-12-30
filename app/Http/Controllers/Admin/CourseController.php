@@ -91,7 +91,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        $course->load(['enrollments.user', 'reviews.user', 'teacher', 'category']);
+        $course->load(['enrollments.user', 'reviews.student', 'teacher', 'category']);
         
         return view('admin.courses.show', compact('course'));
     }
