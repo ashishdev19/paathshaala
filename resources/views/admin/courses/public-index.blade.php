@@ -11,12 +11,15 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg shadow-sm border-b border-gray-100 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-6 lg:px-12">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
+                <!-- Left Side: Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
                     <div class="relative">
                         <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
@@ -30,15 +33,15 @@
                     </div>
                 </a>
                 
-                <!-- Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <a href="{{ url('/') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
-                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
-                    <a href="{{ route('about') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                    <a href="{{ route('contact') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
+                <!-- Center: Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
+                    <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
+                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
+                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
+                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
                 </nav>
                 
-                <!-- Auth Links - Always visible -->
+                <!-- Right Side: Auth Links -->
                 <div class="flex items-center space-x-2">
                     @auth
                         <!-- User Dropdown -->
@@ -148,11 +151,19 @@
         @if($courses->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 @foreach($courses as $course)
-                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
+                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden flex flex-col h-full">
                         <!-- Course Image -->
                         <div class="relative bg-gray-200 h-48">
                             @if($course->thumbnail)
-                                <img src="{{ asset($course->thumbnail) }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
+                                @php
+                                    $thumbnailUrl = Str::startsWith($course->thumbnail, 'courses/') 
+                                        ? Storage::url($course->thumbnail) 
+                                        : asset($course->thumbnail);
+                                @endphp
+                                <img src="{{ $thumbnailUrl }}" alt="{{ $course->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';">
+                                <div class="fallback-icon w-full h-full items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 absolute inset-0" style="display: none;">
+                                    <i class="fas fa-book text-white text-6xl opacity-50"></i>
+                                </div>
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600">
                                     <i class="fas fa-book text-white text-6xl opacity-50"></i>
@@ -166,10 +177,19 @@
                         </div>
 
                         <!-- Course Info -->
-                        <div class="p-4">
+                        <div class="p-4 flex flex-col flex-grow">
                             <!-- Teacher -->
                             <div class="flex items-center mb-2">
-                                <img src="{{ $course->teacher->profile_photo_url ?? asset('img/default-avatar.png') }}" alt="{{ $course->teacher->name }}" class="w-8 h-8 rounded-full mr-2">
+                                @if($course->teacher->profile_photo_path)
+                                    <img src="{{ Storage::url($course->teacher->profile_photo_path) }}" alt="{{ $course->teacher->name }}" class="w-8 h-8 rounded-full mr-2 object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="w-8 h-8 rounded-full mr-2 bg-gradient-to-br from-blue-500 to-indigo-600 items-center justify-center text-white text-sm font-semibold" style="display: none;">
+                                        {{ strtoupper(substr($course->teacher->name, 0, 1)) }}
+                                    </div>
+                                @else
+                                    <div class="w-8 h-8 rounded-full mr-2 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold">
+                                        {{ strtoupper(substr($course->teacher->name, 0, 1)) }}
+                                    </div>
+                                @endif
                                 <span class="text-sm text-gray-600">{{ $course->teacher->name }}</span>
                             </div>
 
@@ -201,7 +221,7 @@
                             </div>
 
                             <!-- Stats -->
-                            <div class="flex items-center justify-between text-sm text-gray-600 mb-4 py-2 border-y">
+                            <div class="flex items-center justify-between text-sm text-gray-600 mb-4 py-2 border-y mt-auto">
                                 <span><i class="fas fa-users mr-1"></i>{{ $course->enrollments_count ?? 0 }} students</span>
                                 <span><i class="fas fa-clock mr-1"></i>{{ $course->duration ?? 0 }} hours</span>
                             </div>

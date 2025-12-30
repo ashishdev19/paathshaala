@@ -23,8 +23,22 @@ class StoreCourseCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:course_categories,name',
+            'icon' => 'nullable|string|max:100',
+            'show_on_homepage' => 'nullable|boolean',
+            'display_order' => 'nullable|integer|min:0',
             'status' => 'required|in:active,inactive',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'show_on_homepage' => $this->has('show_on_homepage') ? true : false,
+            'display_order' => $this->display_order ?? 0,
+        ]);
     }
 
     /**

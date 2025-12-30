@@ -104,7 +104,9 @@
                 <thead class="bg-gradient-to-r from-indigo-50 to-purple-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Category Name</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-indigo-900 uppercase tracking-wider">Icon</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-indigo-900 uppercase tracking-wider">Courses</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-indigo-900 uppercase tracking-wider">Homepage</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-indigo-900 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-indigo-900 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -124,9 +126,28 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <div class="w-10 h-10 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas {{ $category->icon_class }} text-indigo-600 text-lg"></i>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                     {{ $category->courses_count }} {{ Str::plural('course', $category->courses_count) }}
                                 </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                @if($category->show_on_homepage)
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                                        </svg>
+                                        Visible
+                                    </span>
+                                @else
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
+                                        Hidden
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 @if($category->status === 'active')

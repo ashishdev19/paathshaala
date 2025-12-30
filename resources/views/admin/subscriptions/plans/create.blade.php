@@ -14,12 +14,7 @@
                     <!-- Plan Name -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Plan Name *</label>
-                        <select name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                            <option value="">Select Plan Type</option>
-                            <option value="Silver">Silver</option>
-                            <option value="Gold">Gold</option>
-                            <option value="Platinum">Platinum</option>
-                        </select>
+                        <input type="text" name="name" value="{{ old('name') }}" required placeholder="e.g., Starter, Professional, Premium" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         @error('name')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
