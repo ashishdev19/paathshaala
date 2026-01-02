@@ -111,17 +111,39 @@
         </div>
     </header>
 
-    <!-- Hero -->
-    <div class="relative overflow-hidden bg-blue-600 text-white py-32 pt-40">
-        <div class="absolute inset-0 bg-black opacity-10"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <h1 class="text-6xl md:text-7xl font-black mb-8">About <span class="text-white">{{ config('app.name', 'Medniks') }}</span></h1>
-            <p class="text-2xl max-w-4xl mx-auto leading-relaxed font-light">Transforming medical education through innovative technology, expert instructors, and excellence in healthcare learning.</p>
-            <div class="mt-12 flex justify-center gap-6">
-                <a href="/courses" class="bg-white text-blue-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition">Explore Courses</a>
-                <a href="/contact" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-blue-600 transition">Contact Us</a>
+    <!-- Hero (background image) -->
+    @php
+        // prefer kebab or camel names, fallback to candidate list
+        $candidates = [
+            'img/about-hero.png',
+            'img/aboutHero.png',
+            'img/about-hero.jpg',
+            'img/about-hero.jpeg',
+            'img/about_hero.png',
+            'img/about-hero.webp',
+            'img/aboutHero.webp',
+        ];
+        $heroUrl = null;
+        foreach ($candidates as $c) {
+            if (file_exists(public_path($c))) {
+                $heroUrl = asset($c);
+                break;
+            }
+        }
+    @endphp
+
+    <div class="relative overflow-hidden text-white py-24 md:py-36 pt-40" style="background-color:transparent; @if($heroUrl) background-image: url('{{ $heroUrl }}'); background-size: cover; background-position: right center; background-repeat: no-repeat; min-height: 720px; @endif">
+        <div class="absolute inset-0" style="background: linear-gradient(to left, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.35) 36%, rgba(0,0,0,0.12) 60%, rgba(0,0,0,0) 100%);"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-end justify-end h-full pb-12 md:pb-24">
+                <div class="max-w-2xl pr-4 md:pr-8 lg:pr-24 pb-6 text-right">
+                    <h1 class="text-4xl md:text-6xl font-black mb-4">About <span class="text-white">{{ config('app.name', 'Medniks') }}</span></h1>
+                    <p class="text-lg md:text-2xl max-w-xl leading-relaxed font-light text-white mx-auto">Transforming medical education through innovative technology, expert instructors, and excellence in healthcare learning.</p>
+                    <div class="mt-6 flex gap-4 justify-end">
+                        <a href="/courses" class="bg-white text-blue-600 px-6 md:px-8 py-3 rounded-full font-bold text-base md:text-lg hover:shadow-2xl hover:scale-105 transition">Explore Courses</a>
+                        <a href="/contact" class="bg-transparent border-2 border-white text-white px-6 md:px-8 py-3 rounded-full font-bold text-base md:text-lg hover:bg-white hover:text-blue-600 transition">Contact Us</a>
+                    </div>
+                </div>
             </div>
-        </div>
     </div>
 
     <!-- Platform Features -->

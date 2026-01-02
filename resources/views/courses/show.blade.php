@@ -48,6 +48,28 @@
                                 </svg>
                                 {{ $course->enrollments_count ?? 0 }} students
                             </div>
+                            @php
+                                // Support multiple possible DB field names for course start/end dates
+                                $startRaw = $course->batch_start_date ?? $course->start_date ?? $course->course_start_date ?? $course->start ?? null;
+                                $endRaw = $course->batch_end_date ?? $course->end_date ?? $course->course_end_date ?? $course->end ?? null;
+                                $start = $startRaw ? \Carbon\Carbon::parse($startRaw)->format('d M Y') : null;
+                                $end = $endRaw ? \Carbon\Carbon::parse($endRaw)->format('d M Y') : null;
+                            @endphp
+
+                            @if($start || $end)
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    @if($start && $end)
+                                        {{ $start }} — {{ $end }}
+                                    @elseif($start)
+                                        Starts: {{ $start }}
+                                    @else
+                                        Ends: {{ $end }}
+                                    @endif
+                                </div>
+                            @endif
                         </div>
 
                         <div class="mt-6 flex items-center gap-4">
