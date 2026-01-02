@@ -74,7 +74,7 @@
 
                     <!-- Action Buttons -->
                     <div class="flex space-x-4">
-                        <a href="#" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 font-semibold shadow-md transition duration-300">
+                        <a href="{{ route('student.courses.show', $enrollment->course_id) }}" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 font-semibold shadow-md transition duration-300">
                             Continue Learning
                         </a>
                         @if($enrollment->progress >= 100)

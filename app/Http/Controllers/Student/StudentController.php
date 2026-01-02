@@ -182,8 +182,8 @@ class StudentController extends Controller
     {
         $student = Auth::user();
         
-        // Get course details
-        $course = Course::with(['teacher', 'onlineClasses', 'reviews.student', 'category'])
+        // Get course details with sections and lectures
+        $course = Course::with(['teacher', 'onlineClasses', 'sections.lectures', 'reviews.student', 'category'])
             ->withCount(['enrollments', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->findOrFail($id);
@@ -210,7 +210,7 @@ class StudentController extends Controller
             ->limit(3)
             ->get();
 
-        return view('courses.show', compact('course', 'isEnrolled', 'enrollment', 'relatedCourses'));
+        return view('student.courses.show', compact('course', 'isEnrolled', 'enrollment', 'relatedCourses'));
     }
 
     public function certificates()

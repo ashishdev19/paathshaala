@@ -91,6 +91,206 @@
                     </li>
                 </ul>
             </div>
+
+            <!-- Course Content -->
+            <div id="course-content" class="space-y-6">
+                @php
+                    $mainVideo = $course->video_url ?: ($course->video_file ?: $course->promo_video_url);
+                    $isYouTube = str_contains($mainVideo, 'youtube.com') || str_contains($mainVideo, 'youtu.be');
+                @endphp
+                @if($isEnrolled && ($mainVideo || ($course->syllabus && isset($course->syllabus['pdf'])) || $course->demo_pdf || $course->demo_lecture))
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Course Materials</h2>
+                    <div class="space-y-6">
+                        @if($mainVideo)
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-800 mb-3">Course Video</h3>
+                            <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
+                                @if($isYouTube)
+                                    @php
+                                        $videoId = '';
+                                        if (str_contains($mainVideo, 'youtu.be/')) {
+                                            $videoId = explode('youtu.be/', $mainVideo)[1];
+                                            if (str_contains($videoId, '?')) {
+                                                $videoId = explode('?', $videoId)[0];
+                                            }
+                                        } else {
+                                            parse_str(parse_url($mainVideo, PHP_URL_QUERY), $params);
+                                            $videoId = $params['v'] ?? '';
+                                        }
+                                    @endphp
+                                    @if($videoId)
+                                        <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full min-h-[400px]"></iframe>
+                                    @else
+                                        <div class="flex items-center justify-center h-full text-white p-12 text-center">
+                                            <div>
+                                                <p class="mb-4">Video link detected but could not be embedded.</p>
+                                                <a href="{{ $mainVideo }}" target="_blank" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">Watch on YouTube</a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @elseif($course->video_file)
+                                    @php
+                                        $videoPath = $course->video_file;
+                                        if (!str_starts_with($videoPath, 'storage/') && !str_starts_with($videoPath, '/storage/')) {
+                                            $videoPath = 'storage/' . $videoPath;
+                                        }
+                                        if (!str_starts_with($videoPath, '/')) {
+                                            $videoPath = '/' . $videoPath;
+                                        }
+                                    @endphp
+                                    <video src="{{ $videoPath }}" controls class="w-full h-full"></video>
+                                @else
+                                    <video src="{{ $mainVideo }}" controls class="w-full h-full"></video>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @if($course->syllabus && isset($course->syllabus['pdf']))
+                            <div class="flex items-center justify-between p-4 bg-indigo-50 rounded-lg border border-indigo-100">
+                                <div class="flex items-center">
+                                    <svg class="h-8 w-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <div>
+                                        <p class="font-semibold text-indigo-900">Course Syllabus</p>
+                                        <p class="text-sm text-indigo-700">PDF Document</p>
+                                    </div>
+                                </div>
+                                <a href="/storage/{{ $course->syllabus['pdf'] }}" target="_blank" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm font-semibold transition">
+                                    View
+                                </a>
+                            </div>
+                            @endif
+
+                            @if($course->demo_pdf)
+                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-100">
+                                <div class="flex items-center">
+                                    <svg class="h-8 w-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <div>
+                                        <p class="font-semibold text-green-900">Study Material</p>
+                                        <p class="text-sm text-green-700">PDF Document</p>
+                                    </div>
+                                </div>
+                                <a href="{{ str_starts_with($course->demo_pdf, 'storage/') ? '/' . $course->demo_pdf : '/storage/' . $course->demo_pdf }}" target="_blank" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm font-semibold transition">
+                                    View
+                                </a>
+                            </div>
+                            @endif
+                        </div>
+
+                        @if($course->demo_lecture)
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-800 mb-3">Demo Lecture</h3>
+                            <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
+                                @if(str_contains($course->demo_lecture, 'youtube.com') || str_contains($course->demo_lecture, 'youtu.be'))
+                                    @php
+                                        $demoVideoId = '';
+                                        if (str_contains($course->demo_lecture, 'youtu.be/')) {
+                                            $demoVideoId = explode('youtu.be/', $course->demo_lecture)[1];
+                                            if (str_contains($demoVideoId, '?')) {
+                                                $demoVideoId = explode('?', $demoVideoId)[0];
+                                            }
+                                        } else {
+                                            parse_str(parse_url($course->demo_lecture, PHP_URL_QUERY), $demoParams);
+                                            $demoVideoId = $demoParams['v'] ?? '';
+                                        }
+                                    @endphp
+                                    @if($demoVideoId)
+                                        <iframe src="https://www.youtube.com/embed/{{ $demoVideoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full min-h-[400px]"></iframe>
+                                    @endif
+                                @else
+                                    <video src="{{ $course->demo_lecture }}" controls class="w-full h-full"></video>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+                @if($course->onlineClasses && $course->onlineClasses->count() > 0)
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Online Classes</h2>
+                    <div class="space-y-3">
+                        @foreach($course->onlineClasses as $class)
+                        <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-semibold text-gray-900">{{ $class->title }}</h3>
+                                <p class="text-sm text-gray-600 mt-1">{{ $class->description }}</p>
+                            </div>
+                            @if($isEnrolled)
+                                <div class="flex space-x-2">
+                                    @if($class->type == 'recorded' && $class->video_url)
+                                        <a href="{{ route('online-classes.watch', $class->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm font-semibold">
+                                            Watch Recording
+                                        </a>
+                                    @elseif($class->type == 'live' && $class->meeting_link)
+                                        <a href="{{ $class->meeting_link }}" target="_blank" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm font-semibold">
+                                            Join Live Class
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Course Curriculum -->
+                @if($course->sections && $course->sections->count() > 0)
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Course Curriculum</h2>
+                    <div class="space-y-4">
+                        @foreach($course->sections as $section)
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                                <h3 class="font-bold text-gray-800">{{ $section->title }}</h3>
+                                <span class="text-sm text-gray-500">{{ $section->lectures->count() }} lectures</span>
+                            </div>
+                            <div class="divide-y divide-gray-100">
+                                @foreach($section->lectures as $lecture)
+                                <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span class="text-gray-700">{{ $lecture->title }}</span>
+                                    </div>
+                                    @if($isEnrolled && $lecture->video_url)
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Video</span>
+                                    @endif
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                @if($isEnrolled && 
+                    (!$course->sections || $course->sections->count() == 0) && 
+                    (!$course->onlineClasses || $course->onlineClasses->count() == 0) &&
+                    !$mainVideo &&
+                    !($course->syllabus && isset($course->syllabus['pdf'])) &&
+                    !$course->demo_pdf &&
+                    !$course->demo_lecture)
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                    <svg class="mx-auto h-12 w-12 text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-blue-900 mb-2">Course Content Coming Soon</h3>
+                    <p class="text-blue-700">The instructor hasn't uploaded the curriculum yet. Please check back later or contact support if you have questions.</p>
+                </div>
+                @endif
+            </div>
         </div>
 
         <!-- Sidebar -->
@@ -101,9 +301,15 @@
                     <p class="text-gray-600 text-sm mb-2">Course Price</p>
                     <p class="text-4xl font-bold text-blue-600">₹{{ number_format($course->price, 2) }}</p>
                 </div>
-                <a href="{{ route('enrollment.checkout', $course->id) }}" class="block w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold mb-4 text-center">
-                    Enroll Now
-                </a>
+                @if(!$isEnrolled)
+                    <a href="{{ route('enrollment.checkout', $course->id) }}" class="block w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold mb-4 text-center">
+                        Enroll Now
+                    </a>
+                @else
+                    <a href="#course-content" class="block w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold mb-4 text-center">
+                        Already Enrolled - Go to Course
+                    </a>
+                @endif
                 <div class="border-t border-gray-200 pt-4 space-y-3">
                     <div class="flex items-center text-sm text-gray-600">
                         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

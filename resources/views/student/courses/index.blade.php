@@ -53,7 +53,7 @@
                 
                 <div class="flex items-center justify-between pt-4 border-t border-gray-200">
                     <span class="text-sm text-gray-500">Enrolled: {{ $enrollment->enrolled_at ? $enrollment->enrolled_at->format('M d, Y') : ($enrollment->created_at ? $enrollment->created_at->format('M d, Y') : 'N/A') }}</span>
-                    <a href="{{ route('courses.show', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                    <a href="{{ route('student.courses.show', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
                         Continue Learning
                     </a>
                 </div>

@@ -89,7 +89,7 @@
                                     </a>
                                 @endauth
                             @else
-                                <a href="{{ route('student.courses') }}" 
+                                <a href="#course-content" 
                                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -105,7 +105,7 @@
             <!-- Course Details Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
-                <div class="lg:col-span-2 space-y-8">
+                <div class="lg:col-span-2 space-y-8" id="course-content">
                     <!-- What you'll learn -->
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <h2 class="text-2xl font-bold text-gray-900 mb-4">What you'll learn</h2>
@@ -120,9 +120,57 @@
                         <h2 class="text-2xl font-bold text-gray-900 mb-4">Course Content</h2>
                         <div class="space-y-2">
                             @foreach($course->onlineClasses as $class)
-                            <div class="border border-gray-200 rounded-lg p-4">
-                                <h3 class="font-semibold text-gray-900">{{ $class->title }}</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $class->description }}</p>
+                            <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">{{ $class->title }}</h3>
+                                    <p class="text-sm text-gray-600 mt-1">{{ $class->description }}</p>
+                                </div>
+                                @if($isEnrolled)
+                                    <div class="flex space-x-2">
+                                        @if($class->type == 'recorded' && $class->video_url)
+                                            <a href="{{ route('online-classes.watch', $class->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm font-semibold">
+                                                Watch Recording
+                                            </a>
+                                        @elseif($class->type == 'live' && $class->meeting_link)
+                                            <a href="{{ $class->meeting_link }}" target="_blank" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm font-semibold">
+                                                Join Live Class
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Course Curriculum -->
+                    @if($course->sections && $course->sections->count() > 0)
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Course Curriculum</h2>
+                        <div class="space-y-4">
+                            @foreach($course->sections as $section)
+                            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-800">{{ $section->title }}</h3>
+                                    <span class="text-sm text-gray-500">{{ $section->lectures->count() }} lectures</span>
+                                </div>
+                                <div class="divide-y divide-gray-100">
+                                    @foreach($section->lectures as $lecture)
+                                    <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span class="text-gray-700">{{ $lecture->title }}</span>
+                                        </div>
+                                        @if($isEnrolled && $lecture->video_url)
+                                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Video</span>
+                                        @endif
+                                    </div>
+                                    @endforeach
+                                </div>
                             </div>
                             @endforeach
                         </div>
