@@ -257,14 +257,31 @@
                                 @foreach($section->lectures as $lecture)
                                 <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition">
                                     <div class="flex items-center">
-                                        <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span class="text-gray-700">{{ $lecture->title }}</span>
+                                        @if($lecture->type == 'video')
+                                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        @elseif($lecture->type == 'pdf')
+                                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        @else
+                                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        @endif
+                                        
+                                        @if($isEnrolled)
+                                            <a href="{{ route('student.lectures.watch', $lecture->id) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                                                {{ $lecture->title }}
+                                            </a>
+                                        @else
+                                            <span class="text-gray-700">{{ $lecture->title }}</span>
+                                        @endif
                                     </div>
-                                    @if($isEnrolled && $lecture->video_url)
-                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Video</span>
+                                    @if($isEnrolled)
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded uppercase">{{ $lecture->type }}</span>
                                     @endif
                                 </div>
                                 @endforeach

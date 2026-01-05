@@ -213,6 +213,28 @@ class StudentController extends Controller
         return view('student.courses.show', compact('course', 'isEnrolled', 'enrollment', 'relatedCourses'));
     }
 
+    public function watchLecture($lectureId)
+    {
+        $student = Auth::user();
+        $lecture = \App\Models\CourseLecture::with('section.course')->findOrFail($lectureId);
+        $course = $lecture->section->course;
+
+        // Check if student is enrolled
+        $isEnrolled = Enrollment::where('student_id', $student->id)
+            ->where('course_id', $course->id)
+            ->exists();
+
+        if (!$isEnrolled && !$lecture->is_preview) {
+            return redirect()->route('student.courses.show', $course->id)
+                ->with('error', 'You must be enrolled to view this lecture.');
+        }
+
+        // Get all lectures for the sidebar
+        $course->load('sections.lectures');
+
+        return view('student.courses.watch', compact('course', 'lecture'));
+    }
+
     public function certificates()
     {
         $student = Auth::user();

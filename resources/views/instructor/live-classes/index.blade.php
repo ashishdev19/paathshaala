@@ -177,6 +177,17 @@
                                     </svg>
                                 </a>
 
+                                @if($status === 'completed' && $class->course_id)
+                                <!-- Add Content Button -->
+                                <a href="{{ route('instructor.courses.curriculum.edit', $class->course_id) }}" 
+                                   class="inline-flex items-center px-3 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition duration-200 group/item"
+                                   title="Add Recording/Notes to Course">
+                                    <svg class="w-4 h-4 group-hover/item:scale-110 transition duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                </a>
+                                @endif
+
                                 <!-- Delete Button -->
                                 <form action="{{ route('instructor.live-classes.destroy', $class->id) }}" method="POST" class="inline-block">
                                     @csrf

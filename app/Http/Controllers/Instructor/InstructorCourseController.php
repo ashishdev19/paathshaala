@@ -137,6 +137,14 @@ class InstructorCourseController extends Controller
         return view('instructor.courses.create.curriculum', compact('course'));
     }
 
+    // Edit Curriculum for existing course
+    public function editCurriculum(Course $course)
+    {
+        $this->authorize('update', $course);
+        $course->load('sections.lectures');
+        return view('instructor.courses.curriculum', compact('course'));
+    }
+
     // Step 4: Pricing
     public function createPricing()
     {

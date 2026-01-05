@@ -114,6 +114,7 @@
                     </div>
                 </div>
                 <input type="file" id="demo_pdf" name="demo_pdf" class="hidden" accept=".pdf">
+                <p class="mt-2 text-xs text-gray-500 italic">Note: This is for a sample/demo PDF. You can add class-wise notes in the next step (Curriculum).</p>
                 @error('demo_pdf')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror
@@ -149,6 +150,7 @@
                     </div>
                 </div>
                 <input type="file" id="demo_lecture" name="demo_lecture" class="hidden" accept="video/*">
+                <p class="mt-2 text-xs text-gray-500 italic">Note: This is for a sample/demo video. You can add class-wise recordings in the next step (Curriculum).</p>
                 @error('demo_lecture')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror

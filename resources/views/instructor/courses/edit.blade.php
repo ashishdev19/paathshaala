@@ -4,6 +4,16 @@
     </x-slot>
 
     <div class="max-w-3xl mx-auto bg-white rounded-lg shadow p-6">
+        <div class="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-lg flex justify-between items-center">
+            <div>
+                <h3 class="text-indigo-900 font-bold">Course Curriculum</h3>
+                <p class="text-indigo-700 text-sm">Add class-wise videos, PDFs, and notes as you complete them.</p>
+            </div>
+            <a href="{{ route('instructor.courses.curriculum.edit', $course->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-sm">
+                Manage Curriculum
+            </a>
+        </div>
+
         @if ($errors->any())
             <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
                 <ul class="list-disc list-inside">
@@ -61,6 +71,7 @@
                         <p class="text-xs text-gray-500 mb-2">Current: {{ basename($course->syllabus['pdf']) }}</p>
                     @endif
                     <input type="file" name="syllabus_pdf" accept="application/pdf" class="mt-1 block w-full">
+                    <p class="text-xs text-gray-500 mt-1 italic">Note: This is for the overall course syllabus. Use "Manage Curriculum" above for class-wise notes.</p>
                 </div>
 
                 <div>
@@ -70,6 +81,7 @@
                     @endif
                     <input type="file" name="video_file" accept="video/*" class="mt-1 block w-full">
                     <p class="text-xs text-gray-500 mt-1">You can also provide a Video URL below instead of uploading a file.</p>
+                    <p class="text-xs text-gray-500 mt-1 italic">Note: This is for the course intro/promo video. Use "Manage Curriculum" above for class recordings.</p>
                 </div>
 
                 <div>

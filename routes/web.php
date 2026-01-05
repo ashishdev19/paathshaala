@@ -239,6 +239,7 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     Route::get('/courses', [App\Http\Controllers\Instructor\InstructorCourseController::class, 'index'])->name('courses.index');
     Route::get('/courses/{course}', [App\Http\Controllers\Instructor\InstructorCourseController::class, 'show'])->name('courses.show');
     Route::get('/courses/{course}/edit', [App\Http\Controllers\Instructor\InstructorCourseController::class, 'edit'])->name('courses.edit');
+    Route::get('/courses/{course}/curriculum', [App\Http\Controllers\Instructor\InstructorCourseController::class, 'editCurriculum'])->name('courses.curriculum.edit');
     Route::put('/courses/{course}', [App\Http\Controllers\Instructor\InstructorCourseController::class, 'update'])->name('courses.update');
     Route::delete('/courses/{course}', [App\Http\Controllers\Instructor\InstructorCourseController::class, 'destroy'])->name('courses.destroy');
     
@@ -297,6 +298,7 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     Route::post('/sections/reorder', [App\Http\Controllers\Instructor\CourseSectionController::class, 'reorder'])->name('sections.reorder');
     
     Route::post('/lectures', [App\Http\Controllers\Instructor\CourseLectureController::class, 'store'])->name('lectures.store');
+    Route::get('/lectures/{lecture}', [App\Http\Controllers\Instructor\CourseLectureController::class, 'show'])->name('lectures.show');
     Route::put('/lectures/{lecture}', [App\Http\Controllers\Instructor\CourseLectureController::class, 'update'])->name('lectures.update');
     Route::delete('/lectures/{lecture}', [App\Http\Controllers\Instructor\CourseLectureController::class, 'destroy'])->name('lectures.destroy');
     Route::post('/lectures/reorder', [App\Http\Controllers\Instructor\CourseLectureController::class, 'reorder'])->name('lectures.reorder');
@@ -364,6 +366,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::get('/browse-courses', [App\Http\Controllers\Student\StudentController::class, 'browseCourses'])->name('courses.browse');
     Route::get('/course/{id}/preview', [App\Http\Controllers\Student\StudentController::class, 'coursePreview'])->name('courses.preview');
     Route::get('/courses/{id}', [App\Http\Controllers\Student\StudentController::class, 'courseDetail'])->name('courses.show');
+    Route::get('/lectures/{lecture}', [App\Http\Controllers\Student\StudentController::class, 'watchLecture'])->name('lectures.watch');
     Route::post('/courses/{id}/review', [App\Http\Controllers\Student\StudentController::class, 'storeReview'])->name('courses.review.store');
     Route::get('/enrollments', [App\Http\Controllers\Student\StudentController::class, 'enrollments'])->name('enrollments.index');
     Route::get('/certificates', [App\Http\Controllers\Student\StudentController::class, 'certificates'])->name('certificates.index');

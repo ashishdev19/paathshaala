@@ -73,6 +73,15 @@ class CourseLectureController extends Controller
         ]);
     }
 
+    public function show(CourseLecture $lecture)
+    {
+        $this->authorize('view', $lecture->section->course);
+        return response()->json([
+            'success' => true,
+            'lecture' => $lecture
+        ]);
+    }
+
     public function update(Request $request, CourseLecture $lecture)
     {
         $this->authorize('update', $lecture->section->course);
@@ -80,11 +89,18 @@ class CourseLectureController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'type' => 'required|in:video,pdf,quiz,assignment,live',
+            'file_path' => 'nullable|file|max:51200',
             'video_url' => 'nullable|url',
             'duration' => 'nullable|integer|min:0',
             'is_preview' => 'boolean',
             'description' => 'nullable|string',
         ]);
+
+        // Handle file upload
+        if ($request->hasFile('file_path')) {
+            $path = $request->file('file_path')->store('courses/lectures', 'public');
+            $validated['file_path'] = 'storage/' . $path;
+        }
 
         $lecture->update($validated);
 
