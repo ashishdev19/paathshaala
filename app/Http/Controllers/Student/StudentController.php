@@ -64,12 +64,21 @@ class StudentController extends Controller
             ->take(5)
             ->get();
 
+        // Recommended medical courses (not enrolled)
+        $recommendations = Course::where('is_active', true)
+            ->whereNotIn('id', $enrolledCourseIds)
+            ->with(['category', 'teacher'])
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
         return view('student.dashboard', compact(
             'stats',
             'enrollments', 
             'upcomingClasses',
             'certificates',
-            'recentPayments'
+            'recentPayments',
+            'recommendations'
         ));
     }
 
@@ -247,16 +256,26 @@ class StudentController extends Controller
         return view('student.certificates.index', compact('certificates'));
     }
 
-    public function enrollments()
+    public function enrollments(Request $request)
     {
         $student = Auth::user();
+        $status = $request->query('status');
         
-        $enrollments = Enrollment::where('student_id', $student->id)
-            ->with('course')
-            ->latest()
-            ->paginate(10);
+        $query = Enrollment::where('student_id', $student->id)
+            ->with(['course.teacher'])
+            ->latest();
 
-        return view('student.enrollments.index', compact('enrollments'));
+        if ($status == 'active') {
+            $query->active()->notExpired();
+        } elseif ($status == 'completed') {
+            $query->completed();
+        } elseif ($status == 'expired') {
+            $query->expired();
+        }
+
+        $enrollments = $query->paginate(10);
+
+        return view('student.enrollments.index', compact('enrollments', 'status'));
     }
 
     public function payments()

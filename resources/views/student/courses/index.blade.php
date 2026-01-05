@@ -11,7 +11,7 @@
             $course = $enrollment->course;
         @endphp
         <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
-            <div class="h-48 bg-gray-200 relative">
+            <div class="aspect-video bg-gray-100 relative overflow-hidden">
                 @if($course->thumbnail)
                     <img src="/storage/{{ $course->thumbnail }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
                 @else

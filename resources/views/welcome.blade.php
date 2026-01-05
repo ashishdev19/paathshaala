@@ -343,22 +343,32 @@
         
         .specialty-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 24px rgba(99, 102, 241, 0.15);
             border-color: #6366f1;
+            background: #f8faff;
+        }
+        
+        .specialty-card:hover .specialty-icon i {
+            color: #6366f1;
+            transform: scale(1.1);
         }
         
         .specialty-icon {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: #f3f4f6;
+            border-radius: 16px;
+            transition: all 0.3s ease;
         }
         
         .specialty-icon i {
-            font-size: 3rem;
-            color: #374151;
+            font-size: 2.25rem;
+            color: #4b5563;
+            transition: all 0.3s ease;
         }
         
         .specialty-name {
@@ -841,7 +851,7 @@
             @forelse($categories as $category)
             <a href="{{ route('courses.index') }}?category={{ $category->id }}" class="specialty-card">
                 <div class="specialty-icon">
-                    <i class="fas {{ $category->icon_class }}" style="font-size: 2.5rem; color: #4B5563;"></i>
+                    <i class="fas {{ $category->icon_class }}"></i>
                 </div>
                 <div class="specialty-name">{{ $category->name }}</div>
             </a>

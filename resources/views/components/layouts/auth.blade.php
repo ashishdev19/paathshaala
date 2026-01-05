@@ -41,15 +41,18 @@
             <div class="w-full max-w-md">
                 <!-- Logo -->
                 <div class="text-center mb-8">
-                    <a href="{{ url('/') }}" class="inline-flex items-center gap-3">
-                        <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                    <a href="{{ url('/') }}" class="inline-flex items-center gap-3 group">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                                <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                            </div>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-white"></div>
                         </div>
                         <div class="text-left">
-                            <h1 class="text-2xl font-bold text-blue-600 montserrat">
+                            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent montserrat">
                                 {{ config('app.name', 'Medniks') }}
                             </h1>
-                            <p class="text-xs text-gray-500">Medical Excellence</p>
+                            <p class="text-xs text-gray-500 font-medium">Medical Excellence</p>
                         </div>
                     </a>
                 </div>

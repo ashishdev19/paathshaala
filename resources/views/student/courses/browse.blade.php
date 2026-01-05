@@ -8,7 +8,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @forelse($courses as $course)
         <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
-            <div class="h-48 bg-gray-200 relative">
+            <div class="aspect-video bg-gray-100 relative overflow-hidden">
                 @if($course->thumbnail)
                     <img src="/storage/{{ $course->thumbnail }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
                 @else

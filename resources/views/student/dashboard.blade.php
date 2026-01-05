@@ -297,18 +297,17 @@
         <div class="section-card">
             <h2 class="section-title">Recommendations</h2>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <div class="recommendation-item">
-                    <div class="recommendation-title">Python Fundamentals</div>
-                    <div class="recommendation-text">Perfect next step for your learning path</div>
-                </div>
-                <div class="recommendation-item">
-                    <div class="recommendation-title">Web Development Path</div>
-                    <div class="recommendation-text">Build modern, responsive applications</div>
-                </div>
-                <div class="recommendation-item">
-                    <div class="recommendation-title">Data Science Basics</div>
-                    <div class="recommendation-text">Start your data science journey</div>
-                </div>
+                @forelse($recommendations as $course)
+                    <a href="{{ route('student.courses.show', $course->id) }}" class="recommendation-item" style="text-decoration: none; display: block;">
+                        <div class="recommendation-title">{{ $course->title }}</div>
+                        <div class="recommendation-text">{{ $course->category->name ?? 'Medical Course' }}</div>
+                    </a>
+                @empty
+                    <div class="recommendation-item">
+                        <div class="recommendation-title">Explore More</div>
+                        <div class="recommendation-text">Check out our latest medical courses</div>
+                    </div>
+                @endforelse
             </div>
         </div>
 

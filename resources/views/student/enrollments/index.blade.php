@@ -8,10 +8,22 @@
     <!-- Filters -->
     <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg shadow-md p-6 mb-6 border border-indigo-200">
         <div class="flex space-x-4">
-            <button class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-800 transition duration-300">All</button>
-            <button class="px-4 py-2 text-gray-700 hover:bg-white hover:shadow-sm rounded-lg font-medium border border-transparent hover:border-gray-200 transition duration-200">Active</button>
-            <button class="px-4 py-2 text-gray-700 hover:bg-white hover:shadow-sm rounded-lg font-medium border border-transparent hover:border-gray-200 transition duration-200">Completed</button>
-            <button class="px-4 py-2 text-gray-700 hover:bg-white hover:shadow-sm rounded-lg font-medium border border-transparent hover:border-gray-200 transition duration-200">Expired</button>
+            <a href="{{ route('student.enrollments.index') }}" 
+               class="px-4 py-2 rounded-lg font-semibold shadow-md transition duration-300 {{ !$status ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' : 'text-gray-700 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200' }}">
+                All
+            </a>
+            <a href="{{ route('student.enrollments.index', ['status' => 'active']) }}" 
+               class="px-4 py-2 rounded-lg font-semibold shadow-md transition duration-300 {{ $status == 'active' ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' : 'text-gray-700 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200' }}">
+                Active
+            </a>
+            <a href="{{ route('student.enrollments.index', ['status' => 'completed']) }}" 
+               class="px-4 py-2 rounded-lg font-semibold shadow-md transition duration-300 {{ $status == 'completed' ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' : 'text-gray-700 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200' }}">
+                Completed
+            </a>
+            <a href="{{ route('student.enrollments.index', ['status' => 'expired']) }}" 
+               class="px-4 py-2 rounded-lg font-semibold shadow-md transition duration-300 {{ $status == 'expired' ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' : 'text-gray-700 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200' }}">
+                Expired
+            </a>
         </div>
     </div>
 
@@ -22,8 +34,10 @@
             <div class="md:flex">
                 <!-- Course Image -->
                 <div class="md:flex-shrink-0">
-                    <div class="h-48 md:h-full md:w-48 bg-gradient-to-br from-indigo-100 to-purple-100 relative overflow-hidden">
-                        <img src="{{ $enrollment->course->thumbnail ? '/storage/' . $enrollment->course->thumbnail : 'https://via.placeholder.com/300x200' }}" alt="{{ $enrollment->course->title }}" class="h-full w-full object-cover border-r-4 border-indigo-200">
+                    <div class="w-full aspect-video md:w-64 bg-gray-100 relative overflow-hidden border-r border-gray-200">
+                        <img src="{{ $enrollment->course->thumbnail ? '/storage/' . $enrollment->course->thumbnail : 'https://via.placeholder.com/300x200' }}" 
+                             alt="{{ $enrollment->course->title }}" 
+                             class="w-full h-full object-cover">
                     </div>
                 </div>
                 <!-- Course Details -->
@@ -45,10 +59,10 @@
                     <div class="mb-4">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-sm font-semibold text-gray-700">Course Progress</span>
-                            <span class="text-sm font-bold text-indigo-600">{{ $enrollment->progress ?? 0 }}%</span>
+                            <span class="text-sm font-bold text-indigo-600">{{ $enrollment->progress_percentage ?? 0 }}%</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3 shadow-inner">
-                            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full shadow-md transition-all duration-500" style="width: {{ $enrollment->progress ?? 0 }}%"></div>
+                            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full shadow-md transition-all duration-500" style="width: {{ $enrollment->progress_percentage ?? 0 }}%"></div>
                         </div>
                     </div>
 
@@ -77,7 +91,7 @@
                         <a href="{{ route('student.courses.show', $enrollment->course_id) }}" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 font-semibold shadow-md transition duration-300">
                             Continue Learning
                         </a>
-                        @if($enrollment->progress >= 100)
+                        @if($enrollment->progress_percentage >= 100)
                         <a href="{{ route('student.certificates.download', $enrollment) }}" class="border-2 border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-blue-50 font-semibold shadow-sm transition duration-300">
                             Download Certificate
                         </a>
