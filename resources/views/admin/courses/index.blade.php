@@ -8,27 +8,39 @@
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <!-- Search and Filter -->
         <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 border-b border-indigo-200">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="md:col-span-2">
-                    <input type="text" placeholder="Search courses..." class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
+            <form action="{{ route('admin.courses.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                <div class="md:col-span-5">
+                    <label class="block text-xs font-semibold text-indigo-700 uppercase mb-1">Search</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title, description or teacher..." class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
                 </div>
-                <div>
-                    <select class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold text-indigo-700 uppercase mb-1">Status</label>
+                    <select name="status" class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
                         <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="draft">Draft</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                     </select>
                 </div>
-                <div>
-                    <select class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-semibold text-indigo-700 uppercase mb-1">Teacher</label>
+                    <select name="teacher_id" class="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm">
                         <option value="">All Teachers</option>
                         @foreach(\App\Models\User::byRole('instructor')->get() as $teacher)
-                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                            <option value="{{ $teacher->id }}" {{ request('teacher_id') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
                         @endforeach
                     </select>
                 </div>
-            </div>
+                <div class="md:col-span-2 flex space-x-2">
+                    <button type="submit" class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold shadow-md">
+                        Filter
+                    </button>
+                    <a href="{{ route('admin.courses.index') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition font-semibold text-center shadow-sm">
+                        Clear
+                    </a>
+                </div>
+            </form>
         </div>
 
         <!-- Courses Table -->

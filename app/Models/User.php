@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -79,6 +80,16 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class, 'student_id');
+    }
+
+    public function customNotifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    public function unreadCustomNotifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id')->where('is_read', false);
     }
 
     // Teacher Subscription Relationships
@@ -207,6 +218,26 @@ class User extends Authenticatable
     public function hasActiveSubscription(): bool
     {
         return $this->currentSubscription()->exists();
+    }
+
+    /**
+     * Get the URL to the user's profile photo.
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_image && Storage::disk('public')->exists($this->profile_image)) {
+            return asset('storage/' . $this->profile_image);
+        }
+        
+        return null;
+    }
+
+    /**
+     * Get the user's initials.
+     */
+    public function getInitialsAttribute()
+    {
+        return strtoupper(substr($this->name, 0, 1));
     }
 }
 

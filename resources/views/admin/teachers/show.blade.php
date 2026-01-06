@@ -12,9 +12,15 @@
                 <div class="flex items-start space-x-6">
                     <!-- Profile Picture -->
                     <div class="flex-shrink-0">
-                        <div class="h-24 w-24 rounded-full bg-indigo-500 flex items-center justify-center text-white text-3xl font-semibold">
-                            {{ strtoupper(substr($teacher->name ?? 'T', 0, 1)) }}
-                        </div>
+                        @if($teacher->profile_photo_url)
+                            <img src="{{ $teacher->profile_photo_url }}" 
+                                 alt="{{ $teacher->name }}" 
+                                 class="h-24 w-24 rounded-full object-cover shadow-lg border-2 border-indigo-100">
+                        @else
+                            <div class="h-24 w-24 rounded-full bg-indigo-500 flex items-center justify-center text-white text-3xl font-semibold shadow-lg">
+                                {{ $teacher->initials }}
+                            </div>
+                        @endif
                     </div>
                     
                     <!-- Teacher Info -->

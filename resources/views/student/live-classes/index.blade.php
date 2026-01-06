@@ -86,9 +86,15 @@
 
                         <!-- Instructor Info -->
                         <div class="flex items-center space-x-3 mb-4 p-3 bg-gray-50 rounded-lg">
-                            <img src="{{ $class->instructor->profile_photo_url ?? asset('img/default-avatar.png') }}" 
-                                 alt="{{ $class->instructor->name }}" 
-                                 class="w-10 h-10 rounded-full">
+                            @if($class->instructor->profile_photo_url)
+                                <img src="{{ $class->instructor->profile_photo_url }}" 
+                                     alt="{{ $class->instructor->name }}" 
+                                     class="w-10 h-10 rounded-full">
+                            @else
+                                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold">
+                                    {{ $class->instructor->initials }}
+                                </div>
+                            @endif
                             <div>
                                 <p class="text-sm font-medium text-gray-900">{{ $class->instructor->name }}</p>
                                 <p class="text-xs text-gray-500">Instructor</p>

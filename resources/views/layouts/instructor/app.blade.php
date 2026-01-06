@@ -80,6 +80,9 @@
             color: #6b7280;
             cursor: pointer;
             transition: color 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
         }
 
         .notification-bell:hover {
@@ -216,10 +219,15 @@
                 </div>
 
                 <div class="navbar-right">
-                    <div class="notification-bell">
+                    <a href="{{ route('notifications.index') }}" class="notification-bell">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </div>
+                        @php
+                            $unreadCount = auth()->user()->unreadCustomNotifications()->count();
+                        @endphp
+                        @if($unreadCount > 0)
+                            <span class="notification-badge">{{ $unreadCount }}</span>
+                        @endif
+                    </a>
 
                     <div class="user-profile">
                         <div class="user-avatar">

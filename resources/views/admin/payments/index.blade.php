@@ -62,22 +62,33 @@
     <div class="bg-white rounded-lg shadow-lg border border-indigo-100 overflow-hidden">
         <!-- Filters -->
         <div class="p-6 border-b border-indigo-100 bg-gradient-to-r from-indigo-50 to-purple-50">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form action="{{ route('admin.payments.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div>
-                    <input type="date" class="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <label class="block text-xs font-semibold text-indigo-700 uppercase mb-1">Date</label>
+                    <input type="date" name="date" value="{{ request('date') }}" class="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                 </div>
                 <div>
-                    <select class="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <label class="block text-xs font-semibold text-indigo-700 uppercase mb-1">Status</label>
+                    <select name="status" class="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         <option value="">All Status</option>
-                        <option value="completed">Completed</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
                     </select>
                 </div>
-                <div class="md:col-span-2">
-                    <input type="text" placeholder="Search by transaction ID or student name..." class="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <div>
+                    <label class="block text-xs font-semibold text-indigo-700 uppercase mb-1">Search</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Transaction ID or student name..." class="w-full px-4 py-2 border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                 </div>
-            </div>
+                <div class="flex space-x-2">
+                    <button type="submit" class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold shadow-md">
+                        Filter
+                    </button>
+                    <a href="{{ route('admin.payments.index') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition font-semibold text-center shadow-sm">
+                        Clear
+                    </a>
+                </div>
+            </form>
         </div>
 
         <!-- Payments Table -->
@@ -123,7 +134,7 @@
                             {{ $payment->created_at->format('M d, Y H:i') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="#" class="text-indigo-600 hover:text-indigo-900 font-semibold">View Details</a>
+                            <a href="{{ route('admin.payments.show', $payment) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">View Details</a>
                         </td>
                     </tr>
                     @empty

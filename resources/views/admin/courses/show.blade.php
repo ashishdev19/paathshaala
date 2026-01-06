@@ -65,9 +65,15 @@
                 <div class="mb-8 bg-gray-50 rounded-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Instructor</h3>
                     <div class="flex items-center">
-                        <img src="{{ $course->teacher->profile_photo_url ?? asset('img/default-avatar.png') }}" 
-                             alt="{{ $course->teacher->name }}" 
-                             class="w-16 h-16 rounded-full mr-4">
+                        @if($course->teacher->profile_photo_url)
+                            <img src="{{ $course->teacher->profile_photo_url }}" 
+                                 alt="{{ $course->teacher->name }}" 
+                                 class="w-16 h-16 rounded-full mr-4">
+                        @else
+                            <div class="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xl font-bold mr-4">
+                                {{ $course->teacher->initials }}
+                            </div>
+                        @endif
                         <div>
                             <h4 class="text-lg font-semibold text-gray-900">{{ $course->teacher->name }}</h4>
                             <p class="text-gray-600">{{ $course->teacher->email }}</p>

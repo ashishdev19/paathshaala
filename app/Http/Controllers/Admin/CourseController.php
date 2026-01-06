@@ -14,12 +14,34 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::with(['enrollments', 'teacher'])
-            ->withCount(['enrollments', 'reviews'])
-            ->latest()
-            ->paginate(12);
+        $query = Course::with(['enrollments', 'teacher'])
+            ->withCount(['enrollments', 'reviews']);
+
+        // Apply Search Filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('teacher', function($t) use ($search) {
+                      $t->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Apply Status Filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Apply Teacher Filter
+        if ($request->filled('teacher_id')) {
+            $query->where('teacher_id', $request->teacher_id);
+        }
+
+        $courses = $query->latest()->paginate(12)->withQueryString();
             
         return view('admin.courses.index', compact('courses'));
     }

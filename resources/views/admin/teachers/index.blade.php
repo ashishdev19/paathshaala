@@ -42,9 +42,15 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
-                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                                        <span class="text-white font-bold text-lg">{{ substr($teacher->name, 0, 1) }}</span>
-                                    </div>
+                                    @if($teacher->profile_photo_url)
+                                        <img src="{{ $teacher->profile_photo_url }}" 
+                                             alt="{{ $teacher->name }}" 
+                                             class="h-10 w-10 rounded-full object-cover shadow-sm border border-indigo-100">
+                                    @else
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-md">
+                                            <span class="text-white font-bold text-lg">{{ $teacher->initials }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-semibold text-gray-900">{{ $teacher->name }}</div>
