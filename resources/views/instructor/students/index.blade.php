@@ -8,27 +8,31 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <!-- Filters -->
         <div class="px-6 py-4 border-b border-gray-200">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option value="">All Courses</option>
-                        @foreach($courses ?? [] as $course)
-                        <option value="{{ $course->id }}">{{ $course->title }}</option>
-                        @endforeach
-                    </select>
+            <form action="{{ route('instructor.students.index') }}" method="GET">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <select name="course_id" onchange="this.form.submit()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">All Courses</option>
+                            @foreach($courses ?? [] as $course)
+                            <option value="{{ $course->id }}" {{ request('course_id') == $course->id ? 'selected' : '' }}>
+                                {{ $course->title }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <select name="status" onchange="this.form.submit()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">All Status</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>Expired</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search students..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
                 </div>
-                <div>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="completed">Completed</option>
-                        <option value="expired">Expired</option>
-                    </select>
-                </div>
-                <div>
-                    <input type="text" placeholder="Search students..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                </div>
-            </div>
+            </form>
         </div>
 
         <!-- Students Table -->

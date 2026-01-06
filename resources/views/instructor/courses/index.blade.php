@@ -80,10 +80,19 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <!-- Header with Add Button -->
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <div>
-                <input type="text" placeholder="Search courses..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <div class="flex-1 max-w-md">
+                <form action="{{ route('instructor.courses.index') }}" method="GET" class="flex">
+                    <div class="relative w-full">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search courses..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        @if(request('search'))
+                            <a href="{{ route('instructor.courses.index') }}" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </div>
+                </form>
             </div>
-            <a href="{{ route('instructor.courses.create.basics') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+            <a href="{{ route('instructor.courses.create.basics') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 ml-4">
                 <svg class="inline-block h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>

@@ -79,16 +79,37 @@ class InstructorController extends Controller
         return view('instructor.courses.index', compact('courses'));
     }
 
-    public function students()
+    public function students(Request $request)
     {
         $teacher = Auth::user();
         $courseIds = Course::where('teacher_id', $teacher->id)->pluck('id');
         
+        $query = Enrollment::with(['student', 'course'])
+            ->whereIn('course_id', $courseIds);
+
+        // Filter by course
+        if ($request->filled('course_id')) {
+            $query->where('course_id', $request->course_id);
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Search by student name or email
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('student', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
         // Get all enrollments for teacher's courses
-        $enrollments = Enrollment::with(['student', 'course'])
-            ->whereIn('course_id', $courseIds)
-            ->latest()
-            ->paginate(15);
+        $enrollments = $query->latest()
+            ->paginate(15)
+            ->withQueryString();
         
         // Get all courses for the filter dropdown
         $courses = Course::where('teacher_id', $teacher->id)->get();

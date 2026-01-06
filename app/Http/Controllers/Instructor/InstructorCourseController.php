@@ -233,16 +233,27 @@ class InstructorCourseController extends Controller
     }
 
     // Main course list
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         
         // Check if instructor has active subscription
         $hasSubscription = $user->hasActiveSubscription();
         
-        $courses = Course::where('teacher_id', Auth::id())
-            ->latest()
-            ->paginate(10);
+        $query = Course::where('teacher_id', Auth::id());
+
+        // Handle Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $courses = $query->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         $stats = [
             'total' => $courses->total(),
