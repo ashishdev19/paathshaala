@@ -62,12 +62,12 @@ class CourseController extends Controller
             $data['status'] = 'pending'; // Pending admin approval
             $data['is_active'] = false;
             
-            // Handle thumbnail upload if present
+            // Handle thumbnail upload (Save as Base64 in DB)
             if ($request->hasFile('thumbnail')) {
-                $thumbnail = $request->file('thumbnail');
-                $thumbnailName = time() . '_' . $thumbnail->getClientOriginalName();
-                $thumbnailPath = $thumbnail->storeAs('courses/thumbnails', $thumbnailName, 'public');
-                $data['thumbnail'] = $thumbnailPath;
+                $file = $request->file('thumbnail');
+                $binData = file_get_contents($file->getRealPath());
+                $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($binData);
+                $data['thumbnail'] = $base64;
             }
 
             $course = Course::create($data);
@@ -132,17 +132,12 @@ class CourseController extends Controller
                 $data['slug'] = Str::slug($data['title']);
             }
             
-            // Handle thumbnail upload if present
+            // Handle thumbnail upload (Save as Base64 in DB)
             if ($request->hasFile('thumbnail')) {
-                // Delete old thumbnail
-                if ($course->thumbnail) {
-                    \Storage::disk('public')->delete($course->thumbnail);
-                }
-                
-                $thumbnail = $request->file('thumbnail');
-                $thumbnailName = time() . '_' . $thumbnail->getClientOriginalName();
-                $thumbnailPath = $thumbnail->storeAs('courses/thumbnails', $thumbnailName, 'public');
-                $data['thumbnail'] = $thumbnailPath;
+                $file = $request->file('thumbnail');
+                $binData = file_get_contents($file->getRealPath());
+                $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($binData);
+                $data['thumbnail'] = $base64;
             }
 
             $course->update($data);

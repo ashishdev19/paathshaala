@@ -17,12 +17,8 @@
         <div class="lg:col-span-2">
             <!-- Course Header -->
             <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
-                <div class="h-64 bg-gray-200">
-                    @if($course->thumbnail)
-                        <img src="/storage/{{ $course->thumbnail }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
-                    @else
-                        <img src="https://via.placeholder.com/800x400" alt="{{ $course->title }}" class="w-full h-full object-cover">
-                    @endif
+                <div class="bg-gray-200">
+                    <img src="{{ $course->thumbnail_url }}" alt="{{ $course->title }}" class="w-full h-auto">
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-4">

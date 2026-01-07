@@ -12,7 +12,7 @@
                 <!-- Left Column -->
                 <div>
                     @if($course->thumbnail)
-                        <img src="{{ asset($course->thumbnail) }}" alt="Thumbnail" class="w-full h-64 object-cover rounded-lg mb-6">
+                        <img src="{{ $course->thumbnail_url }}" alt="Thumbnail" class="w-full h-64 object-cover rounded-lg mb-6">
                     @endif
                     
                     <div class="space-y-4">

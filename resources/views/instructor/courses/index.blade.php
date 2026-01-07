@@ -118,8 +118,21 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded" src="{{ $course->thumbnail ? '/storage/' . $course->thumbnail : 'https://via.placeholder.com/40' }}" alt="">
+                                <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                                    @php
+                                        $thumbnailSrc = $course->thumbnail_url;
+                                        // Clean any accidentally prefixed storage paths from base64 data
+                                        if (strpos($thumbnailSrc, 'data:image/') !== false) {
+                                            $dataPos = strpos($thumbnailSrc, 'data:image/');
+                                            if ($dataPos !== false) {
+                                                $thumbnailSrc = substr($thumbnailSrc, $dataPos);
+                                            }
+                                        }
+                                    @endphp
+                                    <img class="h-10 w-10 rounded object-cover" src="{{ $thumbnailSrc }}" alt="{{ $course->title }}" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';">
+                                    <div class="fallback-icon hidden items-center justify-center w-full h-full">
+                                        <i class="fas fa-image text-gray-400 text-xs"></i>
+                                    </div>
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">{{ $course->title }}</div>

@@ -116,12 +116,10 @@
                     </div>
 
                     <!-- Current Image -->
-                    @if($course->thumbnail)
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
-                            <img src="/storage/{{ $course->thumbnail }}" alt="{{ $course->title }}" class="w-32 h-32 object-cover rounded-lg">
+                            <img src="{{ $course->thumbnail_url }}" alt="{{ $course->title }}" class="w-32 h-32 object-cover rounded-lg">
                         </div>
-                    @endif
 
                     <!-- Course Image -->
                     <div>

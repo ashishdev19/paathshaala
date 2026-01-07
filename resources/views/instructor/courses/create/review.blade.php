@@ -91,7 +91,7 @@
                     @if($course->thumbnail)
                         <div>
                             <p class="text-xs text-gray-500 mb-2">Thumbnail</p>
-                            <img src="{{ asset($course->thumbnail) }}" alt="Thumbnail" class="w-full h-40 object-cover rounded">
+                            <img src="{{ $course->thumbnail_url }}" alt="Thumbnail" class="w-full h-40 object-cover rounded">
                         </div>
                     @endif
                     <div>

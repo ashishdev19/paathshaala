@@ -58,7 +58,7 @@
                     <label class="block text-sm font-medium text-gray-700">Course Image (thumbnail)</label>
                     @if($course->thumbnail)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Current thumbnail" class="h-32 w-auto rounded border">
+                            <img src="{{ $course->thumbnail_url }}" alt="Current thumbnail" class="h-32 w-auto rounded border">
                             <p class="text-xs text-gray-500 mt-1">Current: {{ basename($course->thumbnail) }}</p>
                         </div>
                     @endif

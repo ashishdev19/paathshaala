@@ -91,7 +91,7 @@ class InstructorCourseController extends Controller
     public function storeMedia(Request $request)
     {
         $validated = $request->validate([
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:200',
             'promo_video_url' => 'nullable|url',
             'demo_pdf' => 'nullable|file|mimes:pdf|max:5120',
             'demo_lecture' => 'nullable|file|mimes:mp4,avi,mov,mkv|max:51200',
@@ -100,10 +100,12 @@ class InstructorCourseController extends Controller
         $courseId = session('course_id');
         $course = Course::findOrFail($courseId);
 
-        // Handle thumbnail upload
+        // Handle thumbnail upload (Save as Base64 in DB)
         if ($request->hasFile('thumbnail')) {
-            $path = $request->file('thumbnail')->store('courses/thumbnails', 'public');
-            $course->thumbnail = $path;
+            $file = $request->file('thumbnail');
+            $data = file_get_contents($file->getRealPath());
+            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
+            $course->thumbnail = $base64;
         }
 
         // Handle promo video URL
@@ -292,7 +294,7 @@ class InstructorCourseController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'nullable|exists:course_categories,id',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:200',
             'syllabus_pdf' => 'nullable|file|mimes:pdf|max:5120',
             'video_file' => 'nullable|file|mimes:mp4,avi,mov,mkv|max:512000',
             'video_url' => 'nullable|url',
@@ -300,10 +302,12 @@ class InstructorCourseController extends Controller
             'status' => 'nullable|in:draft,published,archived',
         ]);
 
-        // Handle thumbnail upload
+        // Handle thumbnail upload (Save as Base64 in DB)
         if ($request->hasFile('thumbnail')) {
-            $path = $request->file('thumbnail')->store('courses/thumbnails', 'public');
-            $validated['thumbnail'] = $path;
+            $file = $request->file('thumbnail');
+            $data = file_get_contents($file->getRealPath());
+            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
+            $validated['thumbnail'] = $base64;
         }
 
         // Handle PDF upload

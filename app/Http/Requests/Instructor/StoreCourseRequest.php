@@ -33,7 +33,7 @@ class StoreCourseRequest extends FormRequest
             'batch_end_date' => 'nullable|date|after_or_equal:batch_start_date',
             'price' => 'nullable|numeric|min:0',
             'is_free' => 'nullable|boolean',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:200',
         ];
     }
 

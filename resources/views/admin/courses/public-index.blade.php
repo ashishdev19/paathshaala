@@ -155,12 +155,7 @@
                         <!-- Course Image -->
                         <div class="relative bg-gray-200 h-48">
                             @if($course->thumbnail)
-                                @php
-                                    $thumbnailUrl = Str::startsWith($course->thumbnail, 'courses/') 
-                                        ? Storage::url($course->thumbnail) 
-                                        : asset($course->thumbnail);
-                                @endphp
-                                <img src="{{ $thumbnailUrl }}" alt="{{ $course->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';">
+                                <img src="{{ $course->thumbnail_url }}" alt="{{ $course->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';">
                                 <div class="fallback-icon w-full h-full items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 absolute inset-0" style="display: none;">
                                     <i class="fas fa-book text-white text-6xl opacity-50"></i>
                                 </div>

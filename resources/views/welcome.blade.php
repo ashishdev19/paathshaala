@@ -878,12 +878,7 @@
                     $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
                     $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
                     
-                    // Handle thumbnail URL
-                    $thumbnailUrl = $course->thumbnail 
-                        ? (\Illuminate\Support\Str::startsWith($course->thumbnail, 'courses/') 
-                            ? \Illuminate\Support\Facades\Storage::url($course->thumbnail) 
-                            : asset($course->thumbnail))
-                        : 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop';
+                    $thumbnailUrl = $course->thumbnail_url;
                 @endphp
                 <a href="{{ route('courses.show', $course->id) }}" class="popular-course-card">
                     <img src="{{ $thumbnailUrl }}" alt="{{ $course->title }}" class="popular-course-image">

@@ -206,4 +206,65 @@ class Course extends Model
         $startDate = $enrollmentDate ? $enrollmentDate : now();
         return $startDate->addDays($this->validity_days);
     }
+
+    public function getThumbnailUrlAttribute()
+    {
+        $thumbnail = trim($this->thumbnail);
+
+        if (!$thumbnail) {
+            return asset('images/default-course.png');
+        }
+
+        // 1. Check for Base64 data anywhere in the string
+        // This handles cases where "/storage/" or other junk is prepended
+        if (strpos($thumbnail, 'data:image/') !== false || strpos($thumbnail, ';base64,') !== false) {
+            $startPos = strpos($thumbnail, 'data:image/');
+            if ($startPos !== false) {
+                return substr($thumbnail, $startPos);
+            }
+            // Fallback if data:image/ is missing but ;base64, is there
+            $startPosB64 = strpos($thumbnail, ';base64,');
+            if ($startPosB64 !== false) {
+                // Try to backtrack to find the start of the data URI if possible, 
+                // or just return as is if it's already a clean URI
+                return $thumbnail; 
+            }
+        }
+
+        // 2. If it's a full URL, return it
+        if (filter_var($thumbnail, FILTER_VALIDATE_URL)) {
+            return $thumbnail;
+        }
+
+        // 3. Clean the path (remove leading 'storage/' or '/storage/' if present)
+        $path = $thumbnail;
+        $path = str_replace(['storage/', '/storage/'], '', $path);
+        $path = ltrim($path, '/');
+
+        // 4. Try to find the file and convert to base64 for reliable loading on cPanel
+        $locations = [
+            storage_path('app/public/' . $path),
+            public_path('storage/' . $path),
+            base_path('storage/app/public/' . $path),
+            base_path('../public_html/storage/' . $path),
+        ];
+
+        foreach ($locations as $fullPath) {
+            if (file_exists($fullPath) && !is_dir($fullPath) && filesize($fullPath) > 0) {
+                try {
+                    $imageData = file_get_contents($fullPath);
+                    if ($imageData !== false) {
+                        $mimeType = mime_content_type($fullPath);
+                        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+                    }
+                } catch (\Exception $e) {
+                    // Continue to next location
+                }
+            }
+        }
+
+        // 5. Fallback: Return via asset helper, but ONLY if it's NOT a base64 string
+        // We already checked for base64 in Step 1, so this is safe for regular file paths
+        return asset('storage/' . $path);
+    }
 }

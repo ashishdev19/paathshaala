@@ -72,7 +72,7 @@ class CourseController extends Controller
                 'level' => ['required', 'in:beginner,intermediate,advanced'],
                 'teacher_id' => ['required', 'exists:users,id'],
                 'category' => ['required', 'string', 'max:100'],
-                'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:200'],
                 'video_file' => ['nullable', 'file', 'mimes:mp4,avi,mov,wmv,flv', 'max:102400'], // 100MB max
                 'video_url' => ['nullable', 'url'],
                 'is_featured' => ['boolean'],
@@ -87,9 +87,12 @@ class CourseController extends Controller
         $courseData['slug'] = Str::slug($request->title);
         $courseData['duration_hours'] = $request->duration;
 
-        // Handle thumbnail upload
+        // Handle thumbnail upload (Save as Base64 in DB)
         if ($request->hasFile('thumbnail')) {
-            $courseData['thumbnail'] = $request->file('thumbnail')->store('courses/thumbnails', 'public');
+            $file = $request->file('thumbnail');
+            $data = file_get_contents($file->getRealPath());
+            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
+            $courseData['thumbnail'] = $base64;
         }
 
         // Handle video file upload
@@ -140,7 +143,7 @@ class CourseController extends Controller
             'level' => ['required', 'in:beginner,intermediate,advanced'],
             'teacher_id' => ['required', 'exists:users,id'],
             'category' => ['required', 'string', 'max:100'],
-            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:200'],
             'video_file' => ['nullable', 'file', 'mimes:mp4,avi,mov,wmv,flv', 'max:102400'], // 100MB max
             'video_url' => ['nullable', 'url'],
             'course_urls' => ['nullable', 'array'],
@@ -154,13 +157,12 @@ class CourseController extends Controller
         $courseData['slug'] = Str::slug($request->title);
         $courseData['duration_hours'] = $request->duration;
 
-        // Handle thumbnail upload
+        // Handle thumbnail upload (Save as Base64 in DB)
         if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if exists
-            if ($course->thumbnail) {
-                Storage::disk('public')->delete($course->thumbnail);
-            }
-            $courseData['thumbnail'] = $request->file('thumbnail')->store('courses/thumbnails', 'public');
+            $file = $request->file('thumbnail');
+            $data = file_get_contents($file->getRealPath());
+            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
+            $courseData['thumbnail'] = $base64;
         }
 
         // Handle video file upload

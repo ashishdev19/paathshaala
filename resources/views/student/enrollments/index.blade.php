@@ -35,7 +35,7 @@
                 <!-- Course Image -->
                 <div class="md:flex-shrink-0">
                     <div class="w-full aspect-video md:w-64 bg-gray-100 relative overflow-hidden border-r border-gray-200">
-                        <img src="{{ $enrollment->course->thumbnail ? '/storage/' . $enrollment->course->thumbnail : 'https://via.placeholder.com/300x200' }}" 
+                        <img src="{{ $enrollment->course->thumbnail_url }}" 
                              alt="{{ $enrollment->course->title }}" 
                              class="w-full h-full object-cover">
                     </div>
