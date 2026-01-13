@@ -36,6 +36,7 @@ class RoleSeeder extends Seeder
             'view-dashboard',
             'manage-users',
             'manage-roles',
+            'manage-inventory',
             'manage-permissions',
             'manage-courses',
             'manage-payments',

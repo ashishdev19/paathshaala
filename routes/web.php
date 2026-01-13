@@ -166,10 +166,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Unified Access Control Management (Roles & Permissions)
     Route::get('access-control', [App\Http\Controllers\Admin\AccessControlController::class, 'index'])->name('access-control.index');
     
-    // Admin Roles Management
+    // Admin Roles Management (using Spatie roles)
     Route::resource('roles', App\Http\Controllers\Admin\AdminRoleController::class);
     
-    // Admin Permissions Management
+    // Admin Permissions Management (using Spatie permissions)
     Route::prefix('permissions')->name('permissions.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\AdminPermissionController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Admin\AdminPermissionController::class, 'create'])->name('create');
@@ -180,8 +180,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('/{permission}', [App\Http\Controllers\Admin\AdminPermissionController::class, 'destroy'])->name('destroy');
     });
     
-    // Admin Accounts Management
-    Route::resource('accounts', App\Http\Controllers\Admin\AdminAccountController::class);
+    // Admin Accounts Management (using User model with admin/superadmin roles)
+    Route::resource('accounts', App\Http\Controllers\Admin\AdminAccountController::class)->parameters([
+        'accounts' => 'account:id'
+    ]);
     Route::post('/accounts/{account}/toggle-status', [App\Http\Controllers\Admin\AdminAccountController::class, 'toggleStatus'])->name('accounts.toggle-status');
     
     // Course Categories Management

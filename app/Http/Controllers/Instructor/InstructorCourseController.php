@@ -100,12 +100,24 @@ class InstructorCourseController extends Controller
         $courseId = session('course_id');
         $course = Course::findOrFail($courseId);
 
-        // Handle thumbnail upload (Save as Base64 in DB)
+        // Handle thumbnail upload - Store as file path for better performance
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
-            $data = file_get_contents($file->getRealPath());
-            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
-            $course->thumbnail = $base64;
+            
+            // Generate a unique filename
+            $filename = 'course_' . $course->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Store in public disk under courses/thumbnails
+            $path = $file->storeAs('courses/thumbnails', $filename, 'public');
+            
+            // Delete old thumbnail if it was a file path (not base64)
+            if ($course->thumbnail && strpos($course->thumbnail, 'data:image/') === false) {
+                $oldPath = str_replace('storage/', '', $course->thumbnail);
+                \Storage::disk('public')->delete($oldPath);
+            }
+            
+            // Store the path (without 'storage/' prefix - the accessor will handle URL generation)
+            $course->thumbnail = $path;
         }
 
         // Handle promo video URL
@@ -302,12 +314,24 @@ class InstructorCourseController extends Controller
             'status' => 'nullable|in:draft,published,archived',
         ]);
 
-        // Handle thumbnail upload (Save as Base64 in DB)
+        // Handle thumbnail upload - Store as file path for better performance
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
-            $data = file_get_contents($file->getRealPath());
-            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
-            $validated['thumbnail'] = $base64;
+            
+            // Generate a unique filename
+            $filename = 'course_' . $course->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Store in public disk under courses/thumbnails
+            $path = $file->storeAs('courses/thumbnails', $filename, 'public');
+            
+            // Delete old thumbnail if it was a file path (not base64)
+            if ($course->thumbnail && strpos($course->thumbnail, 'data:image/') === false) {
+                $oldPath = str_replace('storage/', '', $course->thumbnail);
+                \Storage::disk('public')->delete($oldPath);
+            }
+            
+            // Store the path (without 'storage/' prefix - the accessor will handle URL generation)
+            $validated['thumbnail'] = $path;
         }
 
         // Handle PDF upload

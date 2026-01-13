@@ -32,9 +32,9 @@
         
         /* Header Styling */
         .site-header {
-            background: #ffffff;
+            background: #008080;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #006666;
         }
         
         .logo-container {
@@ -145,7 +145,7 @@
         
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+            /* background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%); */
             color: white;
             padding: 4rem 2rem;
             padding-top: 6rem;
@@ -557,19 +557,19 @@
         
         /* Footer Styling */
         .site-footer {
-            background: #1f2937;
-            color: white;
+            background: #008080;
+            color: #e6fffb;
             padding: 3rem 2rem 1rem;
         }
         
         .footer-links a {
-            color: #9ca3af;
+            color: #c1f5ef;
             text-decoration: none;
             transition: color 0.3s;
         }
         
         .footer-links a:hover {
-            color: white;
+            color: #ffffff;
         }
         
         /* Responsive */
@@ -608,29 +608,29 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="site-header fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg shadow-sm border-b border-gray-100 z-50">
+    <header class="site-header fixed top-0 left-0 right-0 text-white shadow-sm border-b border-teal-700 z-50">
         <div class="w-full px-6 lg:px-12">
             <div class="flex items-center justify-between h-16">
                 <!-- Left Side: Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
                     <div class="relative">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300" style="background-color: #008080;">
                             <i class="fas fa-graduation-cap text-white text-sm"></i>
                         </div>
                         <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Medniks</h1>
-                        <p class="text-xs text-gray-500 font-medium">Medical Excellence</p>
+                        <h1 class="text-xl font-bold text-white">Medniks</h1>
+                        <p class="text-xs text-teal-100 font-medium">Medical Excellence</p>
                     </div>
                 </a>
                 
                 <!-- Center: Navigation Links -->
                 <nav class="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-                    <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
-                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
-                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
+                    <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Home</a>
+                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Courses</a>
+                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">About</a>
+                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Contact</a>
                 </nav>
                 
                 <!-- Right Side: Auth Links -->
@@ -672,11 +672,11 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="px-4 py-2 md:px-6 md:py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm md:text-base rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] whitespace-nowrap">Login/Register</a>
+                        <a href="{{ route('login') }}" class="px-4 py-2 md:px-6 md:py-2.5 bg-teal-600 text-white text-sm md:text-base rounded-full hover:bg-teal-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] whitespace-nowrap">Login/Register</a>
                     @endauth
                     
                     <!-- Mobile Menu Button -->
-                    <button class="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none" onclick="toggleMobileMenu()">
+                    <button class="md:hidden p-2 text-white hover:text-teal-200 focus:outline-none" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -748,8 +748,9 @@
             
             <!-- Right Side - Content -->
             <div class="hero-text">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6 fade-in-up montserrat leading-tight">
-                    Discover the best online learning for healthcare professionals
+            <h1 class="text-4xl md:text-5xl text-gray-900 font-bold mb-6 fade-in-up montserrat leading-tight">
+
+                    Discover the best online learning<br> for healthcare professionals
                 </h1>
                 
                 <form action="{{ route('courses.index') }}" method="GET" class="search-box">
@@ -1322,18 +1323,18 @@
                 <!-- Company Info -->
                 <div>
                     <h3 class="text-xl font-bold mb-4 montserrat">{{ config('app.name') }}</h3>
-                    <p class="text-gray-400 mb-4">Empowering medical professionals through quality education and training</p>
+                    <p class="text-teal-100 mb-4">Empowering medical professionals through quality education and training</p>
                     <div class="flex gap-3">
-                        <a href="#" class="social-icon bg-gray-700 hover:bg-blue-600">
+                        <a href="#" class="social-icon bg-white/15 hover:bg-white/25">
                             <i class="fab fa-facebook-f text-white"></i>
                         </a>
-                        <a href="#" class="social-icon bg-gray-700 hover:bg-pink-600">
+                        <a href="#" class="social-icon bg-white/15 hover:bg-white/25">
                             <i class="fab fa-instagram text-white"></i>
                         </a>
-                        <a href="#" class="social-icon bg-gray-700 hover:bg-red-600">
+                        <a href="#" class="social-icon bg-white/15 hover:bg-white/25">
                             <i class="fab fa-youtube text-white"></i>
                         </a>
-                        <a href="#" class="social-icon bg-gray-700 hover:bg-blue-700">
+                        <a href="#" class="social-icon bg-white/15 hover:bg-white/25">
                             <i class="fab fa-linkedin-in text-white"></i>
                         </a>
                     </div>
@@ -1341,7 +1342,7 @@
                 
                 <!-- Quick Links -->
                 <div class="footer-links">
-                    <h4 class="text-lg font-semibold mb-4 montserrat">Platform</h4>
+                    <h4 class="text-lg font-semibold mb-4 montserrat text-white">Platform</h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('courses.index') }}">Browse Courses</a></li>
                         <li><a href="{{ route('about') }}">About Us</a></li>
@@ -1352,7 +1353,7 @@
                 
                 <!-- Specializations -->
                 <div class="footer-links">
-                    <h4 class="text-lg font-semibold mb-4 montserrat">Specializations</h4>
+                    <h4 class="text-lg font-semibold mb-4 montserrat text-white">Specializations</h4>
                     <ul class="space-y-2">
                         <li><a href="#">Aesthetic Medicine</a></li>
                         <li><a href="#">Aesthetic Gynecology</a></li>
@@ -1364,8 +1365,8 @@
                 
                 <!-- Contact -->
                 <div>
-                    <h4 class="text-lg font-semibold mb-4 montserrat">Contact Us</h4>
-                    <ul class="space-y-2 text-gray-400">
+                    <h4 class="text-lg font-semibold mb-4 montserrat text-white">Contact Us</h4>
+                    <ul class="space-y-2 text-teal-50">
                         <li>
                             <i class="fas fa-envelope mr-2"></i>
                             info@medniks.com
@@ -1383,7 +1384,7 @@
             </div>
             
             <!-- Bottom Bar -->
-            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+            <div class="border-t border-white/30 pt-6 text-center text-teal-50">
                 <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
                 <div class="mt-2">
                     <span class="inline-block mr-4">

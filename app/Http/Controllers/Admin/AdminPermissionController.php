@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminPermission;
-use App\Models\AdminRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
+/**
+ * Admin Permission Controller - Uses Spatie Permission Package
+ * 
+ * This controller manages permissions using Spatie's Permission model exclusively.
+ */
 class AdminPermissionController extends Controller
 {
     /**
@@ -15,8 +20,11 @@ class AdminPermissionController extends Controller
      */
     public function index()
     {
-        $permissions = AdminPermission::orderBy('module')->orderBy('name')->get()->groupBy('module');
-        $roles = AdminRole::with('permissions')->get();
+        $permissions = Permission::orderBy('name')->get()->groupBy(function ($permission) {
+            $parts = explode('-', $permission->name);
+            return $parts[0] ?? 'general';
+        });
+        $roles = Role::with('permissions')->get();
 
         return view('admin.permissions.index', compact('permissions', 'roles'));
     }
@@ -26,7 +34,11 @@ class AdminPermissionController extends Controller
      */
     public function create()
     {
-        $modules = AdminPermission::distinct()->pluck('module')->filter();
+        $modules = Permission::all()->map(function ($permission) {
+            $parts = explode('-', $permission->name);
+            return $parts[0] ?? 'general';
+        })->unique()->filter();
+        
         return view('admin.permissions.create', compact('modules'));
     }
 
@@ -36,14 +48,13 @@ class AdminPermissionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:admin_permissions,name',
-            'description' => 'nullable|string|max:500',
-            'module' => 'nullable|string|max:100',
+            'name' => 'required|string|max:255|unique:permissions,name',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
-
-        AdminPermission::create($validated);
+        Permission::create([
+            'name' => Str::slug($validated['name']),
+            'guard_name' => 'web',
+        ]);
 
         return redirect()
             ->route('admin.permissions.index')
@@ -55,8 +66,11 @@ class AdminPermissionController extends Controller
      */
     public function assign()
     {
-        $roles = AdminRole::with('permissions')->get();
-        $permissions = AdminPermission::orderBy('module')->orderBy('name')->get()->groupBy('module');
+        $roles = Role::with('permissions')->get();
+        $permissions = Permission::orderBy('name')->get()->groupBy(function ($permission) {
+            $parts = explode('-', $permission->name);
+            return $parts[0] ?? 'general';
+        });
 
         return view('admin.permissions.assign', compact('roles', 'permissions'));
     }
@@ -67,13 +81,20 @@ class AdminPermissionController extends Controller
     public function assignStore(Request $request)
     {
         $validated = $request->validate([
-            'role_id' => 'required|exists:admin_roles,id',
+            'role_id' => 'required|exists:roles,id',
             'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:admin_permissions,id',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
-        $role = AdminRole::findOrFail($validated['role_id']);
-        $role->permissions()->sync($request->permissions ?? []);
+        $role = Role::findOrFail($validated['role_id']);
+        
+        // Use Spatie's syncPermissions method
+        if (!empty($request->permissions)) {
+            $permissionNames = Permission::whereIn('id', $request->permissions)->pluck('name');
+            $role->syncPermissions($permissionNames);
+        } else {
+            $role->syncPermissions([]);
+        }
 
         return redirect()
             ->route('admin.permissions.assign')
@@ -83,10 +104,16 @@ class AdminPermissionController extends Controller
     /**
      * Remove the specified permission
      */
-    public function destroy(AdminPermission $permission)
+    public function destroy(Permission $permission)
     {
-        // Detach from all roles
-        $permission->roles()->detach();
+        // Revoke from all roles using Spatie
+        $roles = Role::all();
+        foreach ($roles as $role) {
+            if ($role->hasPermissionTo($permission->name)) {
+                $role->revokePermissionTo($permission->name);
+            }
+        }
+        
         $permission->delete();
 
         return redirect()
@@ -97,16 +124,15 @@ class AdminPermissionController extends Controller
     /**
      * Update the specified permission
      */
-    public function update(Request $request, AdminPermission $permission)
+    public function update(Request $request, Permission $permission)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:admin_permissions,name,' . $permission->id,
-            'description' => 'nullable|string|max:500',
-            'module' => 'nullable|string|max:100',
+            'name' => 'required|string|max:255|unique:permissions,name,' . $permission->id,
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
-        $permission->update($validated);
+        $permission->update([
+            'name' => Str::slug($validated['name']),
+        ]);
 
         return redirect()
             ->route('admin.permissions.index')

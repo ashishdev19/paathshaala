@@ -23,7 +23,7 @@ class CustomRegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:15'],
-            'user_type' => ['required', 'in:instructor,student'],
+            'role' => ['required', 'in:instructor,student'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
             'city' => ['nullable', 'string', 'max:100'],
             'state' => ['nullable', 'string', 'max:100'],
@@ -31,7 +31,7 @@ class CustomRegisterController extends Controller
         ];
 
         // Add profession type validation if user is instructor
-        if ($request->user_type === 'instructor') {
+        if ($request->role === 'instructor') {
             $validationRules['profession_type'] = ['required', 'string', 'max:100'];
         }
 
@@ -42,8 +42,7 @@ class CustomRegisterController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'user_type' => $request->user_type,
-                'profession_type' => $request->profession_type,
+                'profession_type' => $request->role === 'instructor' ? $request->profession_type : null,
                 'city' => $request->city,
                 'state' => $request->state,
                 'pincode' => $request->pincode,
@@ -52,12 +51,8 @@ class CustomRegisterController extends Controller
 
             event(new Registered($user));
 
-            // Assign role based on user_type
-            if ($request->user_type === 'instructor') {
-                $user->assignRole('instructor');
-            } else {
-                $user->assignRole('student');
-            }
+            // Assign Spatie role based on selection
+            $user->assignRole($request->role);
 
             // Login the user
             Auth::login($user);
@@ -65,10 +60,10 @@ class CustomRegisterController extends Controller
             // Reload user to get fresh role data
             $user->refresh();
 
-            // Redirect directly to role-specific dashboard
-            if ($user->isInstructor()) {
+            // Redirect based on Spatie role using hasRole()
+            if ($user->hasRole('instructor')) {
                 return redirect()->route('instructor.dashboard');
-            } elseif ($user->isStudent()) {
+            } elseif ($user->hasRole('student')) {
                 return redirect()->route('student.dashboard');
             }
             

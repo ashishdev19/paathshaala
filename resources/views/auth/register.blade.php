@@ -46,24 +46,24 @@
             @enderror
         </div>
         
-        <!-- User Type -->
+        <!-- Role Selection (Spatie Role) -->
         <div>
-            <label for="user_type" class="block text-sm font-medium text-gray-700 mb-1.5">
+            <label for="role" class="block text-sm font-medium text-gray-700 mb-1.5">
                 <i class="fas fa-user-tag text-gray-400 mr-2"></i>Who are you?
             </label>
-            <select id="user_type" name="user_type" required onchange="toggleProfessionField()"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('user_type') border-red-500 @enderror">
-                <option value="">Select user type</option>
-                <option value="instructor" {{ old('user_type') == 'instructor' ? 'selected' : '' }}>Instructor/Professional</option>
-                <option value="student" {{ old('user_type') == 'student' ? 'selected' : '' }}>Student/Learner</option>
+            <select id="role" name="role" required onchange="toggleProfessionField()"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('role') border-red-500 @enderror">
+                <option value="">Select your role</option>
+                <option value="instructor" {{ old('role') == 'instructor' ? 'selected' : '' }}>Instructor/Professional</option>
+                <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Student/Learner</option>
             </select>
-            @error('user_type')
+            @error('role')
                 <p class="mt-1 text-sm text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
             @enderror
         </div>
         
         <!-- Profession Type (shown for instructors) -->
-        <div id="professionField" style="display: {{ old('user_type') == 'instructor' ? 'block' : 'none' }};">
+        <div id="professionField" style="display: {{ old('role') == 'instructor' ? 'block' : 'none' }};">
             <label for="profession_type" class="block text-sm font-medium text-gray-700 mb-1.5">
                 <i class="fas fa-briefcase text-gray-400 mr-2"></i>Profession Type
             </label>
@@ -147,11 +147,11 @@
     
     <script>
         function toggleProfessionField() {
-            const userType = document.getElementById('user_type').value;
+            const role = document.getElementById('role').value;
             const professionField = document.getElementById('professionField');
             const professionSelect = document.getElementById('profession_type');
             
-            if (userType === 'instructor') {
+            if (role === 'instructor') {
                 professionField.style.display = 'block';
                 professionSelect.required = true;
             } else {

@@ -87,25 +87,35 @@ class CourseController extends Controller
         $courseData['slug'] = Str::slug($request->title);
         $courseData['duration_hours'] = $request->duration;
 
-        // Handle thumbnail upload (Save as Base64 in DB)
+        // Create course first to get the ID
+        $course = Course::create($courseData);
+        
+        // Handle thumbnail upload - Store as file path for better performance
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
-            $data = file_get_contents($file->getRealPath());
-            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
-            $courseData['thumbnail'] = $base64;
+            
+            // Generate a unique filename
+            $filename = 'course_' . $course->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Store in public disk under courses/thumbnails
+            $path = $file->storeAs('courses/thumbnails', $filename, 'public');
+            
+            // Store the path (without 'storage/' prefix - the accessor will handle URL generation)
+            $course->thumbnail = $path;
+            $course->save();
         }
 
         // Handle video file upload
         if ($request->hasFile('video_file')) {
-            $courseData['video_file'] = $request->file('video_file')->store('courses/videos', 'public');
+            $course->video_file = $request->file('video_file')->store('courses/videos', 'public');
+            $course->save();
         }
 
         // Handle course URLs (simplified for now)
-        $courseData['course_urls'] = null;
+        $course->course_urls = null;
+        $course->save();
 
-        \Log::info('About to create course', ['courseData' => $courseData]);
-        
-        Course::create($courseData);
+        \Log::info('Course created successfully', ['course_id' => $course->id]);
 
         return redirect()->route('admin.courses.index')
             ->with('success', 'Course created successfully.');
@@ -157,12 +167,23 @@ class CourseController extends Controller
         $courseData['slug'] = Str::slug($request->title);
         $courseData['duration_hours'] = $request->duration;
 
-        // Handle thumbnail upload (Save as Base64 in DB)
+        // Handle thumbnail upload - Store as file path for better performance
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
-            $data = file_get_contents($file->getRealPath());
-            $base64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode($data);
-            $courseData['thumbnail'] = $base64;
+            
+            // Generate a unique filename
+            $filename = 'course_' . $course->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Store in public disk under courses/thumbnails
+            $path = $file->storeAs('courses/thumbnails', $filename, 'public');
+            
+            // Delete old thumbnail if it was a file path (not base64)
+            if ($course->thumbnail && strpos($course->thumbnail, 'data:image/') === false) {
+                Storage::disk('public')->delete($course->thumbnail);
+            }
+            
+            // Store the path (without 'storage/' prefix - the accessor will handle URL generation)
+            $courseData['thumbnail'] = $path;
         }
 
         // Handle video file upload

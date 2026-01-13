@@ -13,29 +13,29 @@
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg shadow-sm border-b border-gray-100 z-50">
+    <header class="fixed top-0 left-0 right-0 backdrop-blur-lg shadow-sm z-50" style="background-color: #008080;">
         <div class="w-full px-6 lg:px-12">
             <div class="flex items-center justify-between h-16">
                 <!-- Left Side: Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
                     <div class="relative">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 border border-white/40" style="background-color: #008080;">
                             <i class="fas fa-graduation-cap text-white text-sm"></i>
                         </div>
                         <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Medniks</h1>
-                        <p class="text-xs text-gray-500 font-medium">Medical Excellence</p>
+                        <h1 class="text-xl font-bold text-white">Medniks</h1>
+                        <p class="text-xs text-teal-100 font-medium">Medical Excellence</p>
                     </div>
                 </a>
                 
                 <!-- Center: Navigation Links -->
                 <nav class="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-                    <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
-                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
-                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
+                    <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Home</a>
+                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Courses</a>
+                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">About</a>
+                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Contact</a>
                 </nav>
                 
                 <!-- Right Side: Auth Links -->
@@ -77,11 +77,11 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="px-4 py-2 md:px-6 md:py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm md:text-base rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] whitespace-nowrap">Login/Register</a>
+                        <a href="{{ route('login') }}" class="px-4 py-2 md:px-6 md:py-2.5 bg-teal-600 text-white text-sm md:text-base rounded-full hover:bg-teal-700 transition-all font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] whitespace-nowrap">Login/Register</a>
                     @endauth
                     
                     <!-- Mobile Menu Button -->
-                    <button class="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none" onclick="toggleMobileMenu()">
+                    <button class="md:hidden p-2 text-white hover:text-teal-200 focus:outline-none" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -91,12 +91,12 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg">
+        <div id="mobileMenu" class="hidden md:hidden" style="background-color: #008080;">
             <div class="px-4 py-3 space-y-2">
-                <a href="{{ url('/') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
-                <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
-                <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                <a href="{{ route('contact') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
+                <a href="{{ url('/') }}" class="block px-4 py-2 text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Home</a>
+                <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Courses</a>
+                <a href="{{ route('about') }}" class="block px-4 py-2 text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">About</a>
+                <a href="{{ route('contact') }}" class="block px-4 py-2 text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Contact</a>
             </div>
         </div>
     </header>
@@ -247,15 +247,15 @@
         </div>
     </div>
 
-    <footer class="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
+    <footer class="text-white" style="background-color: #008080;">
         <!-- Newsletter Section -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-16">
+        <div class="py-16" style="background-color: #008080;">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h3 class="text-4xl font-bold mb-4">Stay Updated with Medical Insights</h3>
-                <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Get the latest medical research updates, course announcements, and exclusive healthcare content delivered to your inbox.</p>
+                <p class="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">Get the latest medical research updates, course announcements, and exclusive healthcare content delivered to your inbox.</p>
                 <div class="max-w-md mx-auto flex gap-4">
-                    <input type="email" placeholder="Enter your email address" class="flex-1 px-6 py-4 rounded-2xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                    <button class="px-8 py-4 bg-white text-blue-600 rounded-2xl font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">Subscribe</button>
+                    <input type="email" placeholder="Enter your email address" class="flex-1 px-6 py-4 rounded-2xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-teal-300">
+                    <button class="px-8 py-4 bg-white text-teal-700 rounded-2xl font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">Subscribe</button>
                 </div>
             </div>
         </div>
@@ -299,24 +299,24 @@
     </script>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 py-12 mt-0">
+    <footer class="text-white py-12 mt-0" style="background-color: #008080;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <!-- Company Info -->
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-white">{{ config('app.name') }}</h3>
-                    <p class="text-gray-400 mb-4">Empowering medical professionals through quality education and training</p>
+                    <p class="text-teal-100 mb-4">Empowering medical professionals through quality education and training</p>
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 hover:bg-blue-600 flex items-center justify-center transition-colors" aria-label="Facebook">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors" aria-label="Facebook">
                             <i class="fab fa-facebook-f text-white"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 hover:bg-pink-600 flex items-center justify-center transition-colors" aria-label="Instagram">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors" aria-label="Instagram">
                             <i class="fab fa-instagram text-white"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 hover:bg-red-600 flex items-center justify-center transition-colors" aria-label="YouTube">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors" aria-label="YouTube">
                             <i class="fab fa-youtube text-white"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 hover:bg-blue-700 flex items-center justify-center transition-colors" aria-label="LinkedIn">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in text-white"></i>
                         </a>
                     </div>
@@ -325,30 +325,30 @@
                 <!-- Quick Links -->
                 <div>
                     <h4 class="text-lg font-semibold mb-4 text-white">Platform</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('courses.index') }}" class="hover:text-blue-400 transition-colors">Browse Courses</a></li>
-                        <li><a href="{{ route('about') }}" class="hover:text-blue-400 transition-colors">About Us</a></li>
-                        <li><a href="#faculty" class="hover:text-blue-400 transition-colors">Our Faculty</a></li>
-                        <li><a href="{{ route('contact') }}" class="hover:text-blue-400 transition-colors">Contact</a></li>
+                    <ul class="space-y-2 text-teal-50">
+                        <li><a href="{{ route('courses.index') }}" class="hover:text-white transition-colors">Browse Courses</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#faculty" class="hover:text-white transition-colors">Our Faculty</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
                 
                 <!-- Specializations -->
                 <div>
                     <h4 class="text-lg font-semibold mb-4 text-white">Specializations</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-blue-400 transition-colors">Aesthetic Medicine</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition-colors">Aesthetic Gynecology</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition-colors">Ultrasound</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition-colors">IVF & Reproductive Medicine</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition-colors">Surgical Courses</a></li>
+                    <ul class="space-y-2 text-teal-50">
+                        <li><a href="#" class="hover:text-white transition-colors">Aesthetic Medicine</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Aesthetic Gynecology</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Ultrasound</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">IVF & Reproductive Medicine</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Surgical Courses</a></li>
                     </ul>
                 </div>
                 
                 <!-- Contact -->
                 <div>
                     <h4 class="text-lg font-semibold mb-4 text-white">Contact Us</h4>
-                    <ul class="space-y-2 text-gray-400">
+                    <ul class="space-y-2 text-teal-100">
                         <li>
                             <i class="fas fa-envelope mr-2"></i>
                             info@medniks.com
@@ -366,7 +366,7 @@
             </div>
             
             <!-- Bottom Bar -->
-            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+            <div class="border-t border-teal-200/60 pt-6 text-center text-teal-50">
                 <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
                 <div class="mt-2">
                     <span class="inline-block mr-4">

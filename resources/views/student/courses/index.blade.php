@@ -12,16 +12,7 @@
         @endphp
         <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
             <div class="aspect-video bg-gray-100 relative overflow-hidden flex items-center justify-center">
-                @php
-                    $thumbnailSrc = $course->thumbnail_url;
-                    if (strpos($thumbnailSrc, 'data:image/') !== false) {
-                        $dataPos = strpos($thumbnailSrc, 'data:image/');
-                        if ($dataPos !== false) {
-                            $thumbnailSrc = substr($thumbnailSrc, $dataPos);
-                        }
-                    }
-                @endphp
-                <img src="{{ $thumbnailSrc }}" alt="{{ $course->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';">
+                <img src="{{ $course->thumbnail_url }}" alt="{{ $course->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.querySelector('.fallback-icon').style.display='flex';">
                 <div class="fallback-icon hidden items-center justify-center w-full h-full bg-blue-50">
                     <i class="fas fa-graduation-cap text-4xl text-blue-200"></i>
                 </div>

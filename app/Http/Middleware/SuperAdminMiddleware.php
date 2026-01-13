@@ -21,10 +21,8 @@ class SuperAdminMiddleware
 
         $user = auth()->user();
         
-        // Force refresh the role relationship from database
-        $user->load('role');
-        
-        if (!$user->isSuperAdmin()) {
+        // Use Spatie hasRole() method for authorization
+        if (!$user->hasRole('superadmin')) {
             abort(403, 'You do not have permission to access this resource. Only Super Admins can access.');
         }
 

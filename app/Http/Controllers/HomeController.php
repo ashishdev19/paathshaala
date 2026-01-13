@@ -54,12 +54,57 @@ class HomeController extends Controller
         return view('welcome', compact('featuredCourses', 'stats', 'testimonials', 'categories', 'subscriptionPlans'));
     }
 
-    public function courses()
+    public function courses(Request $request)
     {
-        $courses = Course::active()
+        $query = Course::active()
             ->withCount(['enrollments', 'reviews'])
-            ->with(['teacher', 'reviews'])
-            ->paginate(12);
+            ->withAvg('reviews', 'rating')
+            ->with(['teacher', 'reviews']);
+
+        // Search by title or description
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category (string field) or related category name/slug
+        if ($category = $request->input('category')) {
+            $query->where(function ($q) use ($category) {
+                $q->where('category', $category)
+                    ->orWhereHas('category', function ($cq) use ($category) {
+                        $cq->where('name', $category)->orWhere('slug', $category);
+                    });
+            });
+        }
+
+        // Filter by level
+        if ($level = $request->input('level')) {
+            $query->where('level', $level);
+        }
+
+        // Sorting
+        switch ($request->input('sort')) {
+            case 'popular':
+                $query->orderByDesc('enrollments_count');
+                break;
+            case 'rating':
+                $query->orderByDesc('reviews_avg_rating');
+                break;
+            case 'price_low':
+                $query->orderBy('price');
+                break;
+            case 'price_high':
+                $query->orderByDesc('price');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $courses = $query->paginate(12)->appends($request->query());
 
         return view('admin.courses.public-index', compact('courses'));
     }

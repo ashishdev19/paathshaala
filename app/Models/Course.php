@@ -207,64 +207,68 @@ class Course extends Model
         return $startDate->addDays($this->validity_days);
     }
 
+    /**
+     * Get the thumbnail URL for the course.
+     * Handles multiple formats: file paths, base64, URLs, with proper fallback.
+     *
+     * @return string
+     */
     public function getThumbnailUrlAttribute()
     {
-        $thumbnail = trim($this->thumbnail);
-
-        if (!$thumbnail) {
-            return asset('images/default-course.png');
+        $thumbnail = $this->thumbnail;
+        
+        // Default placeholder image path
+        $defaultImage = asset('img/default-course-thumbnail.png');
+        
+        // Return default if empty or null
+        if (empty($thumbnail)) {
+            return $defaultImage;
         }
-
-        // 1. Check for Base64 data anywhere in the string
-        // This handles cases where "/storage/" or other junk is prepended
-        if (strpos($thumbnail, 'data:image/') !== false || strpos($thumbnail, ';base64,') !== false) {
+        
+        $thumbnail = trim($thumbnail);
+        
+        // 1. Handle base64 encoded images (legacy data)
+        if (strpos($thumbnail, 'data:image/') === 0) {
+            return $thumbnail;
+        }
+        
+        // Also check for corrupted base64 that might have been prefixed
+        if (strpos($thumbnail, ';base64,') !== false) {
             $startPos = strpos($thumbnail, 'data:image/');
             if ($startPos !== false) {
                 return substr($thumbnail, $startPos);
             }
-            // Fallback if data:image/ is missing but ;base64, is there
-            $startPosB64 = strpos($thumbnail, ';base64,');
-            if ($startPosB64 !== false) {
-                // Try to backtrack to find the start of the data URI if possible, 
-                // or just return as is if it's already a clean URI
-                return $thumbnail; 
-            }
         }
-
-        // 2. If it's a full URL, return it
+        
+        // 2. Handle full URLs (external images)
         if (filter_var($thumbnail, FILTER_VALIDATE_URL)) {
             return $thumbnail;
         }
-
-        // 3. Clean the path (remove leading 'storage/' or '/storage/' if present)
+        
+        // 3. Handle file paths - normalize the path
         $path = $thumbnail;
-        $path = str_replace(['storage/', '/storage/'], '', $path);
-        $path = ltrim($path, '/');
-
-        // 4. Try to find the file and convert to base64 for reliable loading on cPanel
-        $locations = [
-            storage_path('app/public/' . $path),
-            public_path('storage/' . $path),
-            base_path('storage/app/public/' . $path),
-            base_path('../public_html/storage/' . $path),
-        ];
-
-        foreach ($locations as $fullPath) {
-            if (file_exists($fullPath) && !is_dir($fullPath) && filesize($fullPath) > 0) {
-                try {
-                    $imageData = file_get_contents($fullPath);
-                    if ($imageData !== false) {
-                        $mimeType = mime_content_type($fullPath);
-                        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
-                    }
-                } catch (\Exception $e) {
-                    // Continue to next location
-                }
-            }
+        
+        // Remove 'storage/' prefix if present
+        if (strpos($path, 'storage/') === 0) {
+            $path = substr($path, 8);
         }
-
-        // 5. Fallback: Return via asset helper, but ONLY if it's NOT a base64 string
-        // We already checked for base64 in Step 1, so this is safe for regular file paths
-        return asset('storage/' . $path);
+        
+        // Remove leading slashes
+        $path = ltrim($path, '/');
+        
+        // Check if file exists in storage
+        $storagePath = storage_path('app/public/' . $path);
+        $publicPath = public_path('storage/' . $path);
+        
+        if (file_exists($publicPath)) {
+            return asset('storage/' . $path);
+        }
+        
+        if (file_exists($storagePath)) {
+            return asset('storage/' . $path);
+        }
+        
+        // 4. Return default image as fallback
+        return $defaultImage;
     }
 }
