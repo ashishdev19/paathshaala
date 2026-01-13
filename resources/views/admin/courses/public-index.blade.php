@@ -34,7 +34,7 @@
                 </a>
 
                 <!-- Center: Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
+                <nav class="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
                     <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Home</a>
                     <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">Courses</a>
                     <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-white hover:text-teal-100 hover:bg-white/10 rounded-lg transition-all font-medium">About</a>
@@ -82,7 +82,7 @@
                     @endauth
 
                     <!-- Mobile Menu Button -->
-                    <button class="md:hidden p-2 text-white hover:text-teal-200 focus:outline-none" onclick="toggleMobileMenu()">
+                    <button class="lg:hidden p-2 text-white hover:text-teal-200 focus:outline-none" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -92,7 +92,7 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden" style="background-color: #008080;">
+        <div id="mobileMenu" class="hidden lg:hidden" style="background-color: #008080;">
             <div class="px-4 py-3 space-y-2">
                 <a href="{{ url('/') }}" class="block px-4 py-2 text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Home</a>
                 <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Courses</a>

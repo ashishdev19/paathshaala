@@ -145,7 +145,6 @@
         
         /* Hero Section */
         .hero-section {
-            /* background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%); */
             color: white;
             padding: 4rem 2rem;
             padding-top: 6rem;
@@ -155,6 +154,7 @@
             display: flex;
             align-items: center;
             margin-top: 64px;
+            /* background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05)), url('{{ asset('img/Landing%20Page%20Bg%20image.png') }}') center/cover no-repeat; */
         }
         
         .hero-section::before {
@@ -626,7 +626,7 @@
                 </a>
                 
                 <!-- Center: Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
+                <nav class="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
                     <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Home</a>
                     <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Courses</a>
                     <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">About</a>
@@ -676,7 +676,7 @@
                     @endauth
                     
                     <!-- Mobile Menu Button -->
-                    <button class="md:hidden p-2 text-white hover:text-teal-200 focus:outline-none" onclick="toggleMobileMenu()">
+                    <button class="lg:hidden p-2 text-white hover:text-teal-200 focus:outline-none" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -686,7 +686,7 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg">
+        <div id="mobileMenu" class="hidden lg:hidden bg-white/50 border-t border-gray-100 shadow-lg text-white">
             <div class="px-4 py-3 space-y-2">
                 <a href="{{ url('/') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
                 <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
@@ -697,85 +697,50 @@
     </header>
     
     <!-- Hero Section -->
-    <section class="hero-section relative z-10">
-        <div class="hero-content relative z-10">
-            <!-- Left Side - Illustration -->
-            <div class="hero-illustration">
-                <svg width="100%" height="350" viewBox="0 0 500 350" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Healthcare Professionals Illustration -->
-                    <circle cx="150" cy="120" r="30" fill="#60A5FA"/>
-                    <rect x="130" y="150" width="40" height="60" rx="5" fill="#3B82F6"/>
-                    <circle cx="150" cy="105" r="5" fill="#1E40AF"/>
-                    
-                    <circle cx="250" cy="140" r="35" fill="#FCD34D"/>
-                    <rect x="225" y="175" width="50" height="70" rx="5" fill="#F59E0B"/>
-                    <circle cx="250" cy="123" r="6" fill="#B45309"/>
-                    
-                    <circle cx="350" cy="130" r="32" fill="#34D399"/>
-                    <rect x="328" y="162" width="44" height="65" rx="5" fill="#10B981"/>
-                    <circle cx="350" cy="115" r="5" fill="#065F46"/>
-                    
-                    <rect x="50" y="80" width="50" height="35" rx="8" fill="white" opacity="0.9"/>
-                    <circle cx="75" cy="97" r="8" fill="#3B82F6"/>
-                    
-                    <rect x="400" y="60" width="50" height="35" rx="8" fill="white" opacity="0.9"/>
-                    <path d="M420 75 L425 85 L430 75" stroke="#F59E0B" stroke-width="3" fill="none"/>
-                    
-                    <rect x="80" y="220" width="45" height="35" rx="8" fill="white" opacity="0.9"/>
-                    <circle cx="102" cy="238" r="6" fill="#10B981"/>
-                    
-                    <rect x="380" y="180" width="60" height="45" rx="5" fill="white" opacity="0.95"/>
-                    <rect x="385" y="185" width="50" height="30" rx="2" fill="#60A5FA"/>
-                    
-                    <circle cx="450" cy="120" r="20" fill="white" opacity="0.9"/>
-                    <rect x="445" y="110" width="10" height="20" fill="#EF4444"/>
-                    <rect x="440" y="115" width="20" height="10" fill="#EF4444"/>
-                </svg>
-                
-                <div class="floating-icon icon-1">
-                    <i class="fas fa-laptop text-blue-600 text-xl"></i>
-                </div>
-                <div class="floating-icon icon-2">
-                    <i class="fas fa-trophy text-yellow-500 text-xl"></i>
-                </div>
-                <div class="floating-icon icon-3">
-                    <i class="fas fa-tasks text-green-500 text-xl"></i>
-                </div>
-                <div class="floating-icon icon-4">
-                    <i class="fas fa-graduation-cap text-purple-600 text-xl"></i>
-                </div>
+   
+        <section>
+      
+            <div class="w-full  flex justify-around lg:flex-row flex-col bg-[#008080] ">
+            
+            <div class="w-full lg:w-1/2    px-4">
+                <img src="{{ asset('img/Landing Page Bg image.png') }}" alt="Healthcare Professionals Illustration" class="w-full h-auto">
+
+     
             </div>
             
             <!-- Right Side - Content -->
-            <div class="hero-text">
-            <h1 class="text-4xl md:text-5xl text-gray-900 font-bold mb-6 fade-in-up montserrat leading-tight">
+            <!-- <div class="hero-text" style="margin-left: 4rem;"> -->
+            <div class="flex-1 justify-center items-center flex flex-col w-full lg:w-1/2 p-4">
+                 <h1 class="text-4xl lg:text-6xl font-bold mb-6 fade-in-up montserrat leading-tight text-white">
 
-                    Discover the best online learning<br> for healthcare professionals
+                    Discover the best<br> online learning<br> for healthcare professionals
                 </h1>
                 
-                <form action="{{ route('courses.index') }}" method="GET" class="search-box">
+              <div class="w-full px-8">
+                  <form action="{{ route('courses.index') }}" method="GET" class="search-box w-full">
                     <input type="text" name="search" placeholder="What do you want to learn about?" class="flex-1">
                     <button type="submit">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
+              </div>
                 
-                <div class="grid grid-cols-3 gap-4 mt-8">
+                <div class="grid grid-cols-3 gap-4 mt-10 text-white w-full px-8">
                     <div class="text-center">
-                        <div class="text-3xl font-bold">500+</div>
-                        <div class="text-sm opacity-90">Courses</div>
+                        <div class="text-3xl lg:text-7xl font-bold">500+</div>
+                        <div class="text-sm lg:text-3xl opacity-90">Courses</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold">50K+</div>
-                        <div class="text-sm opacity-90">Students</div>
+                        <div class="text-3xl lg:text-7xl font-bold">50K+</div>
+                        <div class="text-sm lg:text-3xl opacity-90">Students</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold">200+</div>
-                        <div class="text-sm opacity-90">Experts</div>
+                        <div class="text-3xl lg:text-7xl font-bold">200+</div>
+                        <div class="text-sm lg:text-3xl opacity-90">Experts</div>
                     </div>
                 </div>
             </div>
-        </div>
+        
     </section>
     
     <!-- Statistics Section -->
@@ -1209,16 +1174,16 @@
     </section>
     
     <!-- Get Started for Free Section -->
-    <section class="py-20 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900">
+    <section class="py-20 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100">
         <div class="container mx-auto px-4">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
                 <!-- Left Content -->
-                <div class="lg:w-1/2 text-white">
+                <div class="lg:w-1/2 text-black">
                     <h2 class="text-4xl md:text-5xl font-bold mb-6">Get started</h2>
-                    <p class="text-lg md:text-xl mb-8 text-gray-200 leading-relaxed">
+                    <p class="text-lg md:text-xl mb-8 text-black-200 leading-relaxed">
                         Empower your healthcare career today, sign up for a free account to access some of our most popular courses.
                     </p>
-                    <a href="{{ route('register') }}" class="inline-block px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <a href="{{ route('register') }}" class="inline-block px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
                         Create account
                     </a>
                 </div>
