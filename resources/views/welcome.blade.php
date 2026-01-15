@@ -613,15 +613,17 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Left Side: Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
-                    <div class="relative">
+                    <!-- <div class="relative">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300" style="background-color: #008080;">
                             <i class="fas fa-graduation-cap text-white text-sm"></i>
                         </div>
                         <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    </div>
+                    </div> -->
                     <div>
-                        <h1 class="text-xl font-bold text-white">Medniks</h1>
-                        <p class="text-xs text-teal-100 font-medium">Medical Excellence</p>
+                        <h1 class="text-xl font-bold text-white">
+                            <span style="color: #2d3748;">Med</span><span style="color: #e53e3e;">N<span style="position: relative; display: inline-block;"><span style="color: #e53e3e;">i</span><span style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%); color: #e53e3e; font-size: 0.7em;">+</span></span>ks</span>
+                        </h1>
+                        <!-- <p class="text-xs text-teal-100 font-medium">Medical Excellence</p> -->
                     </div>
                 </a>
                 

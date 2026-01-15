@@ -69,13 +69,19 @@ class HomeController extends Controller
             });
         }
 
-        // Filter by category (string field) or related category name/slug
+        // Filter by category using category_id or related category name/slug
         if ($category = $request->input('category')) {
             $query->where(function ($q) use ($category) {
-                $q->where('category', $category)
-                    ->orWhereHas('category', function ($cq) use ($category) {
-                        $cq->where('name', $category)->orWhere('slug', $category);
-                    });
+                // If category is numeric, filter by category_id
+                if (is_numeric($category)) {
+                    $q->where('category_id', $category);
+                }
+                // Also check by category relationship (name, slug, or id)
+                $q->orWhereHas('category', function ($cq) use ($category) {
+                    $cq->where('id', $category)
+                        ->orWhere('name', $category)
+                        ->orWhere('slug', $category);
+                });
             });
         }
 

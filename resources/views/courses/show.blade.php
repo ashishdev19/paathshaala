@@ -21,15 +21,15 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Left Side: Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
-                    <div class="relative">
+                    <!-- <div class="relative">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 border border-white/40" style="background-color: #008080;">
                             <i class="fas fa-graduation-cap text-white text-sm"></i>
                         </div>
                         <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    </div>
+                    </div> -->
                     <div>
                         <h1 class="text-xl font-bold text-white">Medniks</h1>
-                        <p class="text-xs text-teal-100 font-medium">Medical Excellence</p>
+                        <!-- <p class="text-xs text-teal-100 font-medium">Medical Excellence</p> -->
                     </div>
                 </a>
 

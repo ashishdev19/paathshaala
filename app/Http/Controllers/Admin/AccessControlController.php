@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminRole;
-use App\Models\AdminPermission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 
 class AccessControlController extends Controller
@@ -14,17 +14,20 @@ class AccessControlController extends Controller
      */
     public function index()
     {
-        $roles = AdminRole::withCount(['accounts', 'permissions'])
+        $roles = Role::withCount(['users', 'permissions'])
             ->orderBy('name')
             ->get();
 
-        $permissions = AdminPermission::with('roles')
-            ->orderBy('module')
+        $permissions = Permission::with('roles')
             ->orderBy('name')
             ->get()
-            ->groupBy('module');
+            ->groupBy(function ($permission) {
+                // Group permissions by their prefix (e.g., "admin.", "teacher.", "student.")
+                $parts = explode('.', $permission->name);
+                return count($parts) > 1 ? $parts[0] : 'general';
+            });
 
-        $allPermissions = AdminPermission::all();
+        $allPermissions = Permission::all();
 
         return view('admin.access-control.index', compact('roles', 'permissions', 'allPermissions'));
     }
