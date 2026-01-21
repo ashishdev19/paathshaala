@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -317,6 +318,7 @@ class StudentController extends Controller
             'address' => 'nullable|string|max:500',
             'qualification' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'current_password' => 'nullable|required_with:password',
             'password' => 'nullable|min:8|confirmed',
         ]);
@@ -343,8 +345,13 @@ class StudentController extends Controller
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if exists
+            if ($user->profile_image && \Storage::disk('public')->exists($user->profile_image)) {
+                \Storage::disk('public')->delete($user->profile_image);
+            }
+            
             $path = $request->file('profile_picture')->store('profile-pictures', 'public');
-            $user->profile_picture = $path;
+            $user->profile_image = $path;
         }
 
         $user->save();

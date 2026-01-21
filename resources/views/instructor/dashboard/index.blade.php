@@ -229,7 +229,7 @@
 <!-- Welcome Banner -->
 <div class="welcome-banner">
     <div class="welcome-content">
-        <h1>Welcome back, {{ auth()->user()->name }}!</h1>
+        <h1>Welcome , {{ auth()->user()->name }}!</h1>
         <p>Manage your courses and track student progress</p>
     </div>
     <div class="welcome-icon">🎓</div>

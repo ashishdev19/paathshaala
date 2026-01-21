@@ -1,6 +1,6 @@
 <x-layouts.auth>
     <div class="mb-8">
-        <h2 class="text-3xl font-bold text-gray-900 montserrat">Welcome Back</h2>
+        <h2 class="text-3xl font-bold text-gray-900 montserrat">Welcome</h2>
         <p class="text-gray-600 mt-2">Sign in to continue your learning journey</p>
     </div>
 
@@ -41,7 +41,7 @@
                 <i class="fas fa-envelope text-gray-400 mr-2"></i>Email Address
             </label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg teal-focus transition-all @error('email') border-red-500 @enderror"
                    placeholder="Enter your email">
             @error('email')
                 <p class="mt-1 text-sm text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
@@ -55,7 +55,7 @@
             </label>
             <div class="relative">
                 <input id="password" type="password" name="password" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('password') border-red-500 @enderror"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg teal-focus transition-all @error('password') border-red-500 @enderror"
                        placeholder="Enter your password">
                 <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     <i id="toggleIcon" class="fas fa-eye"></i>
@@ -70,28 +70,28 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center">
                 <input id="remember_me" type="checkbox" name="remember"
-                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                       class="w-4 h-4 teal-checkbox border-gray-300 rounded">
                 <label for="remember_me" class="ml-2 text-sm text-gray-700">
                     Remember me
                 </label>
             </div>
             
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-700 font-semibold">
+                <a href="{{ route('password.request') }}" class="text-sm teal-text font-semibold">
                     Forgot password?
                 </a>
             @endif
         </div>
         
         <!-- Submit Button -->
-        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300">
+        <button type="submit" class="w-full text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300" style="background: linear-gradient(to right, #008080, #006666);">
             <i class="fas fa-sign-in-alt mr-2"></i>Sign In
         </button>
         
         <!-- Register Link -->
         <p class="mt-6 text-center text-gray-600">
             Don't have an account? 
-            <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-700 font-semibold">
+            <a href="{{ route('register') }}" class="teal-text font-semibold">
                 Create one now
             </a>
         </p>

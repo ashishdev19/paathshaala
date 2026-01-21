@@ -219,7 +219,7 @@
 <!-- Welcome Banner -->
 <div class="welcome-banner">
     <div class="welcome-content">
-        <h1>Welcome back, {{ auth()->user()->name }}!</h1>
+        <h1>Welcome , {{ auth()->user()->name }}!</h1>
         <p>Keep up your learning journey and achieve your goals</p>
     </div>
     <div class="welcome-icon">🎓</div>

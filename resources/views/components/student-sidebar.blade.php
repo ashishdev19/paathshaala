@@ -189,7 +189,9 @@
                 ST
             </div>
             <div class="logo-text">
-                <h2>Medniks</h2>
+                <h1 class="text-xl font-bold text-white">
+                    <span style="color: #ffffff;">Med</span><span style="color: #e53e3e;">N<span style="position: relative; display: inline-block;"><span style="color: #e53e3e;">i</span><span style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%); color: #e53e3e; font-size: 0.7em;">+</span></span>ks</span>
+                </h1>
                 <p>Student</p>
             </div>
         </div>

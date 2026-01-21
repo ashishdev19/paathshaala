@@ -17,12 +17,16 @@
                 </div>
                 <div class="flex items-center space-x-6">
                     <div class="flex-shrink-0">
-                        <div class="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-                            {{ strtoupper(substr(auth()->user()->name ?? 'S', 0, 1)) }}
-                        </div>
+                        @if(auth()->user()->profile_image && file_exists(storage_path('app/public/' . auth()->user()->profile_image)))
+                            <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Profile Picture" class="h-24 w-24 rounded-full object-cover shadow-lg">
+                        @else
+                            <div class="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                                {{ strtoupper(substr(auth()->user()->name ?? 'S', 0, 1)) }}
+                            </div>
+                        @endif
                     </div>
                     <div>
-                        <input type="file" name="profile_picture" class="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-blue-50 file:to-blue-100 file:text-blue-700 hover:file:from-blue-100 hover:file:to-blue-200 file:shadow-sm">
+                        <input type="file" name="profile_picture" accept="image/*" class="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-blue-50 file:to-blue-100 file:text-blue-700 hover:file:from-blue-100 hover:file:to-blue-200 file:shadow-sm">
                         <p class="mt-1 text-sm text-gray-500">JPG, PNG or GIF. Max size 2MB</p>
                     </div>
                 </div>

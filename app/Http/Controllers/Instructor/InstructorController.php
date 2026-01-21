@@ -10,6 +10,7 @@ use App\Models\OnlineClass;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class InstructorController extends Controller
 {
@@ -138,22 +139,17 @@ class InstructorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
-            'dob' => 'nullable|date',
             'address' => 'nullable|string|max:500',
-            'qualification' => 'nullable|string|max:255',
-            'institution' => 'nullable|string|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'current_password' => 'nullable|required_with:password',
             'password' => 'nullable|min:8|confirmed',
         ]);
 
-        // Update basic information
+        // Update basic information  
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->phone = $validated['phone'] ?? $user->phone;
-        $user->dob = $validated['dob'] ?? $user->dob;
         $user->address = $validated['address'] ?? $user->address;
-        $user->qualification = $validated['qualification'] ?? $user->qualification;
-        $user->institution = $validated['institution'] ?? $user->institution;
 
         // Handle password change if provided
         if ($request->filled('current_password')) {
@@ -168,13 +164,18 @@ class InstructorController extends Controller
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if exists
+            if ($user->profile_image && \Storage::disk('public')->exists($user->profile_image)) {
+                \Storage::disk('public')->delete($user->profile_image);
+            }
+            
             $path = $request->file('profile_picture')->store('profile-pictures', 'public');
-            $user->profile_picture = $path;
+            $user->profile_image = $path;
         }
 
         $user->save();
 
-        return redirect()->route('instructor.dashboard')
+        return redirect()->route('profile.edit')
             ->with('success', 'Profile updated successfully');
     }
 }

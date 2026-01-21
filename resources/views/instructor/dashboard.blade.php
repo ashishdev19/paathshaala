@@ -237,7 +237,7 @@
             <h1>Welcome, {{ $user->name }}!</h1>
             <p>We're excited to have you on board. Start by creating your first course or exploring the dashboard features.</p>
         @else
-            <h1>Welcome back, {{ $user->name }}!</h1>
+            <h1>Welcome, {{ $user->name }}!</h1>
             <p>Manage your courses and track student progress</p>
         @endif
     </div>
