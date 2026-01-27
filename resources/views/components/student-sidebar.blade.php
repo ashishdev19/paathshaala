@@ -235,12 +235,6 @@
             <span>Certificates</span>
         </a>
 
-        <!-- Wallet -->
-        <a href="{{ route('student.wallet.index') }}" class="nav-item {{ request()->routeIs('student.wallet*') ? 'active' : '' }}">
-            <i class="fas fa-wallet icon"></i>
-            <span>Wallet</span>
-        </a>
-
         <!-- Profile -->
         <a href="{{ route('profile.edit') }}" class="nav-item {{ request()->routeIs('profile*') ? 'active' : '' }}">
             <i class="fas fa-user-circle icon"></i>

@@ -62,7 +62,7 @@
     }
 
     .welcome-banner {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%);
+        background: #008080;
         border-radius: 1.25rem;
         padding: 2.5rem;
         color: white;

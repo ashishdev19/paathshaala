@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\SubscriptionPlanController;
 use App\Http\Controllers\Admin\WalletManagementController;
 use App\Http\Controllers\Instructor\SubscriptionController;
 use App\Http\Controllers\Instructor\WalletController as InstructorWalletController;
-use App\Http\Controllers\Student\WalletController as StudentWalletController;
+// use App\Http\Controllers\Student\WalletController as StudentWalletController; // Removed - wallet not needed for students
 use App\Http\Controllers\Instructor\InstructorEnquiryController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
@@ -381,14 +381,14 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
         Route::get('/join/{id}', [App\Http\Controllers\Student\LiveClassController::class, 'join'])->name('join');
     });
 
-    // Wallet Routes
-    Route::prefix('wallet')->name('wallet.')->group(function () {
-        Route::get('/', [StudentWalletController::class, 'index'])->name('index');
-        Route::get('/topup', [StudentWalletController::class, 'topupForm'])->name('topup');
-        Route::post('/topup', [StudentWalletController::class, 'initiateTopup'])->name('topup.initiate');
-        Route::get('/topup/{topupId}/success', [StudentWalletController::class, 'handleTopupSuccess'])->name('topup.success');
-        Route::post('/webhook', [StudentWalletController::class, 'webhook'])->name('topup.webhook');
-    });
+    // Wallet Routes - REMOVED (students don't need wallet, they pay directly at checkout)
+    // Route::prefix('wallet')->name('wallet.')->group(function () {
+    //     Route::get('/', [StudentWalletController::class, 'index'])->name('index');
+    //     Route::get('/topup', [StudentWalletController::class, 'topupForm'])->name('topup');
+    //     Route::post('/topup', [StudentWalletController::class, 'initiateTopup'])->name('topup.initiate');
+    //     Route::get('/topup/{topupId}/success', [StudentWalletController::class, 'handleTopupSuccess'])->name('topup.success');
+    //     Route::post('/webhook', [StudentWalletController::class, 'webhook'])->name('topup.webhook');
+    // });
 });
 
 Route::middleware('auth')->group(function () {
