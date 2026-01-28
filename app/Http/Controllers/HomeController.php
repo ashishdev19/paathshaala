@@ -159,4 +159,13 @@ class HomeController extends Controller
     {
         return view('shared.public.contact');
     }
+
+    public function becomeInstructor()
+    {
+        $subscriptionPlans = SubscriptionPlan::active()
+            ->ordered()
+            ->get();
+
+        return view('shared.public.become-instructor', compact('subscriptionPlans'));
+    }
 }

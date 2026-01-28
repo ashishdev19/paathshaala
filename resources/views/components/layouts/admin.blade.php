@@ -111,6 +111,8 @@
             gap: 0.75rem;
             padding-left: 1rem;
             border-left: 1px solid #e5e7eb;
+            position: relative;
+            cursor: pointer;
         }
 
         .user-avatar {
@@ -125,6 +127,11 @@
             font-weight: 700;
             font-size: 1rem;
             box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .user-profile:hover .user-avatar {
+            transform: scale(1.05);
         }
 
         .user-info {
@@ -141,6 +148,65 @@
         .user-role {
             font-size: 0.75rem;
             color: #6b7280;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            min-width: 200px;
+            display: none;
+            flex-direction: column;
+            z-index: 50;
+            border: 1px solid #e5e7eb;
+        }
+
+        .profile-dropdown.active {
+            display: flex;
+        }
+
+        .profile-dropdown-item {
+            padding: 0.75rem 1rem;
+            color: #1f2937;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .profile-dropdown-item:hover {
+            background: #f3f4f6;
+            color: #4f46e5;
+        }
+
+        .profile-dropdown-item:first-child {
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .profile-dropdown-item:last-child {
+            border-bottom-left-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+        }
+
+        .profile-dropdown-item.logout {
+            color: #dc2626;
+        }
+
+        .profile-dropdown-item.logout:hover {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .page-content {
@@ -212,13 +278,32 @@
                         @endif
                     </a>
 
-                    <div class="user-profile">
+                    <div class="user-profile" id="profileDropdown">
                         <div class="user-avatar">
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
                         <div class="user-info">
                             <span class="user-name">{{ auth()->user()->name }}</span>
                             <span class="user-role">Administrator</span>
+                        </div>
+
+                        <!-- Dropdown Menu -->
+                        <div class="profile-dropdown" id="dropdownMenu">
+                            <a href="#" class="profile-dropdown-item" style="cursor: not-allowed; opacity: 0.6;">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </a>
+                            <a href="#" class="profile-dropdown-item" style="cursor: not-allowed; opacity: 0.6;">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}" style="width: 100%;">
+                                @csrf
+                                <button type="submit" class="profile-dropdown-item logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -235,5 +320,48 @@
             {{ $slot }}
         </div>
     </div>
+
+    <script>
+        // Profile Dropdown Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileDropdown = document.getElementById('profileDropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (profileDropdown && dropdownMenu) {
+                profileDropdown.addEventListener('click', function(e) {
+                    // Don't toggle if clicking the logout button or its container
+                    if (e.target.closest('form') || e.target.closest('.logout')) {
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('active');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!profileDropdown.contains(e.target)) {
+                        dropdownMenu.classList.remove('active');
+                    }
+                });
+
+                // Close dropdown when clicking on a menu item (except logout form)
+                const dropdownItems = dropdownMenu.querySelectorAll('a.profile-dropdown-item');
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        dropdownMenu.classList.remove('active');
+                    });
+                });
+
+                // Handle logout form submission
+                const logoutForm = dropdownMenu.querySelector('form');
+                if (logoutForm) {
+                    logoutForm.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>

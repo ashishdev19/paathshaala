@@ -85,7 +85,7 @@
                 <i class="fas fa-lock text-gray-400 mr-2"></i>Password
             </label>
             <input id="password" type="password" name="password" required
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('password') border-red-500 @enderror"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all @error('password') border-red-500 @enderror"
                    placeholder="Create a strong password">
             @error('password')
                 <p class="mt-1 text-sm text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
@@ -98,7 +98,7 @@
                 <i class="fas fa-lock text-gray-400 mr-2"></i>Confirm Password
             </label>
             <input id="password_confirmation" type="password" name="password_confirmation" required
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                    placeholder="Re-enter your password">
         </div>
         
@@ -109,7 +109,7 @@
                     <i class="fas fa-city text-gray-400 mr-2"></i>City
                 </label>
                 <input id="city" type="text" name="city" value="{{ old('city') }}"
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                        placeholder="City">
             </div>
             <div>
@@ -117,7 +117,7 @@
                     State
                 </label>
                 <input id="state" type="text" name="state" value="{{ old('state') }}"
-                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                        placeholder="State">
             </div>
         </div>
@@ -127,19 +127,19 @@
                 <i class="fas fa-map-pin text-gray-400 mr-2"></i>PIN Code
             </label>
             <input id="pincode" type="text" name="pincode" value="{{ old('pincode') }}" maxlength="6"
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                    placeholder="PIN Code">
         </div>
         
         <!-- Submit Button -->
-        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 mt-6">
+        <button type="submit" class="w-full bg-gradient-to-r from-teal-600 to-teal-800 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 mt-6">
             <i class="fas fa-user-plus mr-2"></i>Create Account
         </button>
         
         <!-- Login Link -->
         <p class="mt-6 text-center text-gray-600 text-sm">
             Already have an account? 
-            <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-700 font-semibold">
+            <a href="{{ route('login') }}" class="text-teal-600 hover:text-teal-700 font-semibold">
                 Sign In
             </a>
         </p>
