@@ -220,12 +220,6 @@
     }
 </style>
 
-<!-- Page Header -->
-<div class="page-header">
-    <h1 style="font-size: 2.25rem; font-weight: 800; color: #1f2937; margin-bottom: 0.5rem;">Instructor Dashboard</h1>
-    <p style="color: #6b7280; font-size: 0.95rem;">Manage courses, students, and track progress</p>
-</div>
-
 <!-- Welcome Banner -->
 <div class="welcome-banner">
     <div class="welcome-content">

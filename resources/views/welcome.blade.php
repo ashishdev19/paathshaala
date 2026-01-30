@@ -620,8 +620,8 @@
                         <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     </div> -->
                     <div>
-                        <h1 class="text-xl font-bold text-white">
-                            <span style="color: #2d3748;">Med</span><span style="color: #e53e3e;">N<span style="position: relative; display: inline-block;"><span style="color: #e53e3e;">i</span><span style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%); color: #e53e3e; font-size: 0.7em;">+</span></span>ks</span>
+                        <h1 class="text-3xl font-bold text-white">
+                            <span style="color: #034285;">Med</span><span style="color: #e53e3e;">N<span style="position: relative; display: inline-block;"><span style="color: #e53e3e;">i</span><span style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%); color: #e53e3e; font-size: 0.7em;">+</span></span>ks</span>
                         </h1>
                         <!-- <p class="text-xs text-teal-100 font-medium">Medical Excellence</p> -->
                     </div>
@@ -630,10 +630,10 @@
                 <!-- Center: Navigation Links -->
                 <nav class="hidden lg:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
                     <a href="{{ url('/') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Home</a>
-                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Courses</a>
+                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">About Medniks</a>
+                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">How can we help</a>
                     <a href="{{ route('become-instructor') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Become Instructor</a>
-                    <a href="{{ route('about') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">About</a>
-                    <a href="{{ route('contact') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Contact</a>
+                    <a href="{{ route('courses.index') }}" class="px-4 py-2 text-lg text-white hover:text-teal-200 hover:bg-teal-700/40 rounded-lg transition-all font-medium">Courses</a>
                 </nav>
                 
                 <!-- Right Side: Auth Links -->
@@ -692,10 +692,10 @@
         <div id="mobileMenu" class="hidden lg:hidden bg-white/50 border-t border-gray-100 shadow-lg text-white">
             <div class="px-4 py-3 space-y-2">
                 <a href="{{ url('/') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Home</a>
-                <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
+                <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About Medniks</a>
+                <a href="{{ route('contact') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">How can we help</a>
                 <a href="{{ route('become-instructor') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Become Instructor</a>
-                <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">About</a>
-                <a href="{{ route('contact') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Contact</a>
+                <a href="{{ route('courses.index') }}" class="block px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all font-medium">Courses</a>
             </div>
         </div>
     </header>

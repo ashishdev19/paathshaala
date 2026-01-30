@@ -119,14 +119,14 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            background: #008080;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 128, 128, 0.3);
             transition: transform 0.2s ease;
         }
 

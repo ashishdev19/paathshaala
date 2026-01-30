@@ -146,7 +146,7 @@ class NotificationService
                 'course_id' => $course->id,
                 'course_title' => $course->title,
             ],
-            'action_url' => route('teacher.students'),
+            'action_url' => route('instructor.students.index'),
             'priority' => 'normal',
         ]);
     }

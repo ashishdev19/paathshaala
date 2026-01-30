@@ -5,7 +5,7 @@
         top: 0;
         width: 16rem;
         height: 100vh;
-        background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        background: linear-gradient(180deg, #008080 0%, #006666 100%);
         color: white;
         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
         z-index: 50;
@@ -13,6 +13,23 @@
         flex-direction: column;
         overflow-y: auto;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .superadmin-sidebar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .superadmin-sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .superadmin-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 2px;
+    }
+
+    .superadmin-sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(148, 163, 184, 0.5);
     }
 
     .sidebar-header {
@@ -37,14 +54,14 @@
         width: 2.75rem;
         height: 2.75rem;
         border-radius: 0.75rem;
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        background: #008080;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
         font-size: 1.25rem;
         color: white;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 128, 128, 0.4);
     }
 
     .logo-text h2 {
@@ -85,6 +102,13 @@
         background: rgba(148, 163, 184, 0.5);
     }
 
+    .nav-section {
+        padding: 0.5rem 0;
+        margin-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1rem;
+    }
+
     .nav-section-title {
         padding: 0.75rem 1rem;
         margin-top: 1.25rem;
@@ -104,7 +128,7 @@
         padding: 0.875rem 1rem;
         border-radius: 0.65rem;
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        color: #cbd5e1;
+        color: #ffffff;
         text-decoration: none;
         margin: 0.25rem 0;
         font-weight: 500;
@@ -114,17 +138,17 @@
     }
 
     .nav-item:hover {
-        background-color: rgba(59, 130, 246, 0.15);
-        color: #e2e8f0;
+        background-color: #006666;
+        color: #ffffff;
         border-left-color: #3b82f6;
         transform: translateX(4px);
     }
 
     .nav-item.active {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.15));
-        color: #60a5fa;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.20), rgba(59, 130, 246, 0.12));
+        color: #ffffff;
         border-left-color: #3b82f6;
-        box-shadow: inset 0 0 8px rgba(59, 130, 246, 0.15);
+        box-shadow: inset 0 0 8px rgba(59, 130, 246, 0.12);
         font-weight: 600;
     }
 
@@ -190,7 +214,9 @@
                 SA
             </div>
             <div class="logo-text">
-                <h2>Medniks</h2>
+                <h1 class="text-xl font-bold text-white">
+                    <span style="color: #034285;">Med</span><span style="color: #e53e3e;">N<span style="position: relative; display: inline-block;"><span style="color: #e53e3e;">i</span><span style="position: absolute; top: -2px; left: 50%; transform: translateX(-50%); color: #e53e3e; font-size: 0.7em;">+</span></span>ks</span>
+                </h1>
                 <p>Super Admin</p>
             </div>
         </div>

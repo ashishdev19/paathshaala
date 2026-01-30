@@ -75,14 +75,14 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+            background: #008080;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 128, 128, 0.3);
             transition: transform 0.2s ease;
         }
 

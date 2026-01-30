@@ -27,6 +27,15 @@ class EnrollmentController extends Controller
             ->first();
 
         if ($existingEnrollment) {
+            // Check if request is AJAX
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'already_enrolled' => true,
+                    'message' => 'You are already enrolled in this course.',
+                    'course_id' => $course->id
+                ], 422);
+            }
             return redirect()->back()->with('error', 'You are already enrolled in this course.');
         }
 
@@ -122,7 +131,20 @@ class EnrollmentController extends Controller
                 }
             }
 
-            return redirect()->route('enrollment.success')
+            // Check if request is AJAX
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Successfully enrolled in ' . $course->title . '! Welcome to the course.',
+                    'course_title' => $course->title,
+                    'course_id' => $course->id
+                ]);
+            }
+
+            // Fallback: Redirect to the course content page for non-AJAX requests
+            // Don't redirect - this is now handled by AJAX with modal
+            // Keeping this as fallback only
+            return redirect()->back()
                 ->with('success', 'Successfully enrolled in ' . $course->title . '! Welcome to the course.');
 
         } catch (\Exception $e) {
@@ -132,6 +154,14 @@ class EnrollmentController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+            
+            // Check if request is AJAX
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Enrollment failed: ' . $e->getMessage()
+                ], 422);
+            }
             
             return redirect()->back()
                 ->with('error', 'Enrollment failed: ' . $e->getMessage())
@@ -224,7 +254,7 @@ class EnrollmentController extends Controller
             ->first();
 
         if ($existingEnrollment) {
-            return redirect()->route('courses.show', $course->id)
+            return redirect()->route('student.dashboard')
                 ->with('info', 'You are already enrolled in this course.');
         }
 
