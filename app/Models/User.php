@@ -147,8 +147,36 @@ class User extends Authenticatable
                 'currency' => 'INR',
                 'reserved_amount' => 0,
             ]);
+            // Reload the relationship
+            $this->load('wallet');
         }
         return $this->wallet;
+    }
+
+    // Referral Relationships
+    public function referralCode()
+    {
+        return $this->hasOne(ReferralCode::class);
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->hasOne(Referral::class, 'referred_id');
+    }
+
+    /**
+     * Get pending referral discount for this user
+     */
+    public function getPendingReferralDiscount()
+    {
+        return $this->referredBy()
+            ->where('discount_applied', false)
+            ->first();
     }
 
     // ========================

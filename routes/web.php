@@ -160,6 +160,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/user/{userId}/adjust', [WalletManagementController::class, 'manualAdjustment'])->name('user-wallet.adjust');
     });
 
+    // Referral Management Routes
+    Route::prefix('referral')->name('referral.')->group(function () {
+        Route::get('/settings', [App\Http\Controllers\Admin\ReferralSettingController::class, 'index'])->name('settings');
+        Route::post('/settings', [App\Http\Controllers\Admin\ReferralSettingController::class, 'update'])->name('settings.update');
+        Route::get('/list', [App\Http\Controllers\Admin\ReferralSettingController::class, 'referrals'])->name('list');
+    });
+
     // ════════════════════════════════════════════════════════════════════════════
     // Admin Sub-Accounts, Roles & Permissions Management
     // ════════════════════════════════════════════════════════════════════════════
@@ -205,6 +212,9 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
     Route::get('/courses', [App\Http\Controllers\Student\StudentDashboardController::class, 'courses'])->name('courses');
     Route::get('/courses/{course}/progress', [App\Http\Controllers\Student\StudentDashboardController::class, 'progress'])->name('progress');
     Route::get('/explore', [App\Http\Controllers\Student\StudentDashboardController::class, 'explore'])->name('explore');
+    
+    // Referral Routes
+    Route::get('/referral', [App\Http\Controllers\Student\ReferralController::class, 'index'])->name('referral.index');
 });
 
 // Instructor Routes (Existing - keeping for backward compatibility)
@@ -293,6 +303,9 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     Route::post('/subscription/renew', [SubscriptionController::class, 'processRenew'])->name('subscription.process-renew');
     Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     Route::get('/subscription/certificate', [SubscriptionController::class, 'downloadCertificate'])->name('subscription.certificate');
+    
+    // Referral Routes
+    Route::get('/referral', [App\Http\Controllers\Instructor\ReferralController::class, 'index'])->name('referral.index');
     
     // Course Sections & Lectures API Routes
     Route::post('/sections', [App\Http\Controllers\Instructor\CourseSectionController::class, 'store'])->name('sections.store');

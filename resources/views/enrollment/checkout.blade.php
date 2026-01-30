@@ -6,6 +6,24 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Referral Discount Alert -->
+        @if(isset($pendingReferral) && $pendingReferral)
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-xl p-6 mb-8 shadow-lg">
+            <div class="flex items-center gap-4">
+                <div class="bg-purple-600 rounded-full p-3">
+                    <i class="fas fa-gift text-white text-2xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold text-purple-900">Referral Discount Applied! 🎉</h3>
+                    <p class="text-purple-700 mt-1">
+                        You're getting <strong class="text-2xl text-purple-900">₹{{ number_format($referralDiscount, 2) }}</strong> off this course because you used a referral code!
+                    </p>
+                    <p class="text-sm text-purple-600 mt-2">This discount has been automatically applied to your order.</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column - Course Details & Offers -->
             <div class="lg:col-span-2 space-y-8">
@@ -147,9 +165,18 @@
                                 <span class="font-semibold">₹{{ number_format($course->price, 2) }}</span>
                             </div>
                             
+                            @if(isset($pendingReferral) && $pendingReferral)
+                            <div class="flex justify-between text-purple-600 text-lg">
+                                <span class="font-medium flex items-center gap-2">
+                                    <i class="fas fa-gift"></i> Referral Discount
+                                </span>
+                                <span class="font-bold">-₹{{ number_format($referralDiscount, 2) }}</span>
+                            </div>
+                            @endif
+                            
                             <div id="discount-section" class="flex justify-between text-green-600 text-lg {{ !$autoAppliedOffer ? 'hidden' : '' }}">
-                                <span class="font-medium">Discount</span>
-                                <span class="font-bold">-₹<span id="discount-amount">{{ $autoAppliedOffer ? number_format($course->price - $discountedPrice, 2) : '0.00' }}</span></span>
+                                <span class="font-medium">Offer Discount</span>
+                                <span class="font-bold">-₹<span id="discount-amount">{{ $autoAppliedOffer ? number_format($course->price - $discountedPrice - ($referralDiscount ?? 0), 2) : '0.00' }}</span></span>
                             </div>
                             
                             <div class="border-t-2 border-gray-200 pt-6">

@@ -265,6 +265,12 @@
             <span>Subscription</span>
         </a>
 
+        <!-- Referral Program -->
+        <a href="{{ route('instructor.referral.index') }}" class="nav-item {{ request()->routeIs('instructor.referral*') ? 'active' : '' }}">
+            <i class="fas fa-gift icon"></i>
+            <span>Referral Program</span>
+        </a>
+
         <!-- Profile -->
         <a href="{{ route('profile.edit') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <i class="fas fa-user-circle icon"></i>

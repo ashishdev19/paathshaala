@@ -8,6 +8,7 @@ use App\Models\Enrollment;
 use App\Models\Payment;
 use App\Models\Offer;
 use App\Services\NotificationService;
+use App\Services\ReferralService;
 use App\Mail\EnrollmentConfirmation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,18 @@ class EnrollmentController extends Controller
                 // Check if user is new student and apply discount
                 $finalPrice = $course->price;
                 $appliedOffer = null;
+                $referralDiscount = 0;
+                $appliedReferral = null;
+                
+                // Check for referral discount first
+                $referralService = app(ReferralService::class);
+                $pendingReferral = $referralService->getAvailableDiscount($user);
+                
+                if ($pendingReferral) {
+                    $referralDiscount = $pendingReferral->referred_discount;
+                    $finalPrice -= $referralDiscount;
+                    $appliedReferral = $pendingReferral;
+                }
                 
                 $isNewStudent = !Enrollment::where('student_id', $user->id)->exists();
                 if ($isNewStudent) {
@@ -73,9 +86,9 @@ class EnrollmentController extends Controller
                         ->where('code', 'NEWSTUDENT30')
                         ->first();
                         
-                    if ($newStudentOffer && $newStudentOffer->canBeUsed($course->price)) {
-                        $discount = $newStudentOffer->calculateDiscount($course->price);
-                        $finalPrice = $course->price - $discount;
+                    if ($newStudentOffer && $newStudentOffer->canBeUsed($finalPrice)) {
+                        $discount = $newStudentOffer->calculateDiscount($finalPrice);
+                        $finalPrice = $finalPrice - $discount;
                         $appliedOffer = $newStudentOffer;
                         
                         // Increment usage count
@@ -101,11 +114,16 @@ class EnrollmentController extends Controller
                 $enrollment = Enrollment::create($enrollmentData);
 
                 // Process payment with discounted price
-                $payment = $this->processPayment($request, $course, $user, $enrollment, $finalPrice, $appliedOffer);
+                $payment = $this->processPayment($request, $course, $user, $enrollment, $finalPrice, $appliedOffer, $referralDiscount);
 
                 // If payment successful, confirm enrollment
                 if ($payment->status === 'completed') {
                     $enrollment->update(['payment_status' => 'paid']);
+                    
+                    // Apply referral discount and credit referrer
+                    if ($appliedReferral) {
+                        $referralService->applyReferralDiscount($user, $enrollment->id);
+                    }
                 } else {
                     throw new \Exception('Payment processing failed');
                 }
@@ -169,9 +187,10 @@ class EnrollmentController extends Controller
         }
     }
 
-    private function processPayment(Request $request, Course $course, $user, Enrollment $enrollment, $finalPrice = null, $appliedOffer = null)
+    private function processPayment(Request $request, Course $course, $user, Enrollment $enrollment, $finalPrice = null, $appliedOffer = null, $referralDiscount = 0)
     {
         $amount = $finalPrice ?? $course->price;
+        $totalDiscount = ($course->price - $amount) + $referralDiscount;
         
         // Development mode: Set default values if not provided
         $cardNumber = $request->card_number ?? '4111111111111111';
@@ -186,7 +205,7 @@ class EnrollmentController extends Controller
             'enrollment_id' => $enrollment->id,
             'amount' => $amount,
             'original_amount' => $course->price,
-            'discount_amount' => $course->price - $amount,
+            'discount_amount' => $totalDiscount,
             'final_amount' => $amount,
             'offer_id' => $appliedOffer ? $appliedOffer->id : null,
             'platform_commission' => 0.00,
@@ -205,18 +224,21 @@ class EnrollmentController extends Controller
                     'card_last_four' => substr($cardNumber, -4),
                     'card_holder_name' => $cardHolderName,
                     'card_type' => $this->detectCardType($cardNumber),
+                    'referral_discount' => $referralDiscount,
                     'dev_mode' => true,
                 ]);
                 break;
             case 'upi':
                 $paymentData['payment_details'] = json_encode([
                     'upi_id' => $upiId,
+                    'referral_discount' => $referralDiscount,
                     'dev_mode' => true,
                 ]);
                 break;
             case 'net_banking':
                 $paymentData['payment_details'] = json_encode([
                     'bank_name' => $bankName,
+                    'referral_discount' => $referralDiscount,
                     'dev_mode' => true,
                 ]);
                 break;
@@ -258,13 +280,18 @@ class EnrollmentController extends Controller
                 ->with('info', 'You are already enrolled in this course.');
         }
 
+        // Check for referral discount
+        $referralService = app(ReferralService::class);
+        $pendingReferral = $referralService->getAvailableDiscount($user);
+        $referralDiscount = $pendingReferral ? $pendingReferral->referred_discount : 0;
+
         // Check if user is a new student (no previous enrollments)
         $isNewStudent = !Enrollment::where('student_id', $user->id)->exists();
         
         // Get available offers for new students
         $availableOffers = collect();
         $autoAppliedOffer = null;
-        $discountedPrice = $course->price;
+        $discountedPrice = $course->price - $referralDiscount;
         
         if ($isNewStudent) {
             // Find the best new student offer
@@ -274,10 +301,10 @@ class EnrollmentController extends Controller
                 ->where('code', 'NEWSTUDENT30')
                 ->first();
                 
-            if ($newStudentOffer && $newStudentOffer->canBeUsed($course->price)) {
+            if ($newStudentOffer && $newStudentOffer->canBeUsed($discountedPrice)) {
                 $autoAppliedOffer = $newStudentOffer;
-                $discount = $newStudentOffer->calculateDiscount($course->price);
-                $discountedPrice = $course->price - $discount;
+                $discount = $newStudentOffer->calculateDiscount($discountedPrice);
+                $discountedPrice = $discountedPrice - $discount;
             }
         }
         
@@ -295,7 +322,9 @@ class EnrollmentController extends Controller
             'isNewStudent', 
             'autoAppliedOffer', 
             'discountedPrice', 
-            'allOffers'
+            'allOffers',
+            'pendingReferral',
+            'referralDiscount'
         ));
     }
 

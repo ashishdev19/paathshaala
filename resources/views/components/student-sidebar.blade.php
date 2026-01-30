@@ -259,6 +259,12 @@
             <span>Certificates</span>
         </a>
 
+        <!-- Referral Program -->
+        <a href="{{ route('student.referral.index') }}" class="nav-item {{ request()->routeIs('student.referral*') ? 'active' : '' }}">
+            <i class="fas fa-gift icon"></i>
+            <span>Referral Program</span>
+        </a>
+
         <!-- Profile -->
         <a href="{{ route('profile.edit') }}" class="nav-item {{ request()->routeIs('profile*') ? 'active' : '' }}">
             <i class="fas fa-user-circle icon"></i>
