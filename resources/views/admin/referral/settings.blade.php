@@ -22,6 +22,35 @@
     </div>
     @endif
 
+    <!-- Active Campaign Banner -->
+    @if(isset($settings['campaign_name']) && $settings['campaign_name']->value)
+    <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl shadow-lg p-6 mb-8">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
+                    <i class="fas fa-bullhorn text-3xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold">Active Campaign: {{ $settings['campaign_name']->value }}</h3>
+                    @if(isset($settings['campaign_valid_from']) && $settings['campaign_valid_from']->value)
+                    <p class="text-purple-100 mt-1">
+                        <i class="fas fa-calendar mr-2"></i>
+                        {{ \Carbon\Carbon::parse($settings['campaign_valid_from']->value)->format('d M Y') }}
+                        @if(isset($settings['campaign_valid_until']) && $settings['campaign_valid_until']->value)
+                            → {{ \Carbon\Carbon::parse($settings['campaign_valid_until']->value)->format('d M Y') }}
+                        @endif
+                    </p>
+                    @endif
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-xl font-bold">₹{{ number_format($settings['referrer_credit_amount']->getTypedValue(), 0) }} Referrer</p>
+                <p class="text-xl font-bold">₹{{ number_format($settings['referred_discount_amount']->getTypedValue(), 0) }} Discount</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
@@ -107,6 +136,44 @@
                 </div>
 
                 <hr class="my-6">
+
+                <!-- Campaign/Occasion Management -->
+                <div class="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-calendar-star text-purple-600 mr-2"></i>Campaign Settings (Optional)
+                    </h3>
+                    
+                    <div class="mb-4">
+                        <label for="campaign_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-flag text-purple-500 mr-2"></i>Campaign/Occasion Name
+                        </label>
+                        <input type="text" name="campaign_name" id="campaign_name"
+                               value="{{ $settings['campaign_name']->value ?? '' }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                               placeholder="e.g., Diwali Special, New Year Offer, Summer Campaign">
+                        <p class="text-gray-500 text-sm mt-1">Set a name for special occasion campaigns</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="campaign_valid_from" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar-check text-green-500 mr-2"></i>Valid From
+                            </label>
+                            <input type="date" name="campaign_valid_from" id="campaign_valid_from"
+                                   value="{{ $settings['campaign_valid_from']->value ?? '' }}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="campaign_valid_until" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar-times text-red-500 mr-2"></i>Valid Until
+                            </label>
+                            <input type="date" name="campaign_valid_until" id="campaign_valid_until"
+                                   value="{{ $settings['campaign_valid_until']->value ?? '' }}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-2">Leave dates blank for always-active campaign</p>
+                </div>
 
                 <!-- Referrer Credit Amount -->
                 <div class="mb-6">

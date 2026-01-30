@@ -54,6 +54,30 @@ return new class extends Migration
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'key' => 'campaign_name',
+                'value' => '',
+                'type' => 'string',
+                'description' => 'Current referral campaign/occasion name',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key' => 'campaign_valid_from',
+                'value' => '',
+                'type' => 'string',
+                'description' => 'Campaign validity start date (YYYY-MM-DD)',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key' => 'campaign_valid_until',
+                'value' => '',
+                'type' => 'string',
+                'description' => 'Campaign validity end date (YYYY-MM-DD)',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 

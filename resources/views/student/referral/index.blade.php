@@ -59,8 +59,16 @@
         <!-- Referral Code Card -->
         <div class="bg-gradient-to-br from-teal-600 to-teal-800 rounded-xl shadow-xl p-8 mb-8 text-white">
             <div class="text-center">
+                @if($campaignName)
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 inline-block mb-4">
+                    <p class="text-sm font-semibold">
+                        <i class="fas fa-star mr-2"></i>{{ $campaignName }}
+                    </p>
+                </div>
+                @endif
+                
                 <h2 class="text-2xl font-bold mb-2">Your Referral Code</h2>
-                <p class="text-teal-100 mb-6">Share this code with friends to earn ₹100 for each signup!</p>
+                <p class="text-teal-100 mb-6">Share this code with friends to earn ₹{{ number_format($referrerCredit, 0) }} for each signup!</p>
                 
                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 inline-block min-w-[300px]">
                     <div class="text-5xl font-bold tracking-wider mb-4" id="referralCode">

@@ -38,6 +38,11 @@ class ReferralController extends Controller
         // Get wallet balance
         $wallet = $user->getOrCreateWallet();
         
+        // Get campaign settings
+        $campaignName = \App\Models\ReferralSetting::get('campaign_name', '');
+        $referrerCredit = \App\Models\ReferralSetting::get('referrer_credit_amount', 100);
+        $referredDiscount = \App\Models\ReferralSetting::get('referred_discount_amount', 100);
+        
         // Generate shareable link
         $shareableLink = route('register') . '?ref=' . $referralCode->code;
         
@@ -47,7 +52,10 @@ class ReferralController extends Controller
             'referrals',
             'pendingDiscount',
             'shareableLink',
-            'wallet'
+            'wallet',
+            'campaignName',
+            'referrerCredit',
+            'referredDiscount'
         ));
     }
 }

@@ -45,6 +45,9 @@ class ReferralSettingController extends Controller
             'referred_discount_amount' => 'required|numeric|min:0',
             'credit_on_signup' => 'required|boolean',
             'referral_enabled' => 'required|boolean',
+            'campaign_name' => 'nullable|string|max:255',
+            'campaign_valid_from' => 'nullable|date',
+            'campaign_valid_until' => 'nullable|date|after_or_equal:campaign_valid_from',
         ]);
 
         DB::beginTransaction();
@@ -53,6 +56,17 @@ class ReferralSettingController extends Controller
             ReferralSetting::set('referred_discount_amount', $request->referred_discount_amount);
             ReferralSetting::set('credit_on_signup', $request->credit_on_signup ? 'true' : 'false');
             ReferralSetting::set('referral_enabled', $request->referral_enabled ? 'true' : 'false');
+            
+            // Save campaign settings if provided
+            if ($request->filled('campaign_name')) {
+                ReferralSetting::set('campaign_name', $request->campaign_name);
+            }
+            if ($request->filled('campaign_valid_from')) {
+                ReferralSetting::set('campaign_valid_from', $request->campaign_valid_from);
+            }
+            if ($request->filled('campaign_valid_until')) {
+                ReferralSetting::set('campaign_valid_until', $request->campaign_valid_until);
+            }
 
             DB::commit();
 

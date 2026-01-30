@@ -298,6 +298,12 @@
             <i class="fas fa-user-cog icon"></i>
             <span>Admin Accounts</span>
         </a>
+
+        <a href="{{ route('admin.referral.settings') }}" class="nav-item {{ request()->routeIs('admin.referral.*') ? 'active' : '' }}">
+            <i class="fas fa-gift icon"></i>
+            <span>Referral System</span>
+        </a>
+
         <a href="{{ route('admin.settings.index') }}" class="nav-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
             <i class="fas fa-cog icon"></i>
             <span>Settings</span>

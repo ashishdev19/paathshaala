@@ -29,6 +29,20 @@ class ReferralService
             return null;
         }
 
+        // Check campaign validity dates
+        $validFrom = ReferralSetting::get('campaign_valid_from', '');
+        $validUntil = ReferralSetting::get('campaign_valid_until', '');
+        
+        if ($validFrom && now()->lt(\Carbon\Carbon::parse($validFrom))) {
+            Log::info('Referral campaign not yet started', ['valid_from' => $validFrom]);
+            return null;
+        }
+        
+        if ($validUntil && now()->gt(\Carbon\Carbon::parse($validUntil)->endOfDay())) {
+            Log::info('Referral campaign has ended', ['valid_until' => $validUntil]);
+            return null;
+        }
+
         // Find the referral code
         $referralCodeModel = ReferralCode::where('code', $referralCode)
             ->where('is_active', true)
