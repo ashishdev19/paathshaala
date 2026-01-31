@@ -67,6 +67,7 @@ class EnrollmentController extends Controller
                 $appliedOffer = null;
                 $referralDiscount = 0;
                 $appliedReferral = null;
+                $gstAmount = 0;
                 
                 // Check for referral discount first
                 $referralService = app(ReferralService::class);
@@ -96,6 +97,12 @@ class EnrollmentController extends Controller
                     }
                 }
 
+                // Calculate GST on final price (after discounts)
+                if ($course->gst_enabled) {
+                    $gstAmount = $course->calculateGst($finalPrice);
+                }
+                $totalWithGst = $finalPrice + $gstAmount;
+
                 // Create enrollment with expiry date
                 $enrollmentData = [
                     'student_id' => $user->id,
@@ -113,8 +120,8 @@ class EnrollmentController extends Controller
 
                 $enrollment = Enrollment::create($enrollmentData);
 
-                // Process payment with discounted price
-                $payment = $this->processPayment($request, $course, $user, $enrollment, $finalPrice, $appliedOffer, $referralDiscount);
+                // Process payment with GST included price
+                $payment = $this->processPayment($request, $course, $user, $enrollment, $totalWithGst, $appliedOffer, $referralDiscount, $gstAmount);
 
                 // If payment successful, confirm enrollment
                 if ($payment->status === 'completed') {
@@ -187,10 +194,11 @@ class EnrollmentController extends Controller
         }
     }
 
-    private function processPayment(Request $request, Course $course, $user, Enrollment $enrollment, $finalPrice = null, $appliedOffer = null, $referralDiscount = 0)
+    private function processPayment(Request $request, Course $course, $user, Enrollment $enrollment, $finalPrice = null, $appliedOffer = null, $referralDiscount = 0, $gstAmount = 0)
     {
         $amount = $finalPrice ?? $course->price;
-        $totalDiscount = ($course->price - $amount) + $referralDiscount;
+        $subtotal = $amount - $gstAmount; // Amount before GST
+        $totalDiscount = ($course->price - $subtotal) + $referralDiscount;
         
         // Development mode: Set default values if not provided
         $cardNumber = $request->card_number ?? '4111111111111111';
@@ -209,7 +217,7 @@ class EnrollmentController extends Controller
             'final_amount' => $amount,
             'offer_id' => $appliedOffer ? $appliedOffer->id : null,
             'platform_commission' => 0.00,
-            'teacher_earnings' => $amount,
+            'teacher_earnings' => $subtotal, // Teacher gets amount before GST
             'payment_method' => $request->payment_method,
             'paid_via_wallet' => false,
             'transaction_id' => 'TXN_' . strtoupper(Str::random(10)),
@@ -225,6 +233,9 @@ class EnrollmentController extends Controller
                     'card_holder_name' => $cardHolderName,
                     'card_type' => $this->detectCardType($cardNumber),
                     'referral_discount' => $referralDiscount,
+                    'gst_amount' => $gstAmount,
+                    'gst_percentage' => $course->gst_percentage ?? 18,
+                    'subtotal' => $subtotal,
                     'dev_mode' => true,
                 ]);
                 break;
@@ -232,6 +243,9 @@ class EnrollmentController extends Controller
                 $paymentData['payment_details'] = json_encode([
                     'upi_id' => $upiId,
                     'referral_discount' => $referralDiscount,
+                    'gst_amount' => $gstAmount,
+                    'gst_percentage' => $course->gst_percentage ?? 18,
+                    'subtotal' => $subtotal,
                     'dev_mode' => true,
                 ]);
                 break;
@@ -239,6 +253,9 @@ class EnrollmentController extends Controller
                 $paymentData['payment_details'] = json_encode([
                     'bank_name' => $bankName,
                     'referral_discount' => $referralDiscount,
+                    'gst_amount' => $gstAmount,
+                    'gst_percentage' => $course->gst_percentage ?? 18,
+                    'subtotal' => $subtotal,
                     'dev_mode' => true,
                 ]);
                 break;
@@ -317,6 +334,11 @@ class EnrollmentController extends Controller
                 return $offer->canBeUsed($course->price) && $offer->isValidForCourse($course->id);
             });
 
+        // Calculate GST on discounted price
+        $gstAmount = $course->gst_enabled ? $course->calculateGst($discountedPrice) : 0;
+        $gstPercentage = $course->gst_percentage ?? 18;
+        $totalWithGst = $discountedPrice + $gstAmount;
+
         return view('enrollment.checkout', compact(
             'course', 
             'isNewStudent', 
@@ -324,7 +346,10 @@ class EnrollmentController extends Controller
             'discountedPrice', 
             'allOffers',
             'pendingReferral',
-            'referralDiscount'
+            'referralDiscount',
+            'gstAmount',
+            'gstPercentage',
+            'totalWithGst'
         ));
     }
 

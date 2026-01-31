@@ -92,6 +92,59 @@
                 <div id="discountDisplay" class="mb-6 p-4 bg-green-50 rounded-lg hidden">
                     <p class="text-sm"><strong>Discount:</strong> <span id="discountPercent">0</span>% off</p>
                 </div>
+
+                <!-- GST Settings -->
+                <div class="border-t pt-6 mb-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-percentage text-blue-500 mr-2"></i>GST Settings
+                    </h4>
+                    
+                    <div class="mb-4">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="gstEnabled" name="gst_enabled" value="1" 
+                                   {{ old('gst_enabled', $course->gst_enabled ?? true) ? 'checked' : '' }}
+                                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="ml-3 font-medium text-gray-700">Enable GST for this course</span>
+                        </label>
+                        <p class="mt-1 text-xs text-gray-500 ml-6">If enabled, GST will be added to the course price during checkout</p>
+                    </div>
+
+                    <div id="gstPercentageSection" class="{{ old('gst_enabled', $course->gst_enabled ?? true) ? '' : 'opacity-50 pointer-events-none' }}">
+                        <label for="gst_percentage" class="block text-sm font-semibold text-gray-700 mb-2">
+                            GST Percentage (%)
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <input type="number" id="gst_percentage" name="gst_percentage" 
+                                   value="{{ old('gst_percentage', $course->gst_percentage ?? 18) }}"
+                                   min="0" max="100" step="0.01"
+                                   class="w-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <span class="text-gray-600">%</span>
+                        </div>
+                        @error('gst_percentage')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-2 text-xs text-gray-500">Default GST rate is 18%. You can adjust based on course type.</p>
+                    </div>
+
+                    <!-- GST Preview -->
+                    <div id="gstPreview" class="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <h5 class="font-semibold text-blue-900 mb-2">Price Preview (with GST)</h5>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Course Price:</span>
+                                <span id="previewBasePrice" class="font-medium">₹0.00</span>
+                            </div>
+                            <div class="flex justify-between text-blue-700">
+                                <span>GST (<span id="previewGstPercent">18</span>%):</span>
+                                <span id="previewGstAmount" class="font-medium">₹0.00</span>
+                            </div>
+                            <div class="flex justify-between border-t border-blue-200 pt-2 mt-2">
+                                <span class="font-bold text-gray-900">Total:</span>
+                                <span id="previewTotalPrice" class="font-bold text-green-600">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Validity Period -->
@@ -147,8 +200,47 @@
             });
         });
 
+        // GST Toggle and Preview
+        const gstEnabledCheckbox = document.getElementById('gstEnabled');
+        const gstPercentageSection = document.getElementById('gstPercentageSection');
+        const gstPercentageInput = document.getElementById('gst_percentage');
+        const gstPreview = document.getElementById('gstPreview');
+
+        gstEnabledCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                gstPercentageSection.classList.remove('opacity-50', 'pointer-events-none');
+                gstPreview.classList.remove('hidden');
+            } else {
+                gstPercentageSection.classList.add('opacity-50', 'pointer-events-none');
+                gstPreview.classList.add('hidden');
+            }
+            updateGstPreview();
+        });
+
+        function updateGstPreview() {
+            const price = parseFloat(priceInput.value) || 0;
+            const discountPrice = parseFloat(discountInput.value) || 0;
+            const basePrice = discountPrice > 0 ? discountPrice : price;
+            const gstPercent = parseFloat(gstPercentageInput.value) || 18;
+            const gstEnabled = gstEnabledCheckbox.checked;
+            
+            const gstAmount = gstEnabled ? (basePrice * gstPercent / 100) : 0;
+            const totalPrice = basePrice + gstAmount;
+            
+            document.getElementById('previewBasePrice').textContent = '₹' + basePrice.toFixed(2);
+            document.getElementById('previewGstPercent').textContent = gstPercent;
+            document.getElementById('previewGstAmount').textContent = '₹' + gstAmount.toFixed(2);
+            document.getElementById('previewTotalPrice').textContent = '₹' + totalPrice.toFixed(2);
+        }
+
+        // Update GST preview on any price/gst input change
+        [priceInput, discountInput, gstPercentageInput].forEach(input => {
+            input.addEventListener('input', updateGstPreview);
+        });
+
         // Trigger on load
         [priceInput, discountInput].forEach(input => input.dispatchEvent(new Event('input')));
+        updateGstPreview();
     </script>
 
     <style>

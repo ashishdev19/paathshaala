@@ -94,6 +94,32 @@
                     <input type="number" step="0.01" name="price" value="{{ $course->price ?? '0.00' }}" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
                 </div>
 
+                <!-- GST Settings -->
+                <div class="border-t pt-4 mt-4">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-3">
+                        <i class="fas fa-percentage text-blue-500 mr-1"></i> GST Settings
+                    </h4>
+                    
+                    <div class="mb-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" name="gst_enabled" value="1" 
+                                   {{ old('gst_enabled', $course->gst_enabled ?? true) ? 'checked' : '' }}
+                                   class="rounded border-gray-300 text-blue-600">
+                            <span class="ml-2 text-sm text-gray-700">Enable GST for this course</span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label class="block text-sm font-medium text-gray-700">GST Percentage:</label>
+                        <input type="number" step="0.01" name="gst_percentage" 
+                               value="{{ old('gst_percentage', $course->gst_percentage ?? 18) }}" 
+                               min="0" max="100"
+                               class="w-24 border border-gray-300 rounded-md p-2">
+                        <span class="text-gray-600">%</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Default: 18%. GST will be added during checkout.</p>
+                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" class="mt-1 block w-full border border-gray-300 rounded-md p-2">

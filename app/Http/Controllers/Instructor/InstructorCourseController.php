@@ -175,7 +175,13 @@ class InstructorCourseController extends Controller
             'price' => 'required_if:is_free,false|nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'validity_days' => 'nullable|integer|min:1',
+            'gst_enabled' => 'boolean',
+            'gst_percentage' => 'nullable|numeric|min:0|max:100',
         ]);
+
+        // Handle checkbox default
+        $validated['gst_enabled'] = $request->has('gst_enabled');
+        $validated['gst_percentage'] = $validated['gst_percentage'] ?? 18.00;
 
         $courseId = session('course_id');
         $course = Course::findOrFail($courseId);
@@ -312,7 +318,13 @@ class InstructorCourseController extends Controller
             'video_url' => 'nullable|url',
             'price' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:draft,published,archived',
+            'gst_enabled' => 'boolean',
+            'gst_percentage' => 'nullable|numeric|min:0|max:100',
         ]);
+
+        // Handle GST checkbox
+        $validated['gst_enabled'] = $request->has('gst_enabled');
+        $validated['gst_percentage'] = $validated['gst_percentage'] ?? 18.00;
 
         // Handle thumbnail upload - Store as file path for better performance
         if ($request->hasFile('thumbnail')) {

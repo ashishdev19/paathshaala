@@ -178,13 +178,32 @@
                                 <span class="font-medium">Offer Discount</span>
                                 <span class="font-bold">-₹<span id="discount-amount">{{ $autoAppliedOffer ? number_format($course->price - $discountedPrice - ($referralDiscount ?? 0), 2) : '0.00' }}</span></span>
                             </div>
+
+                            <div class="flex justify-between text-gray-600 text-lg">
+                                <span class="font-medium">Subtotal</span>
+                                <span class="font-semibold">₹<span id="subtotal-amount">{{ number_format($discountedPrice, 2) }}</span></span>
+                            </div>
+                            
+                            @if($course->gst_enabled && $gstAmount > 0)
+                            <div class="flex justify-between text-blue-600 text-lg bg-blue-50 px-4 py-2 rounded-lg -mx-4">
+                                <span class="font-medium flex items-center gap-2">
+                                    <i class="fas fa-percentage"></i> GST ({{ number_format($gstPercentage, 0) }}%)
+                                </span>
+                                <span class="font-bold" id="gst-amount">+₹{{ number_format($gstAmount, 2) }}</span>
+                            </div>
+                            @endif
                             
                             <div class="border-t-2 border-gray-200 pt-6">
                                 <div class="flex justify-between text-3xl font-bold text-gray-900">
                                     <span>Total Amount</span>
-                                    <span id="final-price" class="text-teal-600">₹<span id="final-amount">{{ number_format($discountedPrice ?? $course->price, 2) }}</span></span>
+                                    <span id="final-price" class="text-teal-600">₹<span id="final-amount">{{ number_format($totalWithGst ?? $discountedPrice, 2) }}</span></span>
                                 </div>
-                                <p class="text-base text-gray-500 mt-3 text-right">per enrollment</p>
+                                @if($course->gst_enabled && $gstAmount > 0)
+                                <p class="text-sm text-gray-500 mt-2 text-right">
+                                    <i class="fas fa-info-circle"></i> Inclusive of {{ number_format($gstPercentage, 0) }}% GST (₹{{ number_format($gstAmount, 2) }})
+                                </p>
+                                @endif
+                                <p class="text-base text-gray-500 mt-1 text-right">per enrollment</p>
                             </div>
                         </div>
 
@@ -192,7 +211,9 @@
                         <form action="{{ route('enrollment.store', $course->id) }}" method="POST" id="enrollment-form">
                             @csrf
                             <input type="hidden" name="offer_id" id="selected-offer-id" value="{{ $autoAppliedOffer?->id }}">
-                            <input type="hidden" name="amount" id="payment-amount" value="{{ $discountedPrice ?? $course->price }}">
+                            <input type="hidden" name="amount" id="payment-amount" value="{{ $totalWithGst ?? $discountedPrice }}">
+                            <input type="hidden" name="gst_amount" id="gst-hidden" value="{{ $gstAmount ?? 0 }}">
+                            <input type="hidden" name="subtotal" id="subtotal-hidden" value="{{ $discountedPrice ?? $course->price }}">
 
                             <!-- Payment Method -->
                             <div class="mb-8">

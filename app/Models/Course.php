@@ -26,6 +26,8 @@ class Course extends Model
         'price',
         'is_free',
         'discount_price',
+        'gst_enabled',
+        'gst_percentage',
         'thumbnail',
         'promo_video_url',
         'demo_pdf',
@@ -57,10 +59,55 @@ class Course extends Model
         'is_active' => 'boolean',
         'is_lifetime' => 'boolean',
         'is_free' => 'boolean',
+        'gst_enabled' => 'boolean',
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
+        'gst_percentage' => 'decimal:2',
         'validity_days' => 'integer',
     ];
+
+    // GST Calculation Methods
+    
+    /**
+     * Get the base price (discount_price if set, otherwise price)
+     */
+    public function getBasePriceAttribute(): float
+    {
+        if ($this->is_free) {
+            return 0;
+        }
+        return $this->discount_price > 0 ? (float)$this->discount_price : (float)$this->price;
+    }
+
+    /**
+     * Calculate GST amount based on base price
+     */
+    public function getGstAmountAttribute(): float
+    {
+        if (!$this->gst_enabled || $this->is_free) {
+            return 0;
+        }
+        return round($this->base_price * ($this->gst_percentage / 100), 2);
+    }
+
+    /**
+     * Get the total price including GST
+     */
+    public function getTotalPriceWithGstAttribute(): float
+    {
+        return $this->base_price + $this->gst_amount;
+    }
+
+    /**
+     * Calculate GST for a given amount (useful after applying discounts)
+     */
+    public function calculateGst(float $amount): float
+    {
+        if (!$this->gst_enabled || $this->is_free) {
+            return 0;
+        }
+        return round($amount * ($this->gst_percentage / 100), 2);
+    }
 
     // Relationships
     public function category()
